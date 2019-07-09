@@ -1,7 +1,16 @@
 <script type="module">
-  import {html, render} from 'https://unpkg.com/lit-html?module';
+  import { html, render } from 'https://unpkg.com/lit-html?module';
 
-  render(html`
-   <h1>Hello world</h1>
-  `, document.body);
+  render(html`<h1>Wait for it....</h1>`, document.body);
+
+  window.addEventListener('message', event => {
+    console.log(event);
+    // render(html`<ul><li>Hello</li></ul>`, document.body);
+
+    render(html`
+      <ul>
+        ${event.data.data.map((i) => html`<li>${i.id}</li>`)}
+      </ul>
+    `, document.body);
+  })
 </script>
