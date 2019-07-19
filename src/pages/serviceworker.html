@@ -7,16 +7,16 @@
   const vscode = acquireVsCodeApi();
 
   window.onload = () => {
-      vscode.postMessage({
-        name: 'Ready!!!!!!'
-      })
-    }
+    vscode.postMessage({
+      name: 'Ready!!!!!!'
+    })
+  }
 
   window.addEventListener('message', event => {
     var serviceWorkers = event.data.data;
     var serviceworker$ = serviceWorkers[0].id;
-    const helloDirective = directive((id) => (part) => { serviceworker$ = id;});
-    
+    const helloDirective = directive((id) => (part) => { serviceworker$ = id; });
+
     const rightSectionTopViewer = (webSiteData) => html`<pre>${webSiteData}</pre>`;
     const rightSectionBottomViewer = (serviceWorkerCode) => html`<pre>${serviceWorkerCode}</pre>`;
     const page = () => html`
@@ -66,65 +66,71 @@
   
     </div>
     `;
-    getCode(serviceworker$).then((data) => {render(page(),document.body);
+    getCode(serviceworker$).then((data) => {
+      render(page(), document.body);
 
 
-    var swradios = document.getElementsByName("swgroup");
-    document.getElementById("selectsw1").checked = true;
-    for (var i = 0; i < swradios.length; i++) {
-      swradios[i].onchange = function () {
-        console.log(this.value);
-        getCode(this.value).then((data) => {render(page(),document.body);});
-        serviceworker$ = this.value;
-        
+      const swradios = document.getElementsByName("swgroup");
+      document.getElementById("selectsw1").checked = true;
+
+      for (var i = 0; i < swradios.length; i++) {
+        swradios[i].onchange = async function () {
+          console.log(this.value);
+          await getCode(this.value).then((data) => { render(page(), document.body); });
+          serviceworker$ = this.value;
+
+        }
       }
-    }
-    document.getElementById("download").onclick = function(event) {
-      event.preventDefault();
-      download(serviceworker$, this.id);
-      return false;
-    }
 
-    document.getElementById("preview").onclick = function() {
-      inspect(serviceworker$, this.id);
-    }
-    
-  })
-});
+      document.getElementById("download").onclick = function (event) {
+        console.log('download')
+        // event.preventDefault();
+        download(serviceworker$, this.id);
+        // return false;
+      }
+
+      document.getElementById("preview").onclick = function () {
+        console.log('inspecting');
+        inspect(serviceworker$, this.id);
+      }
+
+    })
+  });
   async function getCode(serviceWorkerId) {
-       
-        return await fetch(`https://pwabuilder-api-prod.azurewebsites.net/serviceworkers/previewcode?ids=${serviceWorkerId}`)
-          .then
-          ((res) => res.json()).then((data) => {
-              webSiteData = data.webSite;
-              serviceWorkerCode = data.serviceWorker;
-                       
-          });
-      
+
+    return await fetch(`https://pwabuilder-api-prod.azurewebsites.net/serviceworkers/previewcode?ids=${serviceWorkerId}`)
+      .then
+      ((res) => res.json()).then((data) => {
+        webSiteData = data.webSite;
+        serviceWorkerCode = data.serviceWorker;
+
+      });
 
 
-    }
 
-    function inspect(serviceWorkerId, command) {
-   
+  }
+
+  function inspect(serviceWorkerId, command) {
+
     vscode.postMessage({
-                     name: 'sw',
-                     serviceWorkerId: serviceWorkerId,
-                     type: command
-                    })
- 
-     
+      name: 'sw',
+      serviceWorkerId: serviceWorkerId,
+      type: command
+    })
+
+
   }
 
   function download(serviceWorkerId, command) {
-  
+
     vscode.postMessage({
-                     serviceWorkerId: serviceWorkerId,
-                     type: command
-                        
-                    })
-  
-     
+      name: 'download',
+      serviceWorkerId: serviceWorkerId,
+      type: command
+
+    })
+
+
   }
 
 

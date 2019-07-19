@@ -61,11 +61,12 @@ export async function generateWebView(context) {
     });*/
 
     panel.webview.onDidReceiveMessage(message => {
-        console.log(message);
+        console.log('message type', message.type);
 
         switch (message.name) {
             case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
             case 'sw': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
+            case 'download': getServiceWorkerCode(message.serviceWorkerId, message.type);
 
         }
 
