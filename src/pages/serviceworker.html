@@ -17,8 +17,8 @@
     var serviceworker$ = serviceWorkers[0].id;
     const helloDirective = directive((id) => (part) => { serviceworker$ = id;});
     
-    const rightSectionTopViewer = (webSiteData) => html`<p>${webSiteData}</p>`;
-    const rightSectionBottomViewer = (serviceWorkerCode) => html`<p>${serviceWorkerCode}</p>`;
+    const rightSectionTopViewer = (webSiteData) => html`<pre>${webSiteData}</pre>`;
+    const rightSectionBottomViewer = (serviceWorkerCode) => html`<pre>${serviceWorkerCode}</pre>`;
     const page = () => html`
       <style>
         .column {
