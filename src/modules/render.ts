@@ -33,7 +33,8 @@ export async function generateWebView(context) {
         vscode.ViewColumn.One,// Editor column to show the new webview panel in.
         {
             // Enable scripts in the webview
-            enableScripts: true
+            enableScripts: true,
+            retainContextWhenHidden: true
         }
         // Webview options. More on these later.
     );
@@ -42,7 +43,9 @@ export async function generateWebView(context) {
     var serviceWorkers = await getSWDesc(context, panel);
     console.log(serviceWorkers);
 
-    panel.onDidChangeViewState(async event => {
+
+    // handle panel lifecycle
+    /*panel.onDidChangeViewState(async event => {
         console.log(event);
 
         if (event.webviewPanel.visible === true) {
@@ -55,7 +58,7 @@ export async function generateWebView(context) {
             panel.webview.postMessage({ data: serviceWorkers });
 
         }
-    });
+    });*/
 
     panel.webview.onDidReceiveMessage(message => {
         console.log(message);
