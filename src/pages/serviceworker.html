@@ -1,6 +1,7 @@
+
 <script type="module" lang="ts">
   import { html, render, directive } from 'https://unpkg.com/lit-html?module';
-
+  
 
   var webSiteData = "";
   var serviceWorkerCode = "";
@@ -17,9 +18,20 @@
     var serviceworker$ = serviceWorkers[0].id;
     const helloDirective = directive((id) => (part) => { serviceworker$ = id; });
 
-    const rightSectionTopViewer = (webSiteData) => html`<pre>${webSiteData}</pre>`;
-    const rightSectionBottomViewer = (serviceWorkerCode) => html`<pre>${serviceWorkerCode}</pre>`;
+    const rightSectionTopViewer = (webSiteData) => html`<pre class="language-java"><code>${webSiteData}</code></pre>`;
+    const rightSectionBottomViewer = (serviceWorkerCode) => html`<pre class="language-java"><code>${serviceWorkerCode}</code></pre>`;
     const page = () => html`
+      
+    <head>
+      <link rel="stylesheet" href="http://prismjs.com/themes/prism.css"/>
+
+    
+    </head>
+    <body>
+      <script src="https://myCDN.com/prism@v1.x/components/prism-core.min.js"><\/script>
+    	<script src="https://myCDN.com/prism@v1.x/plugins/autoloader/prism-autoloader.min.js"><\/script>
+	    <script>Prism.plugins.autoloader.languages_path = 'https://myCDN.com/prism@v1.x/components/'<\/script>
+    </body>
       <style>
         .column {
         float: left;
@@ -62,6 +74,7 @@
         ${rightSectionBottomViewer(serviceWorkerCode)}
         </div>
         </div>
+    
 
   
     </div>
