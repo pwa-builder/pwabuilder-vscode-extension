@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
 import * as fsSync from 'fs';
 import * as path from "path";
-import { MessageChannel } from 'worker_threads';
-import { ServiceWorker } from './ServiceWorker';
+
 import * as constants from './constants';
 
 const fs = require('fs').promises;
@@ -140,16 +139,24 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
               if (folderUri && folderUri[0]) {
                 folderPath = folderUri[0];
                 downloadFile(folderPath, data.webSite);
+                console.log('data.webSite', data.webSite);
+
+                writeToIndex(data.webSite);
               }
 
             });
           }
         });
+
         if (srcIndex === -1) {
           getFolderPath().then(folderUri => {
             if (folderUri && folderUri[0]) {
               folderPath = folderUri[0];
               downloadFile(folderPath, data.webSite);
+
+              console.log('data.webSite', data.webSite);
+
+              writeToIndex(data.webSite);
             }
 
           });
@@ -173,8 +180,57 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
       default: break;
     }
   });
+}
 
+async function writeToIndex(data: any) {
+  const infoMessage = await vscode.window.showInformationMessage('This will write to your index.html file, is this ok?', {
 
+  },
+    {
+      'title': 'Ok'
+    },
+    {
+      'title': 'Cancel'
+    }
+  );
+
+  console.log(infoMessage);
+
+  if (infoMessage.title === 'Ok') {
+    const possibleIndexes = await vscode.workspace.findFiles('**/src/index.html');
+    console.group(possibleIndexes);
+
+    if (possibleIndexes.length > 0) {
+      const indexFilePath = possibleIndexes[0].path;
+
+      const indexFile = await vscode.workspace.openTextDocument(indexFilePath);
+      console.log(indexFile);
+
+      const openTextDocument = await vscode.window.showTextDocument(indexFile, 1, false);
+      console.log(openTextDocument);
+
+      if (openTextDocument) {
+        for (let i = 0; i < openTextDocument.document.lineCount; i++) {
+          const line = openTextDocument.document.lineAt(i);
+          console.log(line);
+
+          if (line.text === "</body>") {
+            openTextDocument.edit((edit) => {
+              edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>`);
+            })
+          }
+        }/*
+
+        }
+        openTextDocument.document.
+          openTextDocument.edit((edit) => {
+
+            edit.insert(new vscode.Position(25, 0), '<script></script>')
+          });*/
+      }
+
+    }
+  }
 
 }
 
@@ -184,6 +240,7 @@ async function getFolderPath(defaultFolder?) {
 
   return await vscode.window.showOpenDialog(options);
 }
+
 async function fetchCode(serviceWorkerId: number) {
 
   return await fetch(constants.apiUrl + "previewCode?ids=" + serviceWorkerId)
@@ -226,6 +283,8 @@ function createAndOpenTemporaryFile(website: any): Promise<any> {
       await fs.writeFile(path, website);
       const doc = await vscode.workspace.openTextDocument(path);
       vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside, false);
+
+
 
     });
 }

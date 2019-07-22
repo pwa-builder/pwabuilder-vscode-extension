@@ -46,6 +46,15 @@
           float: bottom;
           height: 50%;
         }
+
+        .serviceWorkerType {
+          display: flex;
+          align-items: center;
+        }
+
+        .swTypeInnerDiv {
+          margin-left: 2em;
+        }
         
       </style>
       
@@ -54,7 +63,7 @@
       <div class="column">
         <h2><b>Choose a service worker</b></h2></br>
       <h3> Service workers can make your site work offline, run faster, or both. Choose the functionality from our service workers below.</h3>
-        ${serviceWorkers.map((i) => html`<input type="radio"  name="swgroup" value="${i.id}" id="selectsw${i.id}"><h4>${i.title}</h4><span> ${i.description}</span></br> `)}
+        ${serviceWorkers.map((i) => html`<div class="serviceWorkerType"><input type="radio"  name="swgroup" value="${i.id}" id="selectsw${i.id}"><div class="swTypeInnerDiv"><h4>${i.title}</h4><span> ${i.description}</span></div></div></br> `)}
       </ul>
       </br>
       <button id="download">Add Service Worker</button>
