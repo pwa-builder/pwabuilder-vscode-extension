@@ -128,6 +128,7 @@ async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
 
 //Fetches the service worker code and saves it based on the command (Preview or Download)
 async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
+  console.log(type);
   var folderPath;
   fetchCode(serviceWorkerId).then((data) => {
     console.log('service worker data', data);
