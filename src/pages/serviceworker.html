@@ -18,19 +18,16 @@
     var serviceworker$ = serviceWorkers[0].id;
     const helloDirective = directive((id) => (part) => { serviceworker$ = id; });
 
-    const rightSectionTopViewer = (webSiteData) => html`<pre class="language-java"><code>${webSiteData}</code></pre>`;
-    const rightSectionBottomViewer = (serviceWorkerCode) => html`<pre class="language-java"><code>${serviceWorkerCode}</code></pre>`;
+    const rightSectionTopViewer = (webSiteData) => html`<pre class="language-javascript"><code class="language-javascript">${webSiteData}</code></pre>`;
+    const rightSectionBottomViewer = (serviceWorkerCode) => html`<pre class="language-javascript"><code class="language-javascript">${serviceWorkerCode}</code></pre>`;
     const page = () => html`
       
     <head>
-      <link rel="stylesheet" href="http://prismjs.com/themes/prism.css"/>
+      <link rel="stylesheet" href="http://prismjs.com/themes/prism-tomorrow.css"/>
 
     
     </head>
     <body>
-      <script src="https://myCDN.com/prism@v1.x/components/prism-core.min.js"><\/script>
-    	<script src="https://myCDN.com/prism@v1.x/plugins/autoloader/prism-autoloader.min.js"><\/script>
-	    <script>Prism.plugins.autoloader.languages_path = 'https://myCDN.com/prism@v1.x/components/'<\/script>
     </body>
       <style>
         .column {
@@ -91,14 +88,23 @@
     getCode(serviceworker$).then((data) => {
       render(page(), document.body);
 
-
+      // var myScript = document.createElement('script');
+      // myScript.setAttribute('src', 'http://prismjs.com/prism.js');
+      // document.head.appendChild(myScript);
       const swradios = document.getElementsByName("swgroup");
       document.getElementById("selectsw1").checked = true;
 
       for (var i = 0; i < swradios.length; i++) {
         swradios[i].onchange = async function () {
           console.log(this.value);
-          await getCode(this.value).then((data) => { render(page(), document.body); });
+          /*await getCode(this.value).then((data) => { 
+            console.log('data from getCode', data);
+            render(page(), document.body); 
+          });*/
+          await getCode(this.value);
+          console.log(page());
+          //render(html`<h1>hello world</h1>`, document.body);
+          render(page(), document.body);
           serviceworker$ = this.value;
 
         }
@@ -123,6 +129,7 @@
     return await fetch(`https://pwabuilder-api-prod.azurewebsites.net/serviceworkers/previewcode?ids=${serviceWorkerId}`)
       .then
       ((res) => res.json()).then((data) => {
+        console.log(data);
         webSiteData = data.webSite;
         serviceWorkerCode = data.serviceWorker;
 

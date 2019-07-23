@@ -192,7 +192,7 @@ async function writeToIndex(data: any) {
     {
       'title': 'Cancel'
     }
-  );
+  ); //Move inside if
 
   console.log(infoMessage);
 
@@ -216,19 +216,17 @@ async function writeToIndex(data: any) {
 
           if (line.text === "</body>") {
             openTextDocument.edit((edit) => {
-              edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>`);
-            })
+              edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>\n`);
+            });
+            break;
           }
-        }/*
-
         }
-        openTextDocument.document.
-          openTextDocument.edit((edit) => {
-
-            edit.insert(new vscode.Position(25, 0), '<script></script>')
-          });*/
       }
 
+    }
+    else {
+      //User has not been prompted yet
+      // Ask for file path (Write a description)
     }
   }
 
@@ -250,8 +248,8 @@ async function fetchCode(serviceWorkerId: number) {
 }
 
 async function downloadFile(folderPath, website) {
-  await fs.writeFile(path.join(folderPath.fsPath, 'pwabuilder-sw.txt'), website).then((data: any) => {
-    vscode.workspace.openTextDocument(path.join(folderPath.fsPath, 'pwabuilder-sw.txt')).then(doc => {
+  await fs.writeFile(path.join(folderPath.fsPath, 'pwabuilder-sw.js'), website).then((data: any) => {
+    vscode.workspace.openTextDocument(path.join(folderPath.fsPath, 'pwabuilder-sw.js')).then(doc => {
       vscode.window.showTextDocument(doc);
     });
   });
