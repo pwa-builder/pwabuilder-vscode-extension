@@ -60,7 +60,7 @@ export async function generateWebView(context) {
   });*/
 
   panel.webview.onDidReceiveMessage(message => {
-    console.log('message type', message.type);
+    console.log('message', message);
 
     switch (message.name) {
       case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
@@ -111,9 +111,15 @@ async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
   const data = await response.json();
   if (data && data.serviceworkers) {
 
-    const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'pages', 'serviceworker.html'));
+    /*const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'pages', 'serviceworker.html'));
     const swHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
-    panel.webview.html = swHTML;
+    panel.webview.html = swHTML;*/
+    const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'out', 'index.html'));
+    console.log(filePath);
+    const indexHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
+    console.log(indexHTML);
+
+    panel.webview.html = indexHTML;
 
     return data.serviceworkers;
   }
