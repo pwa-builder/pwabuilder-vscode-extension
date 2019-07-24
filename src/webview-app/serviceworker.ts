@@ -104,7 +104,7 @@ export class SWPicker extends LitElement {
           <h3> Service workers can make your site work offline, run faster, or both. Choose the functionality from our service workers below.</h3>
 
           <ul>
-            ${this.serviceWorkers.map((i) => html`<li class="serviceWorkerType"><input type="radio" @change=${() => this.updateChoice(i.id)} name="swgroup" value="${i.id}" id="selectsw${i.id}"><div class="swTypeInnerDiv"><h4>${i.title}</h4><span> ${i.description}</span></div></li> `)}
+            ${this.serviceWorkers.map((i) => html`<li class="serviceWorkerType"><input type="radio" ?checked=${i.id === this.currentServiceWorker} @change=${() => this.updateChoice(i.id)} name="swgroup" value="${i.id}" id="selectsw${i.id}"><div class="swTypeInnerDiv"><h4>${i.title}</h4><span> ${i.description}</span></div></li> `)}
           </ul>
         </div>
 
