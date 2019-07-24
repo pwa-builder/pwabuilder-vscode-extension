@@ -213,7 +213,7 @@ async function writeToIndex(data: any) {
       const indexFile = await vscode.workspace.openTextDocument(indexFilePath);
       console.log(indexFile);
 
-      const openTextDocument = await vscode.window.showTextDocument(indexFile, 1, false);
+      const openTextDocument = await vscode.window.showTextDocument(indexFile, vscode.ViewColumn.Beside, false);
       console.log(openTextDocument);
 
       if (openTextDocument) {
@@ -260,7 +260,7 @@ async function writeToIndex(data: any) {
       const indexFile = await vscode.workspace.openTextDocument(filePath);
 
 
-      const openTextDocument = await vscode.window.showTextDocument(indexFile, 1, false);
+      const openTextDocument = await vscode.window.showTextDocument(indexFile, vscode.ViewColumn.Beside, false);
       console.log(openTextDocument);
 
       if (openTextDocument) {
