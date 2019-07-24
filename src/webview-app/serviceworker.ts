@@ -46,10 +46,50 @@ export class SWPicker extends LitElement {
       .serviceWorkerType {
         display: flex;
         align-items: center;
+        padding-left: 12px;
+        padding-bottom: 14px;
+        padding-right: 12px;
       }
 
-      .swTypeInnerDiv {
-        margin-left: 2em;
+      .serviceWorkerType#selected {
+        border-radius: 12px;
+        background: slategrey;
+      }
+
+      #buttonDiv {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      #buttonDiv #download {
+        margin-right: 10px;
+        background: linear-gradient(90deg,#1fc2c8,#9337d8 116%);
+        color: white;
+        border: none;
+        padding: 1em;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 24px;
+        font-weight: bold;
+      }
+
+      #buttonDiv #preview {
+        background: grey;
+        color: white;
+        border: none;
+        font-weight: bold;
+        padding: 1em;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 24px;
+      }
+
+      #buttonDiv button:hover {
+        cursor: pointer;
+      }
+
+      ul {
+        padding: 0;
       }
     `;
   }
@@ -117,11 +157,7 @@ export class SWPicker extends LitElement {
             service workers below.</h3>
     
           <ul>
-            ${this.serviceWorkers.map((i) => html`<li class="serviceWorkerType"><input type="radio" @change=${()=>
-              this.updateChoice(i.id)} name="swgroup" value="${i.id}" id="selectsw${i.id}"><div class="swTypeInnerDiv">
-                <h4>${i.title}</h4><span> ${i.description}</span>
-              </div>
-            </li> `)}
+            ${this.serviceWorkers.map((i) => html`<li id=${i.id === this.currentServiceWorker ? 'selected' : null}  @click=${() => this.updateChoice(i.id)} class="serviceWorkerType"><div class="swTypeInnerDiv"><h4>${i.title}</h4><span> ${i.description}</span></div></li> `)}
           </ul>
         </div>
     
