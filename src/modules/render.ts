@@ -221,9 +221,9 @@ async function writeToIndex(data: any) {
           const line = openTextDocument.document.lineAt(i);
           console.log(line);
 
-          if (line.text === "</body>") {
+          if (line.text.includes("</body>")) {
             openTextDocument.edit((edit) => {
-              edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>\n`);
+              edit.insert(new vscode.Position(line.lineNumber, 0), `<script>${data}</script>\n`);
             });
             break;
           }
