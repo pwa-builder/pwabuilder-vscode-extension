@@ -17,8 +17,23 @@
       background: black;
       padding: 1em;
       display: flex;
-      /* justify-content: center; */
       align-items: center;
+      justify-content: space-between;
+    }
+
+    header a {
+      background: grey;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      padding-right: 20px;
+      padding-left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     header img {
@@ -29,6 +44,8 @@
 <body>
   <header>
     <img src="/assets/new-logo.svg" alt="header logo">
+
+    <a href="https://www.pwabuilder.com">Open PWABuilder</a>
   </header>
 
   <sw-picker></sw-picker>

@@ -33,6 +33,20 @@ export class SWPicker extends LitElement {
         flex: 1;
       }
 
+      .column #topRow, .column #bottomRow {
+        box-shadow: -1px 0px 13px 7px #252424;
+        border-radius: 10px;
+        padding-top: 8px;
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-bottom: 4em;
+        min-height: 460px;
+      }
+
+      #leftColumn {
+        margin-right: 4em;
+      }
+
       .row1 {
         float: top;
         height: 50%;
@@ -49,11 +63,12 @@ export class SWPicker extends LitElement {
         padding-left: 12px;
         padding-bottom: 14px;
         padding-right: 12px;
+        cursor: pointer;
       }
 
       .serviceWorkerType#selected {
         border-radius: 12px;
-        background: slategrey;
+        background: grey;
       }
 
       #buttonDiv {
@@ -90,6 +105,14 @@ export class SWPicker extends LitElement {
 
       ul {
         padding: 0;
+      }
+
+      code {
+        white-space: pre-wrap;
+      }
+
+      button {
+        outline: none;
       }
     `;
   }
@@ -149,7 +172,7 @@ export class SWPicker extends LitElement {
     return html`
 
     <main>
-      <div class="column">
+      <div class="column" id="leftColumn">
         <h2>Choose a Service Worker</h2>
     
         <div id="serviceWorkerList">
@@ -162,30 +185,36 @@ export class SWPicker extends LitElement {
         </div>
     
         <div id="buttonDiv">
-          <button id="download" @click=${()=> this.download()}>Add Service Worker</button>
-          <button id="preview" @click=${()=> this.inspect()}> Preview</button>
+          <button id="download" @click=${() => this.download()}>Add Service Worker</button>
+          <button id="preview" @click=${() => this.inspect()}> Preview</button>
         </div>
       </div>
     
       <div class="column">
-        <h3>Add this code to your landing page in a &lt;script&gt; tag:</h3>
-        <div>
-          <pre>
-                <code>
-                
-                 ${unsafeHTML(this.highlightedWebSiteData)}
-                </code>
-              </pre>
+
+        <div id="topRow">
+          <h3>Add this code to your landing page in a &lt;script&gt; tag:</h3>
+          <div>
+            <pre>
+              <code>
+                  
+                ${unsafeHTML(this.highlightedWebSiteData)}
+              </code>
+            </pre>
+          </div>
         </div>
-    
-        <h3>Add this code to your landing page in a &lt;script&gt; tag:</h3>
-        <div>
-          <pre>
-                <code>
-                  ${unsafeHTML(this.highlightedSWCode)}
-                </code>
-              </pre>
+
+        <div id="bottomRow">
+          <h3>Add this code to your landing page in a &lt;script&gt; tag:</h3>
+          <div>
+            <pre>
+              <code>
+                ${unsafeHTML(this.highlightedSWCode)}
+              </code>
+            </pre>
+          </div>
         </div>
+
       </div>
     </main>
     `;
