@@ -165,20 +165,20 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
               'title': 'Cancel'
             }
           );
-          if(infoMessage.title === 'Ok') {
-          getFileOrFolderPath(options).then(folderUri => {
-            if (folderUri && folderUri[0]) {
-              folderPath = folderUri[0];
-              downloadFile(folderPath, data.webSite);
-              writeToIndex(data.webSite);
-            }
+          if (infoMessage.title === 'Ok') {
+            getFileOrFolderPath(options).then(folderUri => {
+              if (folderUri && folderUri[0]) {
+                folderPath = folderUri[0];
+                downloadFile(folderPath, data.webSite);
+                writeToIndex(data.webSite);
+              }
 
-          });
-        }
-        else if(infoMessage.title === 'Cancel') {
+            });
+          }
+          else if (infoMessage.title === 'Cancel') {
 
+          }
         }
-      }
 
         break;
       default: break;
@@ -254,30 +254,30 @@ async function writeToIndex(data: any) {
         if (fileUri && fileUri[0]) {
           filePath = fileUri[0];
         }
-        
+
       });
-    if(filePath !== undefined) {
-      const indexFile = await vscode.workspace.openTextDocument(filePath);
+      if (filePath !== undefined) {
+        const indexFile = await vscode.workspace.openTextDocument(filePath);
 
 
-      const openTextDocument = await vscode.window.showTextDocument(indexFile, vscode.ViewColumn.Beside, false);
-      console.log(openTextDocument);
+        const openTextDocument = await vscode.window.showTextDocument(indexFile, vscode.ViewColumn.Beside, false);
+        console.log(openTextDocument);
 
-      if (openTextDocument) {
-        for (let i = 0; i < openTextDocument.document.lineCount; i++) {
-          const line = openTextDocument.document.lineAt(i);
-          console.log(line);
+        if (openTextDocument) {
+          for (let i = 0; i < openTextDocument.document.lineCount; i++) {
+            const line = openTextDocument.document.lineAt(i);
+            console.log(line);
 
-          if (line.text === "</body>") {
-            openTextDocument.edit((edit) => {
-              edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>\n`);
-            });
-            break;
+            if (line.text === "</body>") {
+              openTextDocument.edit((edit) => {
+                edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>\n`);
+              });
+              break;
+            }
           }
         }
       }
     }
-  }
     else {
 
     }
@@ -320,6 +320,9 @@ async function inspectFile(website, serviceWorker) {
 
 function createAndOpenTemporaryFile(website: any): Promise<any> {
   return tmp.file(
+    {
+      postfix: '.js'
+    },
     async function _tempFileCreated(err, path, fd, cleanupCallback) {
       if (err) {
         throw err;
@@ -336,9 +339,6 @@ function createAndOpenTemporaryFile(website: any): Promise<any> {
       await fs.writeFile(path, website);
       const doc = await vscode.workspace.openTextDocument(path);
       vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside, false);
-
-
-
     });
 }
 
