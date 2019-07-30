@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.ServiceWorker.start"
+    "onCommand:extension.ServiceWorker.start",
+    "onCommand:extension.manifest.start"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -18,7 +19,11 @@
 			{
 				"command": "extension.ServiceWorker.start",
 				"title": "Start new Service Worker session"
-			}
+      },
+      {
+        "command": "extension.manifest.start",
+        "title": "Start new Manifest session"
+      }
 		]
 	},
 	"scripts": {
@@ -26,7 +31,8 @@
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"build": "parcel build src/webview-app/*.html --out-dir out --public-url ."
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
