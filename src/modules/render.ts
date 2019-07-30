@@ -49,29 +49,34 @@ export async function generateWebView(context) {
   );
   //fetches the service worker descriptions
 
-  var serviceWorkers = await getSWDesc(context, panel);
+  const serviceWorkers = await getSWDesc(context, panel);
   console.log(serviceWorkers);
 
-
-
   panel.webview.onDidReceiveMessage(message => {
-    console.log('message', message);
-
     switch (message.name) {
       case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
       case 'sw': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
       case 'download': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
-
     }
-
-    // getServiceWorkerCode(message.serviceWorkerId, message.type); //On clicking "Preview" or "Download", a m
   });
-
 }
 
+export async function generateManifestWebview(context) {
+  const panel = vscode.window.createWebviewPanel(
+    'javascript_preview',
+    'Web Manifest',
+    vscode.ViewColumn.One,
+    {
+      enableScripts: true,
+      retainContextWhenHidden: true
+    }
+  );
 
+  const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'out', 'index.manifest.html'));
+  const indexHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
 
-
+  panel.webview.html = indexHTML;
+}
 
 
 async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
@@ -318,7 +323,7 @@ async function inspectFile(website, serviceWorker) {
   await createAndOpenTemporaryFile(serviceWorker);
 }
 
-function createAndOpenTemporaryFile(website: any): Promise<any> {
+async function createAndOpenTemporaryFile(website: any): Promise<any> {
   return tmp.file(
     {
       postfix: '.js'
