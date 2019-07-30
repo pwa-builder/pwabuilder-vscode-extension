@@ -41,14 +41,18 @@
 		"@types/vscode": "^1.36.0",
 		"glob": "^7.1.4",
 		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
+		"parcel-bundler": "^1.12.3",
+		"parcel-plugin-inliner": "^1.0.10",
 		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
 		"vscode-test": "^1.0.0-next.0"
 	},
 	"dependencies": {
 		"@types/node-fetch": "^2.3.7",
+		"lit-element": "^2.2.0",
 		"lit-html": "^1.1.1",
 		"node-fetch": "^2.6.0",
+		"prismjs": "^1.17.1",
 		"tmp": "^0.1.0"
 	},
 	"configuration": {

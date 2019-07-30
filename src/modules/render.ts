@@ -21,7 +21,17 @@ var options: vscode.OpenDialogOptions = {
   defaultUri: null
 };
 
-
+var optionsToOpenFile: vscode.OpenDialogOptions = {
+  canSelectMany: false,
+  canSelectFolders: false,
+  canSelectFiles: true,
+  openLabel: 'Open landing page',
+  filters: {
+    'HTML files': ['html'],
+    'All files': ['*']
+  },
+  defaultUri: null
+};
 
 
 
@@ -70,40 +80,17 @@ export async function generateManifestWebview(context) {
 
 
 async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
-  /*fetch(constants.apiUrl + "getServiceWorkersDescription")
-      .then((res: any) => res.json()).then((data: any) => {
-          let serviceWorkers: ServiceWorker[] = data.serviceworkers;
-          const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'pages', 'serviceworker.html'));
-          const swHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
-          panel.webview.html = swHTML; //renders HTML of the main page
-
-          /*console.log(panel.active);
-          console.log(panel.visible);*/
-
-
-
-  /*if (panel.active) {
-      panel.webview.postMessage({ data: serviceWorkers });
-  }*/
-
-  // panel.onDidChangeViewState(() => {
-
-  //     panel.webview.postMessage({ data: serviceWorkers });
-  // });
-
-  // setTimeout(() => {
-  //     panel.webview.postMessage({ data: serviceWorkers }); //Is there a better way to ensure that the message is sent after page load?
-  // }, 5000);
-  /* return serviceWorkers;
-});*/
 
   const response = await fetch(constants.apiUrl + "getServiceWorkersDescription");
   const data = await response.json();
   if (data && data.serviceworkers) {
 
-    const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'pages', 'serviceworker.html'));
-    const swHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
-    panel.webview.html = swHTML;
+    const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'out', 'index.html'));
+    console.log(filePath);
+    const indexHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
+    console.log(indexHTML);
+
+    panel.webview.html = indexHTML;
 
     return data.serviceworkers;
   }
@@ -112,59 +99,91 @@ async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
 
 //Fetches the service worker code and saves it based on the command (Preview or Download)
 async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
+  console.log(type);
   var folderPath;
-  fetchCode(serviceWorkerId).then((data) => {
+  fetchCode(serviceWorkerId).then(async (data) => {
     console.log('service worker data', data);
     switch (type) {
       case constants.preview: inspectFile(data.webSite, data.serviceWorker);
         break;
-      case constants.download: if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length === 1) {
+      case constants.download:
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length === 1) {
+          const infoMessage = await vscode.window.showInformationMessage('We will download a file named "pwabuilder-sw.js" on your root directory', {
 
-        var srcIndex = -1;
-        constants.getDirectories(vscode.workspace.workspaceFolders[0].uri.fsPath).forEach((element, index) => {
-          if (path.basename(element) === constants.src) {
-            srcIndex = index;
+          },
+            {
+              'title': 'Ok'
+            },
+            {
+              'title': 'Cancel'
+            }
+          );
+          if (infoMessage.title === 'Ok') {
+            var srcIndex = -1;
+            constants.getDirectories(vscode.workspace.workspaceFolders[0].uri.fsPath).forEach((element, index) => {
+              if (path.basename(element) === constants.src) {
+                srcIndex = index;
 
-            getFolderPath(element).then(folderUri => {
+                getFileOrFolderPath(options, element).then(folderUri => {
+                  if (folderUri && folderUri[0]) {
+                    folderPath = folderUri[0];
+                    downloadFile(folderPath, data.webSite);
+                    console.log('data.webSite', data.webSite);
+
+                    writeToIndex(data.webSite);
+                  }
+
+                });
+              }
+            });
+
+            if (srcIndex === -1) {
+              getFileOrFolderPath(options).then(folderUri => {
+                if (folderUri && folderUri[0]) {
+                  folderPath = folderUri[0];
+                  downloadFile(folderPath, data.webSite);
+
+                  console.log('data.webSite', data.webSite);
+
+                  writeToIndex(data.webSite);
+                }
+
+              });
+            }
+            else {
+              break;
+            }
+          }
+          else {
+
+          }
+        }
+
+        else {
+          const infoMessage = await vscode.window.showInformationMessage('Choose a folder you would want "pwabuilder-sw.js" to be downloaded into', {
+
+          },
+            {
+              'title': 'Ok'
+            },
+            {
+              'title': 'Cancel'
+            }
+          );
+          if (infoMessage.title === 'Ok') {
+            getFileOrFolderPath(options).then(folderUri => {
               if (folderUri && folderUri[0]) {
                 folderPath = folderUri[0];
                 downloadFile(folderPath, data.webSite);
-                console.log('data.webSite', data.webSite);
-
                 writeToIndex(data.webSite);
               }
 
             });
           }
-        });
+          else if (infoMessage.title === 'Cancel') {
 
-        if (srcIndex === -1) {
-          getFolderPath().then(folderUri => {
-            if (folderUri && folderUri[0]) {
-              folderPath = folderUri[0];
-              downloadFile(folderPath, data.webSite);
-
-              console.log('data.webSite', data.webSite);
-
-              writeToIndex(data.webSite);
-            }
-
-          });
-        }
-        else {
-          break;
-        }
-      }
-
-      else {
-        getFolderPath().then(folderUri => {
-          if (folderUri && folderUri[0]) {
-            folderPath = folderUri[0];
-            downloadFile(folderPath, data.webSite);
           }
-
-        });
-      }
+        }
 
         break;
       default: break;
@@ -173,30 +192,33 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
 }
 
 async function writeToIndex(data: any) {
-  const infoMessage = await vscode.window.showInformationMessage('This will write to your index.html file, is this ok?', {
 
-  },
-    {
-      'title': 'Ok'
+  const possibleIndexes = await vscode.workspace.findFiles('**/src/index.html');
+  console.group(possibleIndexes);
+
+  if (possibleIndexes.length > 0) {
+
+    const infoMessage = await vscode.window.showInformationMessage('This will write to your index.html file, is this ok?', {
+
     },
-    {
-      'title': 'Cancel'
-    }
-  ); //Move inside if
+      {
+        'title': 'Ok'
+      },
+      {
+        'title': 'Cancel'
+      }
+    );
 
-  console.log(infoMessage);
+    console.log(infoMessage);
 
-  if (infoMessage.title === 'Ok') {
-    const possibleIndexes = await vscode.workspace.findFiles('**/src/index.html');
-    console.group(possibleIndexes);
+    if (infoMessage.title === 'Ok') {
 
-    if (possibleIndexes.length > 0) {
       const indexFilePath = possibleIndexes[0].path;
 
       const indexFile = await vscode.workspace.openTextDocument(indexFilePath);
       console.log(indexFile);
 
-      const openTextDocument = await vscode.window.showTextDocument(indexFile, 1, false);
+      const openTextDocument = await vscode.window.showTextDocument(indexFile, vscode.ViewColumn.Beside, false);
       console.log(openTextDocument);
 
       if (openTextDocument) {
@@ -204,9 +226,9 @@ async function writeToIndex(data: any) {
           const line = openTextDocument.document.lineAt(i);
           console.log(line);
 
-          if (line.text === "</body>") {
+          if (line.text.includes("</body>")) {
             openTextDocument.edit((edit) => {
-              edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>\n`);
+              edit.insert(new vscode.Position(line.lineNumber, 0), `<script>${data}</script>\n`);
             });
             break;
           }
@@ -214,17 +236,65 @@ async function writeToIndex(data: any) {
       }
 
     }
-    else {
-      //User has not been prompted yet
-      // Ask for file path (Write a description)
+    else if (infoMessage.title === 'Cancel') {
+
     }
   }
 
+  else {
+    const infoMessage = await vscode.window.showInformationMessage('Open the HTML file of your landing page. We will write into it.', {
+
+    },
+      {
+        'title': 'Ok'
+      },
+      {
+        'title': 'Cancel'
+      }
+    );
+    if (infoMessage.title === 'Ok') {
+
+      var filePath;
+      await getFileOrFolderPath(optionsToOpenFile).then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          filePath = fileUri[0];
+        }
+
+      });
+      if (filePath !== undefined) {
+        const indexFile = await vscode.workspace.openTextDocument(filePath);
+
+
+        const openTextDocument = await vscode.window.showTextDocument(indexFile, vscode.ViewColumn.Beside, false);
+        console.log(openTextDocument);
+
+        if (openTextDocument) {
+          for (let i = 0; i < openTextDocument.document.lineCount; i++) {
+            const line = openTextDocument.document.lineAt(i);
+            console.log(line);
+
+            if (line.text === "</body>") {
+              openTextDocument.edit((edit) => {
+                edit.insert(new vscode.Position(line.lineNumber - 1, 0), `<script>${data}</script>\n`);
+              });
+              break;
+            }
+          }
+        }
+      }
+    }
+    else {
+
+    }
+
+  }
+
+
 }
 
-async function getFolderPath(defaultFolder?) {
+async function getFileOrFolderPath(options, defaultFolder?) {
 
-  options.defaultUri = defaultFolder ? vscode.Uri.file(defaultFolder) : null;
+  options.defaultUri = defaultFolder ? vscode.Uri.file(defaultFolder) : vscode.workspace.getWorkspaceFolder;
 
   return await vscode.window.showOpenDialog(options);
 }
@@ -255,6 +325,9 @@ async function inspectFile(website, serviceWorker) {
 
 async function createAndOpenTemporaryFile(website: any): Promise<any> {
   return tmp.file(
+    {
+      postfix: '.js'
+    },
     async function _tempFileCreated(err, path, fd, cleanupCallback) {
       if (err) {
         throw err;
@@ -271,9 +344,6 @@ async function createAndOpenTemporaryFile(website: any): Promise<any> {
       await fs.writeFile(path, website);
       const doc = await vscode.workspace.openTextDocument(path);
       vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside, false);
-
-
-
     });
 }
 

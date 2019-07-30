@@ -1,65 +1,22 @@
-# test README
+# PWABuilder VSCode extension
 
-This is the README for your extension "test". After writing up a brief description, we recommend including the following sections.
+## Status: Alpha
 
-## Features
+Thanks for checking this project out, we are actively working on this extension so it may not work for you currently.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Trying the Alpha
+Once we are further along with this project we will be releasing to the [vscode marketplace](https://marketplace.visualstudio.com/) so that this extension can be installed just like any other extension. Until then you can try the alpha with the following steps:
 
-For example if there is an image subfolder under your extension project workspace:
+Prerequisites: You will need [nodejs](https://nodejs.org/en/), [git](https://git-scm.com/) and [vscode](https://code.visualstudio.com/) installed on your machine.
 
-\!\[feature X\]\(images/feature-x.png\)
+- Run `git clone https://github.com/pwa-builder/pwabuilder-vscode-extension.git` in a directory of your choice
+- In the directory we just cloned above (you should be in `/pwabuilder-vscode-extension`) run `npm install`
+- Next, run `npm run build` in the same directory.
+- Open the `/pwabuilder-vscode-extension` folder in [vscode](https://code.visualstudio.com/) and then press `F5` on your computer.
+- This should open the extension in a new vscode window. Once it has opened you can press `ctrl + shift + P`and type `Start new Service Worker session`. 
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+If you have any problems with the above steps feel free to [open an issue](https://github.com/pwa-builder/pwabuilder-vscode-extension/issues) with us. Also, [these docs](https://code.visualstudio.com/api/get-started/your-first-extension) may help get you started.
 
-## Requirements
+Thanks,
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+PWABuilder Team
