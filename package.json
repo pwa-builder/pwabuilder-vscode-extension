@@ -10,8 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-    "onCommand:extension.ServiceWorker.start",
-    "onCommand:extension.manifest.start"
+		"onCommand:extension.ServiceWorker.start",
+		"onCommand:extension.manifest.start"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -19,11 +19,11 @@
 			{
 				"command": "extension.ServiceWorker.start",
 				"title": "Start new Service Worker session"
-      },
-      {
-        "command": "extension.manifest.start",
-        "title": "Start new Manifest session"
-      }
+			},
+			{
+				"command": "extension.manifest.start",
+				"title": "Start new Manifest session"
+			}
 		]
 	},
 	"scripts": {
@@ -49,10 +49,13 @@
 	},
 	"dependencies": {
 		"@types/node-fetch": "^2.3.7",
+		"create-object-url": "^1.0.2",
+		"image-size": "^0.7.4",
 		"lit-element": "^2.2.0",
 		"lit-html": "^1.1.1",
 		"node-fetch": "^2.6.0",
 		"prismjs": "^1.17.1",
+		"revoke-object-url": "^1.0.2",
 		"tmp": "^0.1.0"
 	},
 	"configuration": {

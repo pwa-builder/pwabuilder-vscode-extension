@@ -9,7 +9,12 @@ const fs = require('fs').promises;
 const fetch = require('node-fetch');
 const tmp = require('tmp');
 
-var options: vscode.OpenDialogOptions = {
+var { promisify } = require('util');
+var sizeOf = promisify(require('image-size'));
+
+
+
+var options: vscode.OpenDialogOptions = { // This is for selecting folders from the filepicker
   canSelectMany: false,
   canSelectFolders: true,
   canSelectFiles: false,
@@ -21,7 +26,7 @@ var options: vscode.OpenDialogOptions = {
   defaultUri: null
 };
 
-var optionsToOpenFile: vscode.OpenDialogOptions = {
+var optionsToOpenFile: vscode.OpenDialogOptions = { // This is for selecting files from the filepicker
   canSelectMany: false,
   canSelectFolders: false,
   canSelectFiles: true,
@@ -61,7 +66,99 @@ export async function generateWebView(context) {
   });
 }
 
+async function generateManifest(JSONObject) {
+  var srcIndex = -1;
+  var folderPath;
+  if(vscode.workspace.workspaceFolders === undefined) {
+    await getFileOrFolderPath(options).then(folderUri => {
+      if (folderUri && folderUri[0]) {
+        folderPath = folderUri[0];
+      }
+
+    });
+  }
+  else {
+  constants.getDirectories(vscode.workspace.workspaceFolders[0].uri.fsPath).forEach((element, index) => { // Tries to find src directory
+    if (path.basename(element) === constants.src) { //src is found
+      srcIndex = index;
+      folderPath = element;
+    }
+
+  });
+  if (srcIndex === -1) { //src is not found
+    await getFileOrFolderPath(options).then(folderUri => {
+      if (folderUri && folderUri[0]) {
+        folderPath = folderUri[0];
+      }
+
+    });
+  }
+}
+  if(JSONObject.screenshots !== undefined) {
+    JSONObject = await downloadScreenshots(JSONObject, folderPath);
+  } //Downloads screenshots into the folder where manifest.json will be created.
+  var JSONString = JSON.stringify(JSONObject, null, 4);
+  await createAndDownloadFile(folderPath, JSONString, constants.manifestFileName);
+}
+
+const testArray = ['category'];
+
+function registerCompletion(context: vscode.ExtensionContext) {
+  
+	
+}
+
 export async function generateManifestWebview(context) {
+  const provider2 = vscode.languages.registerCompletionItemProvider(
+		{
+      language: 'json',
+      scheme: 'file',
+      pattern: '**/manifest.json'
+  },
+		{
+			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+
+				// get all text until the `position` and check if it reads `console.`
+				// and iff so then complete if `log`, `warn`, and `error`
+				let linePrefix = document.lineAt(position).text.substr(0, position.character);
+				if (!linePrefix.includes('display')) {
+					return undefined;
+				}
+
+				return [
+					new vscode.CompletionItem('"standalone"', vscode.CompletionItemKind.Text),
+					new vscode.CompletionItem('"fullscreen"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"minimal-ui"',vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"browser"',vscode.CompletionItemKind.Text),
+				];
+			}
+		},
+		':', ': ',': "', ':"' // triggered whenever a '.' is being typed
+	);
+
+  context.subscriptions.push(provider2);
+  
+
+  vscode.languages.registerHoverProvider(
+    { pattern: '**/manifest.json' },
+    {
+      provideHover(document, position, token) {
+        console.log(document, position, token);
+        const testVar = document.lineAt(position.line);
+        for (var item of constants.manifestIntelliSense) {
+          if(testVar.text.toLowerCase().includes(item.name)) {
+            return new vscode.Hover(item.description);
+          }
+        }
+
+        if (testVar.text.toLowerCase().includes('zzzz')) {
+          return new vscode.Hover('this is category', new vscode.Range(new vscode.Position(1,4),new vscode.Position(1,11)));
+        }
+
+        // return new vscode.Hover('I am a hover!');
+      }
+    }
+  );
   const panel = vscode.window.createWebviewPanel(
     'javascript_preview',
     'Web Manifest',
@@ -71,7 +168,14 @@ export async function generateManifestWebview(context) {
       retainContextWhenHidden: true
     }
   );
+  panel.webview.onDidReceiveMessage(async message => {
+    console.log(message.FormData);
+    switch (message.name) {
+      case 'manifest': await generateManifest(message.JSONObject);
 
+        break;
+    }
+  });
   const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'out', 'index.manifest.html'));
   const indexHTML = fsSync.readFileSync(filePath.fsPath, 'utf8');
 
@@ -79,6 +183,53 @@ export async function generateManifestWebview(context) {
 }
 
 
+async function downloadScreenshots(JSONObject, folderPath) {
+  var i;
+  folderPath = typeof folderPath === 'string' ? folderPath : folderPath.fsPath; //Fix this later
+  if (!fsSync.existsSync(path.join(folderPath, 'screenshots'))) {
+    try {
+      fsSync.mkdirSync(path.join(folderPath, 'screenshots'));  //Create dir called "screenshots"
+      folderPath = path.join(folderPath, 'screenshots');
+    }
+    catch (e) {
+      vscode.window.showErrorMessage("Something went wrong. Could not access your workspace!");
+    }
+
+
+  }
+
+  for (i = 0; i < JSONObject.screenshots.length; i++) { //Go through each image
+
+    var fileName = "screenshots\\screenshot" + (i > 0 ? i : "") + ".png";
+    await fs.copyFile(JSONObject.screenshots[i].src, path.join(folderPath, "screenshot" + (i > 0 ? i : "") + ".png"), function (err, data) {
+
+      if (err) {
+        throw err;
+      }
+      // Fail if the file can't be read.
+    }).then((data) => {
+      JSONObject.screenshots[i].src = fileName; //Change src in the jsonObject to the new path
+    });
+
+  }
+  return JSONObject;
+}
+
+async function generateIcons(formData) {
+  console.log('formData', formData);
+
+  await fetch('https://appimagegenerator-pre.azurewebsites.net/api/image', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      "Accept": "application/json"
+    }
+  }).then((res) => {
+    console.log("This is the uri" + res.data.Uri);
+    //const fileUri = res.data.Uri
+
+  });
+}
 async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
 
   const response = await fetch(constants.apiUrl + "getServiceWorkersDescription");
@@ -127,8 +278,8 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                 getFileOrFolderPath(options, element).then(folderUri => {
                   if (folderUri && folderUri[0]) {
                     folderPath = folderUri[0];
-                    downloadFile(folderPath, data.webSite);
-                    console.log('data.webSite', data.webSite);
+                    createAndDownloadFile(folderPath, data.webSite, constants.swFileName);
+
 
                     writeToIndex(data.webSite);
                   }
@@ -141,9 +292,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
               getFileOrFolderPath(options).then(folderUri => {
                 if (folderUri && folderUri[0]) {
                   folderPath = folderUri[0];
-                  downloadFile(folderPath, data.webSite);
-
-                  console.log('data.webSite', data.webSite);
+                  createAndDownloadFile(folderPath, data.webSite, constants.swFileName);
 
                   writeToIndex(data.webSite);
                 }
@@ -174,7 +323,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
             getFileOrFolderPath(options).then(folderUri => {
               if (folderUri && folderUri[0]) {
                 folderPath = folderUri[0];
-                downloadFile(folderPath, data.webSite);
+                createAndDownloadFile(folderPath, data.webSite, constants.swFileName);
                 writeToIndex(data.webSite);
               }
 
@@ -307,9 +456,10 @@ async function fetchCode(serviceWorkerId: number) {
 
 }
 
-async function downloadFile(folderPath, website) {
-  await fs.writeFile(path.join(folderPath.fsPath, 'pwabuilder-sw.js'), website).then((data: any) => {
-    vscode.workspace.openTextDocument(path.join(folderPath.fsPath, 'pwabuilder-sw.js')).then(doc => {
+async function createAndDownloadFile(folderPath, website, fileName) {
+  folderPath = typeof folderPath === 'string' ? folderPath : folderPath.fsPath;
+  await fs.writeFile(path.join(folderPath, fileName), website).then((data: any) => {
+    vscode.workspace.openTextDocument(path.join(folderPath, fileName)).then(doc => {
       vscode.window.showTextDocument(doc);
     });
   });
