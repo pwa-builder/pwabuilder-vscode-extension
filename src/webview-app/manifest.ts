@@ -5,9 +5,9 @@ import dropdownData from './languages.json';
 import { FileStat } from 'vscode';
 
 
-declare var acquireVsCodeApi: any;
+// declare var acquireVsCodeApi: any;
 var sampleObject = new ManifestInfo();
-const vscode = acquireVsCodeApi();
+// const vscode = acquireVsCodeApi();
 var i;
 @customElement('manifest-gen')
 export class Manifest extends LitElement {
@@ -216,7 +216,7 @@ export class Manifest extends LitElement {
         sampleObject.categories = this.categories;
 
         sampleObject.start_url = this.start_url;
-        vscode.postMessage({
+        (window as any).vscode.postMessage({
             name: 'manifest',
             FormData: testData,
             JSONObject: sampleObject

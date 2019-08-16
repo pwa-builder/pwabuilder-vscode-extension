@@ -4,11 +4,6 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import Prism from 'prismjs';
 
 
-// var Prism = require('prismjs');
-declare var acquireVsCodeApi: any;
-// declare var htmlString: any;
-const vscode = acquireVsCodeApi();
-
 @customElement('sw-picker')
 export class SWPicker extends LitElement {
   @property() serviceWorkers = [];
@@ -118,8 +113,9 @@ export class SWPicker extends LitElement {
   }
 
   firstUpdated() {
+    console.log((window as any).vscode);
     window.onload = () => {
-      vscode.postMessage({
+      (window as any).vscode.postMessage({
         name: 'Ready!!!!!!'
       });
     };
@@ -152,7 +148,7 @@ export class SWPicker extends LitElement {
   }
 
   download() {
-    vscode.postMessage({
+    (window as any).vscode.postMessage({
       name: 'download',
       serviceWorkerId: this.currentServiceWorker,
       type: 'download'
@@ -160,7 +156,7 @@ export class SWPicker extends LitElement {
   }
 
   inspect() {
-    vscode.postMessage({
+    (window as any).vscode.postMessage({
       name: 'sw',
       serviceWorkerId: this.currentServiceWorker,
       type: 'preview'
