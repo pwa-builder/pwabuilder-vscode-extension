@@ -114,11 +114,11 @@ export class SWPicker extends LitElement {
 
   firstUpdated() {
     console.log((window as any).vscode);
-    window.onload = () => {
-      (window as any).vscode.postMessage({
-        name: 'Ready!!!!!!'
-      });
-    };
+    
+    (window as any).vscode.postMessage({
+      name: 'Ready!!!!!!'
+    });
+
 
     window.addEventListener('message', async (event) => {
       this.serviceWorkers = event.data.data;

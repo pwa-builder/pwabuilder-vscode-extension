@@ -57,8 +57,9 @@ export async function generateWebView(context) {
   const serviceWorkers = await getSWDesc(context, panel);
   console.log(serviceWorkers);
 
-  panel.webview.onDidReceiveMessage(message => {
+  panel.webview.onDidReceiveMessage(async message => {
     switch (message.name) {
+      case 'manifest': await generateManifest(message.JSONObject); break;
       case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
       case 'sw': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
       case 'download': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
@@ -69,7 +70,7 @@ export async function generateWebView(context) {
 async function generateManifest(JSONObject) {
   var srcIndex = -1;
   var folderPath;
-  if(vscode.workspace.workspaceFolders === undefined) {
+  if (vscode.workspace.workspaceFolders === undefined) {
     await getFileOrFolderPath(options).then(folderUri => {
       if (folderUri && folderUri[0]) {
         folderPath = folderUri[0];
@@ -78,23 +79,23 @@ async function generateManifest(JSONObject) {
     });
   }
   else {
-  constants.getDirectories(vscode.workspace.workspaceFolders[0].uri.fsPath).forEach((element, index) => { // Tries to find src directory
-    if (path.basename(element) === constants.src) { //src is found
-      srcIndex = index;
-      folderPath = element;
-    }
-
-  });
-  if (srcIndex === -1) { //src is not found
-    await getFileOrFolderPath(options).then(folderUri => {
-      if (folderUri && folderUri[0]) {
-        folderPath = folderUri[0];
+    constants.getDirectories(vscode.workspace.workspaceFolders[0].uri.fsPath).forEach((element, index) => { // Tries to find src directory
+      if (path.basename(element) === constants.src) { //src is found
+        srcIndex = index;
+        folderPath = element;
       }
 
     });
+    if (srcIndex === -1) { //src is not found
+      await getFileOrFolderPath(options).then(folderUri => {
+        if (folderUri && folderUri[0]) {
+          folderPath = folderUri[0];
+        }
+
+      });
+    }
   }
-}
-  if(JSONObject.screenshots !== undefined) {
+  if (JSONObject.screenshots !== undefined) {
     JSONObject = await downloadScreenshots(JSONObject, folderPath);
   } //Downloads screenshots into the folder where manifest.json will be created.
   var JSONString = JSON.stringify(JSONObject, null, 4);
@@ -104,40 +105,40 @@ async function generateManifest(JSONObject) {
 const testArray = ['category'];
 
 function registerCompletion(context: vscode.ExtensionContext) {
-  
-	
+
+
 }
 
 export async function generateManifestWebview(context) {
   const provider2 = vscode.languages.registerCompletionItemProvider(
-		{
+    {
       language: 'json',
       scheme: 'file',
       pattern: '**/manifest.json'
-  },
-		{
-			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+    },
+    {
+      provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 
-				// get all text until the `position` and check if it reads `console.`
-				// and iff so then complete if `log`, `warn`, and `error`
-				let linePrefix = document.lineAt(position).text.substr(0, position.character);
-				if (!linePrefix.includes('display')) {
-					return undefined;
-				}
+        // get all text until the `position` and check if it reads `console.`
+        // and iff so then complete if `log`, `warn`, and `error`
+        let linePrefix = document.lineAt(position).text.substr(0, position.character);
+        if (!linePrefix.includes('display')) {
+          return undefined;
+        }
 
-				return [
-					new vscode.CompletionItem('"standalone"', vscode.CompletionItemKind.Text),
-					new vscode.CompletionItem('"fullscreen"', vscode.CompletionItemKind.Text),
-          new vscode.CompletionItem('"minimal-ui"',vscode.CompletionItemKind.Text),
-          new vscode.CompletionItem('"browser"',vscode.CompletionItemKind.Text),
-				];
-			}
-		},
-		':', ': ',': "', ':"' // triggered whenever a '.' is being typed
-	);
+        return [
+          new vscode.CompletionItem('"standalone"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"fullscreen"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"minimal-ui"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"browser"', vscode.CompletionItemKind.Text),
+        ];
+      }
+    },
+    ':', ': ', ': "', ':"' // triggered whenever a '.' is being typed
+  );
 
   context.subscriptions.push(provider2);
-  
+
 
   vscode.languages.registerHoverProvider(
     { pattern: '**/manifest.json' },
@@ -146,13 +147,13 @@ export async function generateManifestWebview(context) {
         console.log(document, position, token);
         const testVar = document.lineAt(position.line);
         for (var item of constants.manifestIntelliSense) {
-          if(testVar.text.toLowerCase().includes(item.name)) {
+          if (testVar.text.toLowerCase().includes(item.name)) {
             return new vscode.Hover(item.description);
           }
         }
 
         if (testVar.text.toLowerCase().includes('zzzz')) {
-          return new vscode.Hover('this is category', new vscode.Range(new vscode.Position(1,4),new vscode.Position(1,11)));
+          return new vscode.Hover('this is category', new vscode.Range(new vscode.Position(1, 4), new vscode.Position(1, 11)));
         }
 
         // return new vscode.Hover('I am a hover!');
@@ -168,12 +169,17 @@ export async function generateManifestWebview(context) {
       retainContextWhenHidden: true
     }
   );
+
+  const serviceWorkers = await getSWDesc(context, panel);
+  console.log(serviceWorkers);
+
   panel.webview.onDidReceiveMessage(async message => {
     console.log(message.FormData);
     switch (message.name) {
-      case 'manifest': await generateManifest(message.JSONObject);
-
-        break;
+      case 'manifest': await generateManifest(message.JSONObject); break;
+      case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
+      case 'sw': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
+      case 'download': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
     }
   });
   const filePath: vscode.Uri = vscode.Uri.file(path.join(context.extensionPath, 'out', 'index.manifest.html'));

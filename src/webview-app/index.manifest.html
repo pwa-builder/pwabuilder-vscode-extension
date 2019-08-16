@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,7 @@
     }
 
     header a {
-      background: grey;
+      background: linear-gradient(90deg, #1fc2c8, #9337d8 116%);
       color: white;
       text-decoration: none;
       padding: 10px;
@@ -39,16 +40,59 @@
     header img {
       height: 30px;
     }
+
+    header #headerButtons {
+      display: flex;
+      justify-content: space-between;
+      width: 23em;
+    }
+
+    header #headerButtons button {
+      background: grey;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 10px 20px;
+      justify-content: center;
+      border: none;
+    }
   </style>
 </head>
+
 <body>
   <header>
     <img src="/assets/new-logo.svg" alt="header logo">
 
-    <a href="https://www.pwabuilder.com">Open PWABuilder</a>
+    <div id="headerButtons">
+      <button id="swButton">Service Worker</button>
+      <a href="https://www.pwabuilder.com">Open PWABuilder</a>
+    </div>
   </header>
 
   <manifest-gen></manifest-gen>
+
+  <sw-picker></sw-picker>
+
+  <script>
+    window.vscode = acquireVsCodeApi();
+    console.log(vscode);
+
+    const maniEl = document.querySelector('manifest-gen');
+
+    const swEl = document.querySelector('sw-picker');
+    swEl.style.display = 'none';
+
+    const swButton = document.querySelector('#swButton');
+    swButton.addEventListener('click', () => {
+      maniEl.style.display = 'none';
+      swEl.style.display = 'block';
+    });
+  </script>
+
+  <script src="serviceworker.ts"></script>
   <script src="manifest.ts"></script>
 </body>
+
 </html>
