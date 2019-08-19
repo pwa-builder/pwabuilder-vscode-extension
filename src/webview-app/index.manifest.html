@@ -80,14 +80,24 @@
     console.log(vscode);
 
     const maniEl = document.querySelector('manifest-gen');
-
     const swEl = document.querySelector('sw-picker');
+
     swEl.style.display = 'none';
 
     const swButton = document.querySelector('#swButton');
     swButton.addEventListener('click', () => {
-      maniEl.style.display = 'none';
-      swEl.style.display = 'block';
+      if (maniEl.style.display === 'block') {
+        maniEl.style.display = 'none';
+        swEl.style.display = 'block';
+
+        swButton.textContent = 'Web Manifest';
+      }
+      else {
+        maniEl.style.display = 'block';
+        swEl.style.display = 'none';
+
+        swButton.textContent = 'Service Worker';
+      }
     });
   </script>
 

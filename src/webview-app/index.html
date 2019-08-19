@@ -44,7 +44,7 @@
     header #headerButtons {
       display: flex;
       justify-content: space-between;
-      width: 22em;
+      width: 23em;
     }
 
     header #headerButtons button {
@@ -79,14 +79,24 @@
     console.log(vscode);
 
     const maniEl = document.querySelector('manifest-gen');
-    maniEl.style.display = 'none';
-
     const swEl = document.querySelector('sw-picker');
 
+    maniEl.style.display = 'none';
+
     const maniButton = document.querySelector('#manifestButton');
-    manifestButton.addEventListener('click', () => {
-      document.querySelector("sw-picker").style.display = 'none';
-      maniEl.style.display = 'block';
+    maniButton.addEventListener('click', () => {
+      if (swEl.style.display === 'block') {
+        swEl.style.display = 'none';
+        maniEl.style.display = 'block';
+
+        maniButton.textContent = 'Service Worker';
+      }
+      else {
+        maniEl.style.display = 'none';
+        swEl.style.display = 'block';
+
+        maniButton.textContent = 'Web Manifest';
+      }
     });
   </script>
 
