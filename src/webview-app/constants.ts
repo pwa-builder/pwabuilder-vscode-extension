@@ -24,18 +24,20 @@ export class Screenshot {
 
 
 export class ManifestInfo {
-    name: string;
-    short_name: string;
-    description: string;
-    icons: Icon[];
-    orientation: string;
-    lang: string = "en";
     dir: string = "ltr";
-    theme_color: string;
-    background_color: string;
-    screenshots: Screenshot[];
-    categories: string;
-    start_url: string;
+    lang: string = "en";
+    name: string;
+    scope: string = "/";
     display: string = "standalone";
-
+    start_url: string;
+    short_name: string;
+    theme_color: string;
+    description: string;
+    orientation: string;
+    background_color: string;
+    related_applications : string = "";
+    prefer_related_applications : boolean = false;
+    screenshots: Screenshot[];
+    icons: Icon[];
+    categories: string;
 }

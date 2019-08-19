@@ -1,14 +1,13 @@
 import * as vscode from 'vscode';
 import * as fsSync from 'fs';
 import * as path from "path";
-
+import * as upath from 'upath';
 import * as constants from './constants';
 
 const fs = require('fs').promises;
 
 const fetch = require('node-fetch');
 const tmp = require('tmp');
-
 var { promisify } = require('util');
 var sizeOf = promisify(require('image-size'));
 
@@ -101,13 +100,6 @@ async function generateManifest(JSONObject) {
   await createAndDownloadFile(folderPath, JSONString, constants.manifestFileName);
 }
 
-const testArray = ['category'];
-
-function registerCompletion(context: vscode.ExtensionContext) {
-  
-	
-}
-
 export async function generateManifestWebview(context) {
   const provider2 = vscode.languages.registerCompletionItemProvider(
 		{
@@ -133,7 +125,7 @@ export async function generateManifestWebview(context) {
 				];
 			}
 		},
-		':', ': ',': "', ':"' // triggered whenever a '.' is being typed
+		':', '"',': "', ':"' // triggered whenever a '.' is being typed
 	);
 
   context.subscriptions.push(provider2);
@@ -155,7 +147,6 @@ export async function generateManifestWebview(context) {
           return new vscode.Hover('this is category', new vscode.Range(new vscode.Position(1,4),new vscode.Position(1,11)));
         }
 
-        // return new vscode.Hover('I am a hover!');
       }
     }
   );
@@ -208,7 +199,9 @@ async function downloadScreenshots(JSONObject, folderPath) {
       }
       // Fail if the file can't be read.
     }).then((data) => {
-      JSONObject.screenshots[i].src = fileName; //Change src in the jsonObject to the new path
+      console.log(upath.toUnix(fileName));
+      JSONObject.screenshots[i].src = upath.toUnix(fileName);
+       //Change src in the jsonObject to the new path
     });
 
   }
