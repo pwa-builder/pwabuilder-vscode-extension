@@ -66,7 +66,15 @@ export async function generateWebView(context) {
   });
 }
 
+function OrderJSON(JSONObject) {
+  var OrderedObj = JSON.parse(JSON.stringify( JSONObject, ["dir", "lang", "name", "scope", "display", "start_url", "short_name", "theme_color","description", "orientation", "background_color","related_applications", "prefer_related_applications","screenshots","icons","categories"],4));
+  return OrderedObj;
+}
+
+
 async function generateManifest(JSONObject) {
+  //HARDCODE JSON object to maintain order of keys
+  JSONObject = OrderJSON(JSONObject);
   var srcIndex = -1;
   var folderPath;
   if (vscode.workspace.workspaceFolders === undefined) {
