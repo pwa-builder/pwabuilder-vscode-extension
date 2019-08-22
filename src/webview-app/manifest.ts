@@ -1,12 +1,56 @@
 import { css, LitElement, html, property, customElement } from 'lit-element';
+import SelectPure from "select-pure";
 import { constants } from 'fs';
-import { OrientationList, ManifestInfo, Screenshot } from './constants';
+import { OrientationList, ManifestInfo, Screenshot, categoryData } from './constants';
 import dropdownData from './languages.json';
-import { FileStat } from 'vscode';
+
 
 
 
 var sampleObject = new ManifestInfo();
+const myOptions = [
+
+    {
+
+        label: "New York",
+
+        value: "NY",
+
+    },
+
+    {
+
+        label: "Washington",
+
+        value: "WA",
+
+    },
+
+    {
+
+        label: "California",
+
+        value: "CA",
+
+    },
+
+    {
+
+        label: "New Jersey",
+
+        value: "NJ",
+
+    },
+
+    {
+
+        label: "North Carolina",
+
+        value: "NC",
+
+    },
+
+];
 
 var i;
 @customElement('manifest-gen')
@@ -93,13 +137,13 @@ export class Manifest extends LitElement {
           }
 
           .animatedSection input:focus{
-            border-color: #9337d8;
+            border-color: #5b7ad0;
             outline: none;
           }
 
           
           .animatedSection textarea:focus{
-            border-color: #9337d8;
+            border-color: #5b7ad0;
             outline: none;
           }
           
@@ -174,6 +218,8 @@ export class Manifest extends LitElement {
             margin-left: 5px;
           }
 
+          
+
 
           @keyframes slidein {
             from {
@@ -186,9 +232,336 @@ export class Manifest extends LitElement {
               opacity: 1;
             }
           }
+
+          @keyframes slideOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;  
+            }
+          
+            to {
+                transform: translateY(-80px);
+                opacity: 0;
+            }
+          }
+
+          @keyframes rotateClockwise {
+          from {
+              transform: rotate(0 16 17);
+            }
+          to {
+              transform: rotate(180 16 17);
+            }
+          }
+
+          #chevronPath {
+            animation-duration: 5s;
+            animation-name: rotateClockwise; 
+          }
+          .select-wrapper {
+            margin: auto;
+            max-width: 600px;
+            width: calc(100% - 40px);
+          }
+          
+          .select-pure__select {
+            align-items: center;
+            background: #f9f9f8;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+            color: #363b3e;
+            cursor: pointer;
+            display: flex;
+            font-size: 16px;
+            font-weight: 500;
+            justify-content: left;
+            min-height: 44px;
+            padding: 5px 10px;
+            position: relative;
+            transition: 0.2s;
+            width: 100%;
+          }
+          
+          .select-pure__options {
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+            color: #363b3e;
+            display: none;
+            left: 0;
+            max-height: 221px;
+            overflow-y: scroll;
+            position: absolute;
+            top: 50px;
+            width: 100%;
+            z-index: 5;
+          }
+          
+          .select-pure__select--opened .select-pure__options {
+            display: block;
+          }
+          
+          .select-pure__option {
+            background: #fff;
+            border-bottom: 1px solid #e4e4e4;
+            box-sizing: border-box;
+            height: 44px;
+            line-height: 25px;
+            padding: 10px;
+          }
+          
+          .select-pure__option--selected {
+            color: #e4e4e4;
+            cursor: initial;
+            pointer-events: none;
+          }
+          
+          .select-pure__option--hidden {
+            display: none;
+          }
+          
+          .select-pure__selected-label {
+            background: #5e6264;
+            border-radius: 4px;
+            color: #fff;
+            cursor: initial;
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 3px 7px;
+          }
+          
+          .select-pure__selected-label:last-of-type {
+            margin-right: 0;
+          }
+          
+          .select-pure__selected-label i {
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 7px;
+          }
+          
+          .select-pure__selected-label i:hover {
+            color: #e4e4e4;
+          }
+          
+          .select-pure__autocomplete {
+            background: #f9f9f8;
+            border-bottom: 1px solid #e4e4e4;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            padding: 10px;
+            width: 100%;
+          }
           
         `;
     }
+
+
+    firstUpdated() {
+        console.log("First udpated");
+        var instance = new SelectPure(".example", {
+            options: myOptions,
+            multiple: true,
+            autocomplete: true,
+            value: ["NY", "CA"] // default: false
+        });
+
+        console.log()
+    }
+
+    toggleAdvancedSection() {
+        console.log(this.shadowRoot.querySelector(".example"));
+        var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
+        var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
+
+
+        // console.log(el.style.display);
+        // if(rotatePath !== null) {
+        //     rotatePath.style.animationName = 'rotateClockwise';
+        //     rotatePath.style.animationDuration = '400ms';
+        // }
+
+        console.log(el.style.display);
+        if (el !== null) {
+            if (el.style.display !== 'block') {
+                el.style.display = 'block';
+                console.log('in the first');
+
+            }
+            else {
+
+                el.style.animationDuration = '400ms';
+                el.style.animationName = 'slideOut';
+                el.addEventListener("animationend", function (e) {
+                    // var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
+                    console.log("In event handler");
+                    //     if (el.style.display === 'block') {
+                    //         el.style.display = 'none';
+                    // }
+                });
+                setTimeout(() => {
+                    el.style.display = 'none';
+                }, 400);
+
+                console.log('in the second');
+
+            }
+        }
+    }
+
+
+    listener() {
+
+    }
+    onCategoryChange(categoryValue) {
+        //console.log(this.nodeValue;
+        //this.categories = categoryValue;
+    }
+    onStartUrlChange(startUrlValue) {
+        this.start_url = startUrlValue;
+    }
+    onShortnameChange(shortnameValue) {
+        this.shortname = shortnameValue;
+    }
+    async onScreenshotSelection() {
+        const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
+        sampleObject.screenshots = [];
+        var img = new Image();
+
+        for (i = 0; i < files.length; i++) {
+            console.log(i);
+            var url = window.URL.createObjectURL(files[i]);
+            var screenshot = new Screenshot();
+            screenshot.src = files[i].path;
+            console.log("This is the file path" + files[i].path);
+            screenshot.type = files[i].type;
+            await this.getImageDimensions(url)
+                .then((data: any) => {
+                    screenshot.sizes = data.height + 'x' + data.width;
+                });
+
+            sampleObject.screenshots.push(screenshot);
+
+        }
+
+
+
+
+    }
+
+    getImageDimensions(url) {
+        let img = new Image();
+        img.src = url;
+        return new Promise((resolve, reject) => {
+
+            img.onload = function () {
+                var width = img.width;
+                var height = img.height;
+                resolve({ height, width });
+            };
+        });
+    }
+    onIconSelection(iconValue) {
+        var formData = new FormData();
+        var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+
+        // formData.append('username', 'abc123');
+        formData.append('fileName', fileField.files[0]);
+
+        fetch('https://appimagegenerator-pre.azurewebsites.net/api/image', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', JSON.stringify(response)));
+        const files: any = (this.shadowRoot.querySelector('#icon') as HTMLInputElement).files[0];
+        console.log(files);
+    }
+
+    onColorChange(colorValue) {
+        this.color = colorValue;
+
+    }
+    onLanguageChange(languageValue) {
+        console.log(languageValue);
+        var lang = JSON.parse(languageValue);
+        sampleObject.lang = lang.code;
+        sampleObject.dir = lang.dir;
+
+        // this.defaultLanguage = languageValue.code;
+        // console.log(languageValue.dir);
+        // sampleObject.dir = languageValue.dir;
+
+
+
+    }
+    onNameChange(nameValue) {
+        this.name = nameValue;
+        if (this.shortname.trim() === "") {
+            this.shortname = this.name;
+        }
+    }
+
+    onOrientationChange(orientationValue) {
+        this.orientation = OrientationList[orientationValue].type;
+
+    }
+
+    onDescChange(descValue) {
+        this.desc = descValue;
+    }
+
+    submit() {
+
+        //to-do make initial form data
+        //console.log(this.shadowRoot.querySelector('#manifestForm'));
+        //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
+        const file: any = (this.shadowRoot.querySelector('#icon') as HTMLInputElement).files[0];
+        console.log("This is the file" + file);
+        //to-do append default values that the API needs
+        // testData.append('')
+        if (this.shortname.trim() === "") {
+            this.shortname = this.name;
+        }
+        let testData = {}
+
+        testData['fileName'] = file;
+        testData['padding'] = 0.3;
+        testData['colorOption'] = 0;
+        testData['color'] = 0;
+        testData['colorChanged'] = 0;
+        testData['platform'] = "windows10";
+        console.log("category" + this.categories);
+
+
+        sampleObject.description = this.desc;
+        sampleObject.name = this.name;
+        sampleObject.orientation = this.orientation;
+        sampleObject.short_name = this.shortname;
+        sampleObject.theme_color = this.color;
+        sampleObject.background_color = this.color;
+        sampleObject.categories = this.categories;
+
+        sampleObject.start_url = this.start_url;
+        (window as any).vscode.postMessage({
+            name: 'manifest',
+            FormData: testData,
+            JSONObject: sampleObject
+        });
+
+
+    }
+
+
+
     render() {
         return html`<h1><a>Manifest Generator</a></h1>
         
@@ -300,8 +673,20 @@ export class Manifest extends LitElement {
 
             <label class="fieldName">Category </label>
             <div>
+                <span class="example"></span>
 
-                <input id="category" name="category" type="text" maxlength="255" value="${this.categories}" @change="${e => this.onCategoryChange(e.target.value)}">
+                <!-- <input id="category" name="category" type="text" maxlength="255" value="${this.categories}" @change="${e => this.onCategoryChange(e)}"> -->
+                <div>
+                <!-- <select id="category" name="category" @change="${e => this.onCategoryChange(e.target.value)}" multiple>
+
+                    ${categoryData.map((i) => html`
+                    <option value=${JSON.stringify(i)}>${i} `)}
+
+                </select> -->
+        
+                </div>
+                </span>
+            </div>        
             </div>
         </div>
 
@@ -326,7 +711,7 @@ export class Manifest extends LitElement {
 
     <svg id="chevronImg" width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="16" cy="17" r="16" transform="rotate(-180 16 17)" fill="#5b7ad0" fill-opacity="0.4"/>
-      <path d="M15.5352 21.668C15.6719 21.8047 15.8359 21.8867 16 21.8867C16.1914 21.8867 16.3555 21.8047 16.4648 21.668L21.7695 16.3633C21.9063 16.2266 21.9609 16.0625 21.9609 15.8984C21.9609 15.707 21.9063 15.543 21.7695 15.4336L21.168 14.832C21.0586 14.6953 20.8945 14.6133 20.7031 14.6133C20.5391 14.6133 20.375 14.668 20.2383 14.8047L16 19.043L11.7617 14.8047C11.6523 14.668 11.4883 14.6133 11.2969 14.6133C11.1328 14.6133 10.9688 14.6953 10.832 14.832L10.2305 15.4336C10.1211 15.543 10.0391 15.707 10.0391 15.8984C10.0391 16.0625 10.1211 16.2266 10.2305 16.3633L15.5352 21.668Z" fill="white"/>
+      <path id="chevronPath" d="M15.5352 21.668C15.6719 21.8047 15.8359 21.8867 16 21.8867C16.1914 21.8867 16.3555 21.8047 16.4648 21.668L21.7695 16.3633C21.9063 16.2266 21.9609 16.0625 21.9609 15.8984C21.9609 15.707 21.9063 15.543 21.7695 15.4336L21.168 14.832C21.0586 14.6953 20.8945 14.6133 20.7031 14.6133C20.5391 14.6133 20.375 14.668 20.2383 14.8047L16 19.043L11.7617 14.8047C11.6523 14.668 11.4883 14.6133 11.2969 14.6133C11.1328 14.6133 10.9688 14.6953 10.832 14.832L10.2305 15.4336C10.1211 15.543 10.0391 15.707 10.0391 15.8984C10.0391 16.0625 10.1211 16.2266 10.2305 16.3633L15.5352 21.668Z" fill="white"/>
     </svg>
  </button>
 </div>
@@ -336,149 +721,5 @@ export class Manifest extends LitElement {
 
 
     }
-
-    toggleAdvancedSection() {
-        console.log("Reached here");
-        var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
-        console.log(el);
-
-        console.log(el.style.display);
-
-        if (el !== null) {
-            if (el.style.display !== 'block') {
-                el.style.display = 'block';
-
-            }
-            else {
-                el.style.display = 'none';
-            }
-        }
-    }
-    onCategoryChange(categoryValue) {
-        this.categories = categoryValue;
-    }
-    onStartUrlChange(startUrlValue) {
-        this.start_url = startUrlValue;
-    }
-    onShortnameChange(shortnameValue) {
-        this.shortname = shortnameValue;
-    }
-    async onScreenshotSelection() {
-        const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
-        sampleObject.screenshots = [];
-        var img = new Image();
-
-        for (i = 0; i < files.length; i++) {
-            console.log(i);
-            var url = window.URL.createObjectURL(files[i]);
-            var screenshot = new Screenshot();
-            screenshot.src = files[i].path;
-            console.log("This is the file path" + files[i].path);
-            screenshot.type = files[i].type;
-            await this.getImageDimensions(url)
-                .then((data: any) => {
-                    screenshot.sizes = data.height + 'x' + data.width;
-                });
-
-            sampleObject.screenshots.push(screenshot);
-
-        }
-
-
-
-
-    }
-
-    getImageDimensions(url) {
-        let img = new Image();
-        img.src = url;
-        return new Promise((resolve, reject) => {
-
-            img.onload = function () {
-                var width = img.width;
-                var height = img.height;
-                resolve({ height, width });
-            };
-        });
-    }
-    onIconSelection(iconValue) {
-
-
-    }
-
-    onColorChange(colorValue) {
-        this.color = colorValue;
-
-    }
-    onLanguageChange(languageValue) {
-        console.log(languageValue);
-        var lang = JSON.parse(languageValue);
-        sampleObject.lang = lang.code;
-        sampleObject.dir = lang.dir;
-
-        // this.defaultLanguage = languageValue.code;
-        // console.log(languageValue.dir);
-        // sampleObject.dir = languageValue.dir;
-
-
-
-    }
-    onNameChange(nameValue) {
-        this.name = nameValue;
-        this.shortname = this.name;
-
-
-    }
-
-    onOrientationChange(orientationValue) {
-        this.orientation = OrientationList[orientationValue].type;
-
-    }
-
-    onDescChange(descValue) {
-        this.desc = descValue;
-    }
-
-    submit() {
-
-        //to-do make initial form data
-        //console.log(this.shadowRoot.querySelector('#manifestForm'));
-        //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
-        const file: any = (this.shadowRoot.querySelector('#icon') as HTMLInputElement).files[0];
-        console.log("This is the file" + file);
-        //to-do append default values that the API needs
-        // testData.append('')
-
-        let testData = {}
-
-        testData['fileName'] = file;
-        testData['padding'] = 0.3;
-        testData['colorOption'] = 0;
-        testData['color'] = 0;
-        testData['colorChanged'] = 0;
-        testData['platform'] = "windows10";
-        console.log("category" + this.categories);
-
-
-        sampleObject.description = this.desc;
-        sampleObject.name = this.name;
-        sampleObject.orientation = this.orientation;
-        sampleObject.short_name = this.shortname;
-        sampleObject.theme_color = this.color;
-        sampleObject.background_color = this.color;
-        sampleObject.categories = this.categories;
-
-        sampleObject.start_url = this.start_url;
-        (window as any).vscode.postMessage({
-            name: 'manifest',
-            FormData: testData,
-            JSONObject: sampleObject
-        });
-
-
-    }
-
-
-
 }
 

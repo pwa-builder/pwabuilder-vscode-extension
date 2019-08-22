@@ -41,3 +41,34 @@ export class ManifestInfo {
     icons: Icon[];
     categories: string;
 }
+
+export const categoryData = [
+"",
+"books",
+"business",
+"education",
+"entertainment",
+"finance",
+"fitness",
+"food",
+"games",
+"government",
+"health",
+"kids",
+"lifestyle",
+"magazines",
+"medical",
+"music",
+"navigation",
+"news",
+"personalization",
+"photo",
+"politics",
+"productivity",
+"security",
+"shopping",
+"social",
+"sports",
+"travel",
+"utilities",
+"weather"]

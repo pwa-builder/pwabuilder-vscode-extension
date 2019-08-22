@@ -68,6 +68,9 @@ export async function generateWebView(context) {
 
 function OrderJSON(JSONObject) {
   var OrderedObj = JSON.parse(JSON.stringify( JSONObject, ["dir", "lang", "name", "scope", "display", "start_url", "short_name", "theme_color","description", "orientation", "background_color","related_applications", "prefer_related_applications","screenshots","icons","categories"],4));
+  if(JSONObject.screenshots !== undefined) {
+    OrderedObj.screenshots = JSON.parse(JSON.stringify(JSONObject.screenshots));
+  }
   return OrderedObj;
 }
 
@@ -476,7 +479,6 @@ async function createAndDownloadFile(folderPath, website, fileName) {
 
 async function inspectFile(website, serviceWorker) {
   await createAndOpenTemporaryFile(website);
-
   await createAndOpenTemporaryFile(serviceWorker);
 }
 
