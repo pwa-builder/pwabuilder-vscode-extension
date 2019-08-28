@@ -7,7 +7,8 @@ import * as path from "path";
 export const src = "src";
 export const preview = "preview";
 export const download = "download";
-export const apiUrl  = "https://pwabuilder-api-prod.azurewebsites.net/serviceworkers/";
+export const ServiceWorkerApiUrl  = "https://pwabuilder-api-prod.azurewebsites.net/serviceworkers/";
+export const ImageGenApiUrl = "https://appimagegenerator-prod.azurewebsites.net";
 export const swFileName = 'pwabuilder-sw.js';
 export const manifestFileName = 'manifest.json';
 

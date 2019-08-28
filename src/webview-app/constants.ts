@@ -38,7 +38,6 @@ export class ManifestInfo {
     related_applications : string = "";
     prefer_related_applications : boolean = false;
     screenshots: Screenshot[];
-    icons: Icon[];
     categories: string;
 }
 

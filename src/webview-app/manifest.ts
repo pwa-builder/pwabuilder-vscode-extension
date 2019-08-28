@@ -1,11 +1,10 @@
 import { css, LitElement, html, property, customElement } from 'lit-element';
-import SelectPure from "select-pure";
 import { constants } from 'fs';
 import { OrientationList, ManifestInfo, Screenshot, categoryData } from './constants';
 import dropdownData from './languages.json';
 
 
-
+var icon = "";
 
 var sampleObject = new ManifestInfo();
 const myOptions = [
@@ -74,6 +73,24 @@ export class Manifest extends LitElement {
             justify-content: space-between;
             padding-right: 5em;
           }
+
+          
+        #colorinput {
+            line-height: 70px;
+            width: 50px;
+            height: 30px;
+            border-width: medium;
+            border: solid;
+        }
+
+        #colorinput:focus {
+            border-color: #5b7ad0;
+            outline: none;
+        }
+
+        .colorDesc {
+            padding-bottom: 10px;
+        }
 
           h1 {
               margin-left: 28px;
@@ -218,7 +235,9 @@ export class Manifest extends LitElement {
             margin-left: 5px;
           }
 
-          
+          #description {
+            border-width: thick;
+          }
 
 
           @keyframes slidein {
@@ -240,7 +259,7 @@ export class Manifest extends LitElement {
             }
           
             to {
-                transform: translateY(-80px);
+                transform: translateY(-30px);
                 opacity: 0;
             }
           }
@@ -258,107 +277,7 @@ export class Manifest extends LitElement {
             animation-duration: 5s;
             animation-name: rotateClockwise; 
           }
-          .select-wrapper {
-            margin: auto;
-            max-width: 600px;
-            width: calc(100% - 40px);
-          }
-          
-          .select-pure__select {
-            align-items: center;
-            background: #f9f9f8;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-            box-sizing: border-box;
-            color: #363b3e;
-            cursor: pointer;
-            display: flex;
-            font-size: 16px;
-            font-weight: 500;
-            justify-content: left;
-            min-height: 44px;
-            padding: 5px 10px;
-            position: relative;
-            transition: 0.2s;
-            width: 100%;
-          }
-          
-          .select-pure__options {
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-            box-sizing: border-box;
-            color: #363b3e;
-            display: none;
-            left: 0;
-            max-height: 221px;
-            overflow-y: scroll;
-            position: absolute;
-            top: 50px;
-            width: 100%;
-            z-index: 5;
-          }
-          
-          .select-pure__select--opened .select-pure__options {
-            display: block;
-          }
-          
-          .select-pure__option {
-            background: #fff;
-            border-bottom: 1px solid #e4e4e4;
-            box-sizing: border-box;
-            height: 44px;
-            line-height: 25px;
-            padding: 10px;
-          }
-          
-          .select-pure__option--selected {
-            color: #e4e4e4;
-            cursor: initial;
-            pointer-events: none;
-          }
-          
-          .select-pure__option--hidden {
-            display: none;
-          }
-          
-          .select-pure__selected-label {
-            background: #5e6264;
-            border-radius: 4px;
-            color: #fff;
-            cursor: initial;
-            display: inline-block;
-            margin: 5px 10px 5px 0;
-            padding: 3px 7px;
-          }
-          
-          .select-pure__selected-label:last-of-type {
-            margin-right: 0;
-          }
-          
-          .select-pure__selected-label i {
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 7px;
-          }
-          
-          .select-pure__selected-label i:hover {
-            color: #e4e4e4;
-          }
-          
-          .select-pure__autocomplete {
-            background: #f9f9f8;
-            border-bottom: 1px solid #e4e4e4;
-            border-left: none;
-            border-right: none;
-            border-top: none;
-            box-sizing: border-box;
-            font-size: 16px;
-            outline: none;
-            padding: 10px;
-            width: 100%;
-          }
+
           
         `;
     }
@@ -366,18 +285,15 @@ export class Manifest extends LitElement {
 
     firstUpdated() {
         console.log("First udpated");
-        var instance = new SelectPure(".example", {
-            options: myOptions,
-            multiple: true,
-            autocomplete: true,
-            value: ["NY", "CA"] // default: false
-        });
+        console.log(this.shadowRoot.querySelector(".example"));
 
-        console.log()
+       
+
+
+
     }
 
     toggleAdvancedSection() {
-        console.log(this.shadowRoot.querySelector(".example"));
         var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
         var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
 
@@ -393,24 +309,21 @@ export class Manifest extends LitElement {
             if (el.style.display !== 'block') {
                 el.style.display = 'block';
                 console.log('in the first');
+                console.log(el);
 
             }
             else {
-
                 el.style.animationDuration = '400ms';
                 el.style.animationName = 'slideOut';
-                el.addEventListener("animationend", function (e) {
-                    // var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
-                    console.log("In event handler");
-                    //     if (el.style.display === 'block') {
-                    //         el.style.display = 'none';
-                    // }
-                });
                 setTimeout(() => {
                     el.style.display = 'none';
-                }, 400);
+                    el.style.animationName = 'slidein';
+                    console.log('in the second');
+                    console.log(el);
+                }, 220);
 
-                console.log('in the second');
+
+
 
             }
         }
@@ -469,21 +382,7 @@ export class Manifest extends LitElement {
         });
     }
     onIconSelection(iconValue) {
-        var formData = new FormData();
-        var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
-
-        // formData.append('username', 'abc123');
-        formData.append('fileName', fileField.files[0]);
-
-        fetch('https://appimagegenerator-pre.azurewebsites.net/api/image', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .catch(error => console.error('Error:', error))
-            .then(response => console.log('Success:', JSON.stringify(response)));
-        const files: any = (this.shadowRoot.querySelector('#icon') as HTMLInputElement).files[0];
-        console.log(files);
+       
     }
 
     onColorChange(colorValue) {
@@ -519,27 +418,43 @@ export class Manifest extends LitElement {
         this.desc = descValue;
     }
 
-    submit() {
-
+    async submit() {
+        var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+  
         //to-do make initial form data
         //console.log(this.shadowRoot.querySelector('#manifestForm'));
         //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
-        const file: any = (this.shadowRoot.querySelector('#icon') as HTMLInputElement).files[0];
-        console.log("This is the file" + file);
-        //to-do append default values that the API needs
+        var formData = new FormData();
+        var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+
+        // formData.append('username', 'abc123');
+        formData.append('fileName', fileField.files[0]);
+        formData.append('padding', '0.2');
+        formData.append('platform', 'android');
+
+        /*fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error))
+            .then(response =>  {
+                console.log('Success:', JSON.stringify(response));
+                icon = response.Uri;
+            });*/
+
+        const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        icon = data.Uri;
+        
+
         // testData.append('')
         if (this.shortname.trim() === "") {
             this.shortname = this.name;
         }
-        let testData = {}
-
-        testData['fileName'] = file;
-        testData['padding'] = 0.3;
-        testData['colorOption'] = 0;
-        testData['color'] = 0;
-        testData['colorChanged'] = 0;
-        testData['platform'] = "windows10";
-        console.log("category" + this.categories);
 
 
         sampleObject.description = this.desc;
@@ -553,8 +468,8 @@ export class Manifest extends LitElement {
         sampleObject.start_url = this.start_url;
         (window as any).vscode.postMessage({
             name: 'manifest',
-            FormData: testData,
-            JSONObject: sampleObject
+            JSONObject: sampleObject,
+            icon: icon
         });
 
 
@@ -589,7 +504,7 @@ export class Manifest extends LitElement {
             </label>
             <p> Used for tiles or home screens </p>
             <div>
-                <input id="shortname" name="short-name" type="text" maxlength="255" value="${this.shortname}" @change="${e => this.onShortnameChange(e.target.value)}" required>
+                <input id="shortname" name="short-name" type="text" placeholder="App Short Name" maxlength="255" value="${this.shortname}" @change="${e => this.onShortnameChange(e.target.value)}" required>
             </div>
         </div>
 
@@ -599,7 +514,7 @@ export class Manifest extends LitElement {
                 <h4>Description</h4> </label>
             <p>Used for App listings </p>
             <div>
-                <textarea id="description" name="description" @change="${e => this.onDescChange(e.target.value)}" required>${this.desc}</textarea>
+                <textarea id="description" name="description" placeholder="App Description"  @change="${e => this.onDescChange(e.target.value)}" required>${this.desc}</textarea>
             </div>
         </div>
 
@@ -610,17 +525,21 @@ export class Manifest extends LitElement {
       
 
         <div>
-            <label class="fieldName" for="color">Color </label>
+            <div class="colorlabel">
+                <label class="fieldName" for="color">Color </label>
+            </div>
+            <p class="colorDesc"> Select the background color for your splash screen and tile </p>
             <div>
-                <input type="color" value="${this.color}" @change="${e => this.onColorChange(e.target.value)}">
+                <input type="color" id="colorinput" value="${this.color}" @change="${e => this.onColorChange(e.target.value)}">
             </div>
         </div>
 
         <div>
             <label class="fieldName">
                 <h4>Upload an Icon</h4> </label>
+            <p> We suggest at least one image 512×512 or larger </p>
             <div>
-                <input id="icon" name="fileName" type="file" @change="${e => this.onIconSelection(e.target.value)}" />
+                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile" @change="${e => this.onIconSelection(e.target.value)}" />
             </div>
         </div>
 
@@ -637,7 +556,7 @@ export class Manifest extends LitElement {
             <label class="fieldName">Upload Screenshots</label>
             <p>We suggest at least one image 512×512 or larger</p>
             <div>
-                <input id="screenshot" type="file" accept="image/*" @change="${e => this.onScreenshotSelection()}" multiple />
+                <input id="screenshot" type="file" accept="image/*" class="inputfile"  @change="${e => this.onScreenshotSelection()}" multiple />
             </div>
         </div>
         <div>
@@ -716,10 +635,12 @@ export class Manifest extends LitElement {
  </button>
 </div>
 
-<input id="saveForm" type="submit" name="submit" value="Generate" @click=${() => this.submit()}/>
+<input id="saveForm" type="submit" name="submit" value="Generate" form="manifestForm" @click=${() => this.submit()}/>
         `;
 
 
     }
 }
+
+
 

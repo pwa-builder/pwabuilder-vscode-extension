@@ -18,11 +18,11 @@
 		"commands": [
 			{
 				"command": "extension.ServiceWorker.start",
-				"title": "Start new Service Worker session"
+				"title": "PWABuilder - Generate Service Worker"
 			},
 			{
 				"command": "extension.manifest.start",
-				"title": "Start new Manifest session"
+				"title": "PWABuilder - Generate Manifest"
 			}
 		]
 	},
@@ -49,15 +49,18 @@
 	},
 	"dependencies": {
 		"@types/node-fetch": "^2.3.7",
+		"adm-zip": "^0.4.13",
 		"create-object-url": "^1.0.2",
 		"image-size": "^0.7.4",
 		"lit-element": "^2.2.0",
 		"lit-html": "^1.1.1",
 		"node-fetch": "^2.6.0",
 		"prismjs": "^1.17.1",
+		"request": "^2.88.0",
 		"revoke-object-url": "^1.0.2",
 		"select-pure": "^0.2.0",
 		"tmp": "^0.1.0",
+		"unzipper": "^0.10.4",
 		"upath": "^1.1.2"
 	},
 	"configuration": {

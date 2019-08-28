@@ -4,7 +4,10 @@ import * as path from "path";
 import * as upath from 'upath';
 import * as constants from './constants';
 
+const https = require('https');
 const fs = require('fs').promises;
+const request = require('request');
+const AdmZip = require('adm-zip');
 
 const fetch = require('node-fetch');
 const tmp = require('tmp');
@@ -58,7 +61,7 @@ export async function generateWebView(context) {
 
   panel.webview.onDidReceiveMessage(async message => {
     switch (message.name) {
-      case 'manifest': await generateManifest(message.JSONObject); break;
+      case 'manifest': await generateManifest(message); break;
       case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
       case 'sw': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
       case 'download': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
@@ -67,17 +70,101 @@ export async function generateWebView(context) {
 }
 
 function OrderJSON(JSONObject) {
-  var OrderedObj = JSON.parse(JSON.stringify( JSONObject, ["dir", "lang", "name", "scope", "display", "start_url", "short_name", "theme_color","description", "orientation", "background_color","related_applications", "prefer_related_applications","screenshots","icons","categories"],4));
-  if(JSONObject.screenshots !== undefined) {
+  var OrderedObj = JSON.parse(JSON.stringify(JSONObject, ["dir", "lang", "name", "scope", "display", "start_url", "short_name", "theme_color", "description", "orientation", "background_color", "related_applications", "prefer_related_applications", "screenshots", "icons", "categories"], 4));
+  if (JSONObject.screenshots !== undefined) {
     OrderedObj.screenshots = JSON.parse(JSON.stringify(JSONObject.screenshots));
   }
   return OrderedObj;
 }
 
+async function generateIcons(iconUrl: string, folderPath) {
 
-async function generateManifest(JSONObject) {
+  // console.log(iconUrl);
+  /*const file = fsSync.createWriteStream("icons.zip");
+  request(constants.ImageGenApiUrl + iconUrl, (err, res) => {
+    if (err) {
+      console.error(err);
+    }
+    else {
+      file.pipe(res);
+      file.on('end', () => {
+        console.log('we should have a file now');
+      });
+    }
+  });*/
+
+  const zipPath = folderPath + "/icons.zip";
+  const unzippedPath = folderPath + "/icons";
+
+  request(constants.ImageGenApiUrl + iconUrl).pipe(fsSync.createWriteStream(zipPath)).on('finish', () => {
+    let zip = new AdmZip(zipPath);
+    const entries = zip.getEntries();
+  
+    console.log(entries);
+
+
+    zip.extractAllTo(unzippedPath, true);
+
+    /*entries.forEach((entry) => {
+      zip.extractEntryTo(entry.)
+    })*/
+  });
+
+
+
+  // console.log(constants.ImageGenApiUrl + iconUrl);
+  // https.get(constants.ImageGenApiUrl + iconUrl, funct, ion (response) {
+  //   const stream = response.pipe(file);
+
+  //   stream.on('finish', (e) => {
+  //     const zipPath: string = path.resolve((file.path as string));
+  //     console.log(zipPath);
+
+  //     fsSync.createReadStream(zipPath).pipe(unzip.Parse())
+  //     .on('entry', function(entry) {
+  //       console.log(entry);
+  //     });
+  //   });
+  // });
+
+  /*https.get(constants.ImageGenApiUrl + iconUrl, function (response) {
+
+    response.pipe(file);
+
+    response.on('data', (chunk) => {
+      console.log('chunk of data', chunk);
+    });
+
+     response.on('end', (data) => {
+       console.log(data);
+     });
+
+    
+
+    // const response = await fetch(constants.ImageGenApiUrl + iconUrl);
+    // console.log(response);
+
+    // const data = await response.blob();
+    // console.log(data);
+
+    // const anchorEl = document.createElement('anchor');
+    // console.log(anchorEl);
+
+    // let file = fs.createWriteStream();
+
+  }).on('error', (err) => {
+    console.error(err);
+  });*/
+
+
+}
+
+
+
+async function generateManifest(message) {
   //HARDCODE JSON object to maintain order of keys
-  JSONObject = OrderJSON(JSONObject);
+
+  var JSONObject = OrderJSON(message.JSONObject);
   var srcIndex = -1;
   var folderPath;
   if (vscode.workspace.workspaceFolders === undefined) {
@@ -108,6 +195,7 @@ async function generateManifest(JSONObject) {
   if (JSONObject.screenshots !== undefined) {
     JSONObject = await downloadScreenshots(JSONObject, folderPath);
   } //Downloads screenshots into the folder where manifest.json will be created.
+  await generateIcons(message.icon, folderPath);
   var JSONString = JSON.stringify(JSONObject, null, 4);
   await createAndDownloadFile(folderPath, JSONString, constants.manifestFileName);
 }
@@ -118,27 +206,27 @@ export async function generateManifestWebview(context) {
       language: 'json',
       scheme: 'file',
       pattern: '**/manifest.json'
-  },
-		{
-			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+    },
+    {
+      provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 
-				// get all text until the `position` and check if it reads `console.`
-				// and iff so then complete if `log`, `warn`, and `error`
-				let linePrefix = document.lineAt(position).text.substr(0, position.character);
-				if (!linePrefix.includes('display')) {
-					return undefined;
-				}
+        // get all text until the `position` and check if it reads `console.`
+        // and iff so then complete if `log`, `warn`, and `error`
+        let linePrefix = document.lineAt(position).text.substr(0, position.character);
+        if (!linePrefix.includes('display')) {
+          return undefined;
+        }
 
-				return [
-					new vscode.CompletionItem('"standalone"', vscode.CompletionItemKind.Text),
-					new vscode.CompletionItem('"fullscreen"', vscode.CompletionItemKind.Text),
-          new vscode.CompletionItem('"minimal-ui"',vscode.CompletionItemKind.Text),
-          new vscode.CompletionItem('"browser"',vscode.CompletionItemKind.Text),
-				];
-			}
-		},
-		':', '"',': "', ':"' // triggered whenever a '.' is being typed
-	);
+        return [
+          new vscode.CompletionItem('"standalone"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"fullscreen"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"minimal-ui"', vscode.CompletionItemKind.Text),
+          new vscode.CompletionItem('"browser"', vscode.CompletionItemKind.Text),
+        ];
+      }
+    },
+    ':', '"', ': "', ':"' // triggered whenever a '.' is being typed
+  );
 
   context.subscriptions.push(provider2);
 
@@ -178,7 +266,7 @@ export async function generateManifestWebview(context) {
   panel.webview.onDidReceiveMessage(async message => {
     console.log(message.FormData);
     switch (message.name) {
-      case 'manifest': await generateManifest(message.JSONObject); break;
+      case 'manifest': await generateManifest(message); break;
       case 'Ready!!!!!!': panel.webview.postMessage({ data: serviceWorkers }); break;
       case 'sw': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
       case 'download': getServiceWorkerCode(message.serviceWorkerId, message.type); break;
@@ -218,31 +306,17 @@ async function downloadScreenshots(JSONObject, folderPath) {
     }).then((data) => {
       console.log(upath.toUnix(fileName));
       JSONObject.screenshots[i].src = upath.toUnix(fileName);
-       //Change src in the jsonObject to the new path
+      //Change src in the jsonObject to the new path
     });
 
   }
   return JSONObject;
 }
 
-async function generateIcons(formData) {
-  console.log('formData', formData);
 
-  await fetch('https://appimagegenerator-pre.azurewebsites.net/api/image', {
-    method: 'POST',
-    body: formData,
-    headers: {
-      "Accept": "application/json"
-    }
-  }).then((res) => {
-    console.log("This is the uri" + res.data.Uri);
-    //const fileUri = res.data.Uri
-
-  });
-}
 async function getSWDesc(context: any, panel: vscode.WebviewPanel) {
 
-  const response = await fetch(constants.apiUrl + "getServiceWorkersDescription");
+  const response = await fetch(constants.ServiceWorkerApiUrl + "getServiceWorkersDescription");
   const data = await response.json();
   if (data && data.serviceworkers) {
 
@@ -460,7 +534,7 @@ async function getFileOrFolderPath(options, defaultFolder?) {
 
 async function fetchCode(serviceWorkerId: number) {
 
-  return await fetch(constants.apiUrl + "previewCode?ids=" + serviceWorkerId)
+  return await fetch(constants.ServiceWorkerApiUrl + "previewCode?ids=" + serviceWorkerId)
     .then((res: any) => res.json());
 
 
