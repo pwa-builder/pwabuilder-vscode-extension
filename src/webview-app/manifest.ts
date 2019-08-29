@@ -1,4 +1,7 @@
 import { css, LitElement, html, property, customElement } from 'lit-element';
+
+import { SelectPure } from './SelectPure';
+
 import { constants } from 'fs';
 import { OrientationList, ManifestInfo, Screenshot, categoryData } from './constants';
 import dropdownData from './languages.json';
@@ -7,68 +10,226 @@ import dropdownData from './languages.json';
 var icon = "";
 
 var sampleObject = new ManifestInfo();
-const myOptions = [
 
-    {
-
-        label: "New York",
-
-        value: "NY",
-
-    },
-
-    {
-
-        label: "Washington",
-
-        value: "WA",
-
-    },
-
-    {
-
-        label: "California",
-
-        value: "CA",
-
-    },
-
-    {
-
-        label: "New Jersey",
-
-        value: "NJ",
-
-    },
-
-    {
-
-        label: "North Carolina",
-
-        value: "NC",
-
-    },
-
-];
 
 var i;
 @customElement('manifest-gen')
 export class Manifest extends LitElement {
-    @property() name = '';
-    @property() shortname = '';
-    @property() desc;
-    @property() lang = '';
-    @property() orientation = OrientationList[0].type;
-    @property() icons = [];
-    @property() languageData = dropdownData;
-    @property() defaultLanguage = "en";
-    @property() color = "#ffffff";
-    @property() screenshots: Screenshot[];
-    @property() categories = "";
-    @property() start_url = '/';
-    @property() items = ["Does", "This", "Work"];
-    static get styles() {
-        return css`
+  @property() name = '';
+  @property() shortname = '';
+  @property() desc;
+  @property() lang = '';
+  @property() orientation = OrientationList[0].type;
+  @property() icons = [];
+  @property() languageData = dropdownData;
+  @property() defaultLanguage = "en";
+  @property() color = "#ffffff";
+  @property() screenshots: Screenshot[];
+  @property() categories = "";
+  @property() start_url = '/';
+  @property() items = ["Does", "This", "Work"];
+
+
+  static get styles() {
+    return css`
+    .select-wrapper {
+  margin: auto;
+  max-width: 600px;
+  width: calc(100% - 40px);
+}
+
+.select-pure__select {
+  align-items: center;
+  background: #f9f9f8;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  color: #363b3e;
+  cursor: pointer;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+  justify-content: left;
+  min-height: 44px;
+  padding: 5px 10px;
+  position: relative;
+  transition: 0.2s;
+  width: 100%;
+}
+
+.select-pure__options {
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  color: #363b3e;
+  display: none;
+  left: 0;
+  max-height: 221px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 5;
+}
+
+.select-pure__select--opened .select-pure__options {
+  display: block;
+}
+
+.select-pure__option {
+  background: #fff;
+  border-bottom: 1px solid #e4e4e4;
+  box-sizing: border-box;
+  height: 44px;
+  line-height: 25px;
+  padding: 10px;
+}
+
+.select-pure__option--selected {
+  color: #e4e4e4;
+  cursor: initial;
+  pointer-events: none;
+}
+
+.select-pure__option--hidden {
+  display: none;
+}
+
+.select-pure__selected-label {
+  background: #5e6264;
+  border-radius: 4px;
+  color: #fff;
+  cursor: initial;
+  display: inline-block;
+  margin: 5px 10px 5px 0;
+  padding: 3px 7px;
+}
+
+.select-pure__selected-label:last-of-type {
+  margin-right: 0;
+}
+
+.select-pure__selected-label i {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 7px;
+}
+
+.select-pure__selected-label i:hover {
+  color: #e4e4e4;
+}
+
+.select-pure__autocomplete {
+  background: #f9f9f8;
+  border-bottom: 1px solid #e4e4e4;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  box-sizing: border-box;
+  font-size: 16px;
+  outline: none;
+  padding: 10px;
+  width: 100%;
+}
+
+.select-pure__select {
+        align-items: center;
+        background: #f9f9f8;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        color: #363b3e;
+        cursor: pointer;
+        display: flex;
+        font-size: 16px;
+        font-weight: 500;
+        justify-content: left;
+        min-height: 44px;
+        padding: 5px 10px;
+        position: relative;
+        transition: 0.2s;
+        width: 100%;
+      }
+
+      .select-pure__options {
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        color: #363b3e;
+        display: none;
+        left: 0;
+        max-height: 221px;
+        overflow-y: scroll;
+        position: absolute;
+        top: 50px;
+        width: 100%;
+        z-index: 5;
+      }
+
+      .select-pure__select--opened .select-pure__options {
+        display: block;
+      }
+
+      .select-pure__option {
+        background: #fff;
+        border-bottom: 1px solid #e4e4e4;
+        box-sizing: border-box;
+        height: 44px;
+        line-height: 25px;
+        padding: 10px;
+      }
+
+      .select-pure__option--selected {
+        color: #e4e4e4;
+        cursor: initial;
+        pointer-events: none;
+      }
+
+      .select-pure__option--hidden {
+        display: none;
+      }
+
+      .select-pure__selected-label {
+        background: #5e6264;
+        border-radius: 4px;
+        color: #fff;
+        cursor: initial;
+        display: inline-block;
+        margin: 5px 10px 5px 0;
+        padding: 3px 7px;
+      }
+
+      .select-pure__selected-label:last-of-type {
+        margin-right: 0;
+      }
+
+      .select-pure__selected-label i {
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 7px;
+      }
+
+      .select-pure__selected-label i:hover {
+        color: #e4e4e4;
+      }
+
+      .select-pure__autocomplete {
+        background: #f9f9f8;
+        border-bottom: 1px solid #e4e4e4;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        box-sizing: border-box;
+        font-size: 16px;
+        outline: none;
+        padding: 10px;
+        width: 100%;
+      }
+
         .animatedSection {
             display: flex;
             justify-content: space-between;
@@ -284,229 +445,281 @@ export class Manifest extends LitElement {
 
           
         `;
+  }
+
+  firstUpdated() {
+    console.log("First udpated");
+    console.log(this.shadowRoot.querySelector(".example"));
+
+    const myOptions = [
+
+      {
+
+        label: "New York",
+
+        value: "NY",
+
+      },
+
+      {
+
+        label: "Washington",
+
+        value: "WA",
+
+      },
+
+      {
+
+        label: "California",
+
+        value: "CA",
+
+      },
+
+      {
+
+        label: "New Jersey",
+
+        value: "NJ",
+
+      },
+
+      {
+
+        label: "North Carolina",
+
+        value: "NC",
+
+      },
+
+    ];
+
+    const element = this.shadowRoot.querySelector(".example");
+    const containerEl = this.shadowRoot.querySelector(".animatedSection")
+
+    let instance = new SelectPure(element, {
+      options: myOptions,
+      multiple: true,
+      value: ['NY'],
+      autocomplete: true,
+      icon: 'remove'
+      /*multiple: true,
+      autocomplete: true*/
+    }, this.shadowRoot.host);
+  }
+
+  toggleAdvancedSection() {
+    var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
+    var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
+
+
+    // console.log(el.style.display);
+    // if(rotatePath !== null) {
+    //     rotatePath.style.animationName = 'rotateClockwise';
+    //     rotatePath.style.animationDuration = '400ms';
+    // }
+
+    console.log(el.style.display);
+    if (el !== null) {
+      if (el.style.display !== 'block') {
+        el.style.display = 'block';
+        console.log('in the first');
+        console.log(el);
+
+      }
+      else {
+        el.style.animationDuration = '400ms';
+        el.style.animationName = 'slideOut';
+        setTimeout(() => {
+          el.style.display = 'none';
+          el.style.animationName = 'slidein';
+          console.log('in the second');
+          console.log(el);
+        }, 220);
+
+
+
+
+      }
     }
+  }
 
 
-    firstUpdated() {
-        console.log("First udpated");
-        console.log(this.shadowRoot.querySelector(".example"));
+  listener() {
 
-       
+  }
+  onCategoryChange(categoryValue) {
+    //console.log(this.nodeValue;
+    //this.categories = categoryValue;
+  }
+  onStartUrlChange(startUrlValue) {
+    this.start_url = startUrlValue;
+  }
+  onShortnameChange(shortnameValue) {
+    this.shortname = shortnameValue;
+  }
+  async onScreenshotSelection() {
+    const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
+    sampleObject.screenshots = [];
+    var img = new Image();
 
-
-
-    }
-
-    toggleAdvancedSection() {
-        var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
-        var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
-
-
-        // console.log(el.style.display);
-        // if(rotatePath !== null) {
-        //     rotatePath.style.animationName = 'rotateClockwise';
-        //     rotatePath.style.animationDuration = '400ms';
-        // }
-
-        console.log(el.style.display);
-        if (el !== null) {
-            if (el.style.display !== 'block') {
-                el.style.display = 'block';
-                console.log('in the first');
-                console.log(el);
-
-            }
-            else {
-                el.style.animationDuration = '400ms';
-                el.style.animationName = 'slideOut';
-                setTimeout(() => {
-                    el.style.display = 'none';
-                    el.style.animationName = 'slidein';
-                    console.log('in the second');
-                    console.log(el);
-                }, 220);
-
-
-
-
-            }
-        }
-    }
-
-
-    listener() {
-
-    }
-    onCategoryChange(categoryValue) {
-        //console.log(this.nodeValue;
-        //this.categories = categoryValue;
-    }
-    onStartUrlChange(startUrlValue) {
-        this.start_url = startUrlValue;
-    }
-    onShortnameChange(shortnameValue) {
-        this.shortname = shortnameValue;
-    }
-    async onScreenshotSelection() {
-        const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
-        sampleObject.screenshots = [];
-        var img = new Image();
-
-        for (i = 0; i < files.length; i++) {
-            console.log(i);
-            var url = window.URL.createObjectURL(files[i]);
-            var screenshot = new Screenshot();
-            screenshot.src = files[i].path;
-            console.log("This is the file path" + files[i].path);
-            screenshot.type = files[i].type;
-            await this.getImageDimensions(url)
-                .then((data: any) => {
-                    screenshot.sizes = data.height + 'x' + data.width;
-                });
-
-            sampleObject.screenshots.push(screenshot);
-
-        }
-
-
-
-
-    }
-
-    getImageDimensions(url) {
-        let img = new Image();
-        img.src = url;
-        return new Promise((resolve, reject) => {
-
-            img.onload = function () {
-                var width = img.width;
-                var height = img.height;
-                resolve({ height, width });
-            };
-        });
-    }
-    onIconSelection(iconValue) {
-       
-    }
-
-    onColorChange(colorValue) {
-        this.color = colorValue;
-
-    }
-    onLanguageChange(languageValue) {
-        console.log(languageValue);
-        var lang = JSON.parse(languageValue);
-        sampleObject.lang = lang.code;
-        sampleObject.dir = lang.dir;
-
-        // this.defaultLanguage = languageValue.code;
-        // console.log(languageValue.dir);
-        // sampleObject.dir = languageValue.dir;
-
-
-
-    }
-    onNameChange(nameValue) {
-        this.name = nameValue;
-        if (this.shortname.trim() === "") {
-            this.shortname = this.name;
-        }
-    }
-
-    onOrientationChange(orientationValue) {
-        this.orientation = OrientationList[orientationValue].type;
-
-    }
-
-    onDescChange(descValue) {
-        this.desc = descValue;
-    }
-
-    async submit() {
-        var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
-  
-        //to-do make initial form data
-        //console.log(this.shadowRoot.querySelector('#manifestForm'));
-        //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
-        var formData = new FormData();
-        var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
-
-        // formData.append('username', 'abc123');
-        formData.append('fileName', fileField.files[0]);
-        formData.append('padding', '0.2');
-        formData.append('platform', 'android');
-
-        /*fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .catch(error => console.error('Error:', error))
-            .then(response =>  {
-                console.log('Success:', JSON.stringify(response));
-                icon = response.Uri;
-            });*/
-
-        const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-        icon = data.Uri;
-        
-
-        // testData.append('')
-        if (this.shortname.trim() === "") {
-            this.shortname = this.name;
-        }
-
-
-        sampleObject.description = this.desc;
-        sampleObject.name = this.name;
-        sampleObject.orientation = this.orientation;
-        sampleObject.short_name = this.shortname;
-        sampleObject.theme_color = this.color;
-        sampleObject.background_color = this.color;
-        sampleObject.categories = this.categories;
-
-        sampleObject.start_url = this.start_url;
-        (window as any).vscode.postMessage({
-            name: 'manifest',
-            JSONObject: sampleObject,
-            icon: icon
+    for (i = 0; i < files.length; i++) {
+      console.log(i);
+      var url = window.URL.createObjectURL(files[i]);
+      var screenshot = new Screenshot();
+      screenshot.src = files[i].path;
+      console.log("This is the file path" + files[i].path);
+      screenshot.type = files[i].type;
+      await this.getImageDimensions(url)
+        .then((data: any) => {
+          screenshot.sizes = data.height + 'x' + data.width;
         });
 
+      sampleObject.screenshots.push(screenshot);
 
     }
 
-    onCategoriesChange(categoriesValue) {
-        if(categoriesValue.length >= 2) {
-        this.items = ["Does", "This", "Work"];
-        if (categoriesValue && categoriesValue.trim() !== '') {
-            this.items = this.items.filter((item) => {
-                return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
-            });
-            console.log("These are the items", this.items);
-            if(this.items.length > 0) {
-                (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
-            }
-            else
-            {
-                (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
-            }
 
+
+
+  }
+
+  getImageDimensions(url) {
+    let img = new Image();
+    img.src = url;
+    return new Promise((resolve, reject) => {
+
+      img.onload = function () {
+        var width = img.width;
+        var height = img.height;
+        resolve({ height, width });
+      };
+    });
+  }
+  onIconSelection(iconValue) {
+
+  }
+
+  onColorChange(colorValue) {
+    this.color = colorValue;
+
+  }
+  onLanguageChange(languageValue) {
+    console.log(languageValue);
+    var lang = JSON.parse(languageValue);
+    sampleObject.lang = lang.code;
+    sampleObject.dir = lang.dir;
+
+    // this.defaultLanguage = languageValue.code;
+    // console.log(languageValue.dir);
+    // sampleObject.dir = languageValue.dir;
+
+
+
+  }
+  onNameChange(nameValue) {
+    this.name = nameValue;
+    if (this.shortname.trim() === "") {
+      this.shortname = this.name;
+    }
+  }
+
+  onOrientationChange(orientationValue) {
+    this.orientation = OrientationList[orientationValue].type;
+
+  }
+
+  onDescChange(descValue) {
+    this.desc = descValue;
+  }
+
+  async submit() {
+    var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+
+    //to-do make initial form data
+    //console.log(this.shadowRoot.querySelector('#manifestForm'));
+    //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
+    var formData = new FormData();
+    var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+
+    // formData.append('username', 'abc123');
+    formData.append('fileName', fileField.files[0]);
+    formData.append('padding', '0.2');
+    formData.append('platform', 'android');
+
+    /*fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error))
+        .then(response =>  {
+            console.log('Success:', JSON.stringify(response));
+            icon = response.Uri;
+        });*/
+
+    const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await response.json();
+    icon = data.Uri;
+
+
+    // testData.append('')
+    if (this.shortname.trim() === "") {
+      this.shortname = this.name;
+    }
+
+
+    sampleObject.description = this.desc;
+    sampleObject.name = this.name;
+    sampleObject.orientation = this.orientation;
+    sampleObject.short_name = this.shortname;
+    sampleObject.theme_color = this.color;
+    sampleObject.background_color = this.color;
+    sampleObject.categories = this.categories;
+
+    sampleObject.start_url = this.start_url;
+    (window as any).vscode.postMessage({
+      name: 'manifest',
+      JSONObject: sampleObject,
+      icon: icon
+    });
+
+
+  }
+
+  onCategoriesChange(categoriesValue) {
+    if (categoriesValue.length >= 2) {
+
+      this.items = ["Does", "This", "Work"];
+
+      if (categoriesValue && categoriesValue.trim() !== '') {
+        this.items = this.items.filter((item) => {
+          return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
+        });
+        console.log("These are the items", this.items);
+        if (this.items.length > 0) {
+          (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
         }
-       
+        else {
+          (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+        }
+
+      }
+
     }
     else {
-        (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+      (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
     }
-    }
+  }
 
 
 
-    render() {
-        return html`<h1><a>Manifest Generator</a></h1>
+  render() {
+    return html`<h1><a>Manifest Generator</a></h1>
         
    <form enctype="multipart/form-data" method="post" id="manifestForm" name="manifestForm">
     <div>
@@ -595,7 +808,7 @@ export class Manifest extends LitElement {
                 <select id="language" name="language" @change="${e => this.onLanguageChange(e.target.value)}">
 
                     ${this.languageData.map((i) => html`
-                    <option value=${JSON.stringify(i)}>${i.name} `)}
+                    <option value=${JSON.stringify(i)}>${i.name} `)}</option>
 
                 </select>
             </div>
@@ -609,7 +822,7 @@ export class Manifest extends LitElement {
                 <select id="orientation" name="orientation" @change="${e => this.onOrientationChange(e.target.value)}">
                     ${OrientationList.map((i) => html`
                     <option value=${i.id} @click=${() =>
-                this.onOrientationChange(i.id)}>${i.type} `)}
+        this.onOrientationChange(i.id)}>${i.type} `)}
 
                 </select>
             </div>
@@ -621,16 +834,16 @@ export class Manifest extends LitElement {
             <label class="fieldName">Category </label>
             <div>
                 <span class="example"></span>
-                <textarea id="categories" name="categories" @keyup="${e => this.onCategoriesChange(e.target.value)}" required>Uhh</textarea>
+                <!--<textarea id="categories" name="categories" @keyup="${e => this.onCategoriesChange(e.target.value)}" required>Uhh</textarea>-->
                 <!-- <input id="category" name="category" type="text" maxlength="255" value="${this.categories}" @change="${e => this.onCategoryChange(e)}"> -->
-                <div id="displayList">
+               <!-- <div id="displayList">
                     <ul id="categoriesList">
                     ${this.items.map((i) => html`
                         <li value=${i}>${i} `)}
                     </ul>
         
                 </div>
-                </span>
+                </span>-->
             </div>        
             </div>
         </div>
@@ -665,7 +878,7 @@ export class Manifest extends LitElement {
         `;
 
 
-    }
+  }
 }
 
 
