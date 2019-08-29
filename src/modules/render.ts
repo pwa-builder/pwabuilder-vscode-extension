@@ -96,7 +96,11 @@ async function generateIcons(iconUrl: string, folderPath) {
   const zipPath = folderPath + "/icons.zip";
   const unzippedPath = folderPath + "/icons";
 
-  request(constants.ImageGenApiUrl + iconUrl).pipe(fsSync.createWriteStream(zipPath)).on('finish', () => {
+
+
+ 
+  return new Promise((resolve) => {
+    request(constants.ImageGenApiUrl + iconUrl).pipe(fsSync.createWriteStream(zipPath)).on('finish', () => {
     let zip = new AdmZip(zipPath);
     const entries = zip.getEntries();
   
@@ -104,58 +108,14 @@ async function generateIcons(iconUrl: string, folderPath) {
 
 
     zip.extractAllTo(unzippedPath, true);
-
-    /*entries.forEach((entry) => {
-      zip.extractEntryTo(entry.)
-    })*/
-  });
-
-
-
-  // console.log(constants.ImageGenApiUrl + iconUrl);
-  // https.get(constants.ImageGenApiUrl + iconUrl, funct, ion (response) {
-  //   const stream = response.pipe(file);
-
-  //   stream.on('finish', (e) => {
-  //     const zipPath: string = path.resolve((file.path as string));
-  //     console.log(zipPath);
-
-  //     fsSync.createReadStream(zipPath).pipe(unzip.Parse())
-  //     .on('entry', function(entry) {
-  //       console.log(entry);
-  //     });
-  //   });
-  // });
-
-  /*https.get(constants.ImageGenApiUrl + iconUrl, function (response) {
-
-    response.pipe(file);
-
-    response.on('data', (chunk) => {
-      console.log('chunk of data', chunk);
+   
+    fsSync.readdir(unzippedPath, function(err, items) {
+      console.log(items);
+      resolve();
+      
     });
-
-     response.on('end', (data) => {
-       console.log(data);
-     });
-
-    
-
-    // const response = await fetch(constants.ImageGenApiUrl + iconUrl);
-    // console.log(response);
-
-    // const data = await response.blob();
-    // console.log(data);
-
-    // const anchorEl = document.createElement('anchor');
-    // console.log(anchorEl);
-
-    // let file = fs.createWriteStream();
-
-  }).on('error', (err) => {
-    console.error(err);
-  });*/
-
+  });
+});
 
 }
 

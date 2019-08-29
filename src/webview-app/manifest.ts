@@ -66,6 +66,7 @@ export class Manifest extends LitElement {
     @property() screenshots: Screenshot[];
     @property() categories = "";
     @property() start_url = '/';
+    @property() items = ["Does", "This", "Work"];
     static get styles() {
         return css`
         .animatedSection {
@@ -277,6 +278,9 @@ export class Manifest extends LitElement {
             animation-duration: 5s;
             animation-name: rotateClockwise; 
           }
+          #displayList {
+              display: None;
+          }
 
           
         `;
@@ -475,6 +479,30 @@ export class Manifest extends LitElement {
 
     }
 
+    onCategoriesChange(categoriesValue) {
+        if(categoriesValue.length >= 2) {
+        this.items = ["Does", "This", "Work"];
+        if (categoriesValue && categoriesValue.trim() !== '') {
+            this.items = this.items.filter((item) => {
+                return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
+            });
+            console.log("These are the items", this.items);
+            if(this.items.length > 0) {
+                (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
+            }
+            else
+            {
+                (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+            }
+
+        }
+       
+    }
+    else {
+        (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+    }
+    }
+
 
 
     render() {
@@ -593,15 +621,13 @@ export class Manifest extends LitElement {
             <label class="fieldName">Category </label>
             <div>
                 <span class="example"></span>
-
+                <textarea id="categories" name="categories" @keyup="${e => this.onCategoriesChange(e.target.value)}" required>Uhh</textarea>
                 <!-- <input id="category" name="category" type="text" maxlength="255" value="${this.categories}" @change="${e => this.onCategoryChange(e)}"> -->
-                <div>
-                <!-- <select id="category" name="category" @change="${e => this.onCategoryChange(e.target.value)}" multiple>
-
-                    ${categoryData.map((i) => html`
-                    <option value=${JSON.stringify(i)}>${i} `)}
-
-                </select> -->
+                <div id="displayList">
+                    <ul id="categoriesList">
+                    ${this.items.map((i) => html`
+                        <li value=${i}>${i} `)}
+                    </ul>
         
                 </div>
                 </span>
