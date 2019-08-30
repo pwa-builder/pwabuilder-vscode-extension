@@ -201,6 +201,9 @@ export class Manifest extends LitElement {
         display: inline-block;
         margin: 5px 10px 5px 0;
         padding: 3px 7px;
+
+        display: inline-flex;
+        align-items: center;
       }
 
       .select-pure__selected-label:last-of-type {
@@ -443,6 +446,11 @@ export class Manifest extends LitElement {
               display: None;
           }
 
+          i.fa {
+            font-style: normal;
+            font-size: 10px;
+          }
+
           
         `;
   }
@@ -503,7 +511,7 @@ export class Manifest extends LitElement {
       multiple: true,
       value: ['NY'],
       autocomplete: true,
-      icon: 'remove'
+      icon: "fa fa-times"
       /*multiple: true,
       autocomplete: true*/
     }, this.shadowRoot.host);

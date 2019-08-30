@@ -175,7 +175,8 @@ export class SelectPure {
       });
       const icon = new Element("i", {
         class: this._config.icon,
-        textContent: _option.icon,
+        textContent: 'X',
+        value: _option.value,
       });
 
       icon.addEventListener("click", this._boundUnselectOption);
