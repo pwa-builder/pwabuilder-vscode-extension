@@ -93,16 +93,18 @@ async function generateIcons(iconUrl: string, folderPath) {
     }
   });*/
 
-  const zipPath = folderPath + "/icons.zip";
+
   const unzippedPath = folderPath + "/icons";
   const unzippedPathToIcons = unzippedPath + "/" + constants.platFormName;
-
-
+  var pathToTemp: any;
+  await createTempZip().then((pathToFile) => {
+    pathToTemp = pathToFile;
+  });
 
 
   return new Promise((resolve) => {
-    request(constants.ImageGenApiUrl + iconUrl).pipe(fsSync.createWriteStream(zipPath)).on('finish', () => {
-      let zip = new AdmZip(zipPath);
+    request(constants.ImageGenApiUrl + iconUrl).pipe(fsSync.createWriteStream(pathToTemp)).on('finish', () => {
+      let zip = new AdmZip(pathToTemp);
       const entries = zip.getEntries();
 
       console.log(entries);
@@ -561,3 +563,18 @@ async function createAndOpenTemporaryFile(website: any): Promise<any> {
     });
 }
 
+
+async function createTempZip() {
+  return new Promise((resolve) => {
+    tmp.file(
+      {
+        postfix: '.zip'
+      },
+      async function _tempFileCreated(err, path, fd, cleanupCallback) {
+        if (err) {
+          throw err;
+        }
+        resolve(path);
+      });
+  });
+}
