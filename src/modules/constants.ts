@@ -11,6 +11,7 @@ export const ServiceWorkerApiUrl  = "https://pwabuilder-api-prod.azurewebsites.n
 export const ImageGenApiUrl = "https://appimagegenerator-prod.azurewebsites.net";
 export const swFileName = 'pwabuilder-sw.js';
 export const manifestFileName = 'manifest.json';
+export const platFormName = "android";
 
 //Related to Directories 
 const isDirectory = source => lstatSync(source).isDirectory();
@@ -18,7 +19,8 @@ export const getDirectories = source =>
 readdirSync(source).map((name) => path.join(source, name)).filter(isDirectory);
 
 
-
+//CSS
+export const errorRed = "#ff0000";
 
 //IntelliSense
 export class NameDescription {

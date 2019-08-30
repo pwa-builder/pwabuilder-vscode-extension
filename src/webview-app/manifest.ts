@@ -2,6 +2,7 @@ import { css, LitElement, html, property, customElement } from 'lit-element';
 import { constants } from 'fs';
 import { OrientationList, ManifestInfo, Screenshot, categoryData } from './constants';
 import dropdownData from './languages.json';
+import { errorRed } from '../modules/constants';
 
 
 var icon = "";
@@ -154,7 +155,7 @@ export class Manifest extends LitElement {
             padding: 5px;
           }
 
-          .animatedSection input:focus{
+          .animatedSection input:focus:not(.error) {
             border-color: #5b7ad0;
             outline: none;
           }
@@ -281,17 +282,24 @@ export class Manifest extends LitElement {
           #displayList {
               display: None;
           }
+          #categoriesdropdown {
+              display: None;
+          }
 
+          .error {
+              border-color: #ff0000;
+              outline: none;
+          }
           
         `;
     }
 
 
     firstUpdated() {
-        console.log("First udpated");
+        console.log("First updated");
         console.log(this.shadowRoot.querySelector(".example"));
 
-       
+
 
 
 
@@ -342,10 +350,14 @@ export class Manifest extends LitElement {
         //this.categories = categoryValue;
     }
     onStartUrlChange(startUrlValue) {
-        this.start_url = startUrlValue;
+        if(startUrlValue.trim() !== "") {
+            this.start_url = startUrlValue;
+        }
+        
     }
     onShortnameChange(shortnameValue) {
         this.shortname = shortnameValue;
+        console.log('short name', shortnameValue)
     }
     async onScreenshotSelection() {
         const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
@@ -385,9 +397,6 @@ export class Manifest extends LitElement {
             };
         });
     }
-    onIconSelection(iconValue) {
-       
-    }
 
     onColorChange(colorValue) {
         this.color = colorValue;
@@ -407,9 +416,13 @@ export class Manifest extends LitElement {
 
     }
     onNameChange(nameValue) {
-        this.name = nameValue;
-        if (this.shortname.trim() === "") {
-            this.shortname = this.name;
+        if (nameValue.trim() !== "") {
+            this.name = nameValue;
+            console.log('trim', this.shortname.trim())
+            if (this.shortname.trim() === "") {
+                this.onShortnameChange(this.name);
+                (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
+            }
         }
     }
 
@@ -422,93 +435,114 @@ export class Manifest extends LitElement {
         this.desc = descValue;
     }
 
-    async submit() {
+    checkFormValidity(isValid: boolean) {
+
         var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
-  
-        //to-do make initial form data
-        //console.log(this.shadowRoot.querySelector('#manifestForm'));
-        //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
-        var formData = new FormData();
-        var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
-
-        // formData.append('username', 'abc123');
-        formData.append('fileName', fileField.files[0]);
-        formData.append('padding', '0.2');
-        formData.append('platform', 'android');
-
-        /*fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .catch(error => console.error('Error:', error))
-            .then(response =>  {
-                console.log('Success:', JSON.stringify(response));
-                icon = response.Uri;
-            });*/
-
-        const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-        icon = data.Uri;
-        
-
-        // testData.append('')
-        if (this.shortname.trim() === "") {
-            this.shortname = this.name;
+        if (form.elements["name"].value.trim() === "") {
+            isValid = false;
+            (form.elements["name"] as HTMLElement).classList.add('error');
         }
+        if (form.elements["short-name"].value.trim() === "") {
+            isValid = false;
+            (form.elements["short-name"] as HTMLElement).classList.add('error');
+        }
+        if (form.elements["description"].value.trim() === "") {
+            isValid = false;
+            (form.elements["description"] as HTMLElement).classList.add('error');
+        }
+        // if (form.elements["start_url"].value.trim() === "") {
+        //     isValid = false;
+        //     (form.elements["start_url"] as HTMLElement).classList.add('error');
+        // }
+
+        return isValid;
+    }
+    async submit() {
+        var isValid = true;
+        isValid = this.checkFormValidity(isValid);
+        if (isValid) {
+            var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+
+            //to-do make initial form data
+            //console.log(this.shadowRoot.querySelector('#manifestForm'));
+            //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
+
+            var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+            if (fileField.files !== undefined) {
+                var formData = new FormData();
+                formData.append('fileName', fileField.files[0]);
+                formData.append('padding', '0.2');
+                formData.append('platform', 'android');
+
+                const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                icon = data.Uri;
+
+            }
+            // testData.append('')
+            if (this.shortname.trim() === "") {
+                this.shortname = this.name;
+            }
 
 
-        sampleObject.description = this.desc;
-        sampleObject.name = this.name;
-        sampleObject.orientation = this.orientation;
-        sampleObject.short_name = this.shortname;
-        sampleObject.theme_color = this.color;
-        sampleObject.background_color = this.color;
-        sampleObject.categories = this.categories;
+            sampleObject.description = this.desc;
+            sampleObject.name = this.name;
+            sampleObject.orientation = this.orientation;
+            sampleObject.short_name = this.shortname;
+            sampleObject.theme_color = this.color;
+            sampleObject.background_color = this.color;
+            sampleObject.categories = this.categories;
 
-        sampleObject.start_url = this.start_url;
-        (window as any).vscode.postMessage({
-            name: 'manifest',
-            JSONObject: sampleObject,
-            icon: icon
-        });
+            sampleObject.start_url = this.start_url;
+            (window as any).vscode.postMessage({
+                name: 'manifest',
+                JSONObject: sampleObject,
+                icon: icon
+            });
 
-
+        }
     }
 
     onCategoriesChange(categoriesValue) {
-        if(categoriesValue.length >= 2) {
-        this.items = ["Does", "This", "Work"];
-        if (categoriesValue && categoriesValue.trim() !== '') {
-            this.items = this.items.filter((item) => {
-                return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
-            });
-            console.log("These are the items", this.items);
-            if(this.items.length > 0) {
-                (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
-            }
-            else
-            {
-                (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+        if (categoriesValue.length >= 2) {
+            this.items = ["Does", "This", "Work"];
+            if (categoriesValue && categoriesValue.trim() !== '') {
+                this.items = this.items.filter((item) => {
+                    return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
+                });
+                console.log("These are the items", this.items);
+                if (this.items.length > 0) {
+                    (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
+                }
+                else {
+                    (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+                }
+
             }
 
         }
-       
+        else {
+            (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+        }
     }
-    else {
-        (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
-    }
+
+    displayDropDown() {
+        (this.shadowRoot.querySelector("#categoriesdropdown") as HTMLElement).style.display = 'block';
     }
 
 
-
+    removeError(id:string, value:string) {
+        if(value.trim() !== "") {
+            (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove('error');
+        }
+    }
     render() {
         return html`<h1><a>Manifest Generator</a></h1>
         
-   <form enctype="multipart/form-data" method="post" id="manifestForm" name="manifestForm">
+   <form enctype="multipart/form-data" id="manifestForm" name="manifestForm">
     <div>
         <h3>Fill out the following fields to generate your manifest file.</h3>
     </div>
@@ -522,7 +556,7 @@ export class Manifest extends LitElement {
 
             <p> Used for App lists or Store listings </p>
             <div>
-                <input id="name" name="name" type="text" placeholder="App Name" maxlength="255" value="" @change="${e => this.onNameChange(e.target.value)} " required>
+                <input id="name" name="name" type="text" placeholder="App Name" maxlength="255" value="" @change="${e => this.onNameChange(e.target.value)}" @keyup="${e => this.removeError(e.target.id, e.target.value)}" >
             </div>
         </div>
 
@@ -532,7 +566,7 @@ export class Manifest extends LitElement {
             </label>
             <p> Used for tiles or home screens </p>
             <div>
-                <input id="shortname" name="short-name" type="text" placeholder="App Short Name" maxlength="255" value="${this.shortname}" @change="${e => this.onShortnameChange(e.target.value)}" required>
+                <input id="shortname" name="short-name" type="text" placeholder="App Short Name" maxlength="255" value="${this.shortname}" @change="${e => this.onShortnameChange(e.target.value)}" @keyup="${e => this.removeError(e.target.id, e.target.value)}" >
             </div>
         </div>
 
@@ -542,7 +576,7 @@ export class Manifest extends LitElement {
                 <h4>Description</h4> </label>
             <p>Used for App listings </p>
             <div>
-                <textarea id="description" name="description" placeholder="App Description"  @change="${e => this.onDescChange(e.target.value)}" required>${this.desc}</textarea>
+                <textarea id="description" name="description" placeholder="App Description"  @change="${e => this.onDescChange(e.target.value)}" @keyup="${e => this.removeError(e.target.id, e.target.value)}" >${this.desc}</textarea>
             </div>
         </div>
 
@@ -567,7 +601,7 @@ export class Manifest extends LitElement {
                 <h4>Upload an Icon</h4> </label>
             <p> We suggest at least one image 512×512 or larger </p>
             <div>
-                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile" @change="${e => this.onIconSelection(e.target.value)}" />
+                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile"/>
             </div>
         </div>
 
@@ -595,7 +629,7 @@ export class Manifest extends LitElement {
                 <select id="language" name="language" @change="${e => this.onLanguageChange(e.target.value)}">
 
                     ${this.languageData.map((i) => html`
-                    <option value=${JSON.stringify(i)}>${i.name} `)}
+                    <option value=${JSON.stringify(i)}>${i.name} `)}</option>
 
                 </select>
             </div>
@@ -609,7 +643,7 @@ export class Manifest extends LitElement {
                 <select id="orientation" name="orientation" @change="${e => this.onOrientationChange(e.target.value)}">
                     ${OrientationList.map((i) => html`
                     <option value=${i.id} @click=${() =>
-                this.onOrientationChange(i.id)}>${i.type} `)}
+                this.onOrientationChange(i.id)}>${i.type} `)}</option>
 
                 </select>
             </div>
@@ -619,8 +653,9 @@ export class Manifest extends LitElement {
         <div>
 
             <label class="fieldName">Category </label>
-            <div>
-                <span class="example"></span>
+            <!-- <div>
+                <div id="category-multi-auto" @click="${() => { this.displayDropDown(); }}"></div>
+                <span id="categoriesdropdown">
                 <textarea id="categories" name="categories" @keyup="${e => this.onCategoriesChange(e.target.value)}" required>Uhh</textarea>
                 <!-- <input id="category" name="category" type="text" maxlength="255" value="${this.categories}" @change="${e => this.onCategoryChange(e)}"> -->
                 <div id="displayList">
@@ -632,7 +667,7 @@ export class Manifest extends LitElement {
                 </div>
                 </span>
             </div>        
-            </div>
+            </div> -->
         </div>
 
         <div>
@@ -661,7 +696,7 @@ export class Manifest extends LitElement {
  </button>
 </div>
 
-<input id="saveForm" type="submit" name="submit" value="Generate" form="manifestForm" @click=${() => this.submit()}/>
+<input id="saveForm" type="submit" name="submit" value="Generate" form="manifestForm" @click="${() => this.submit()}"/>
         `;
 
 

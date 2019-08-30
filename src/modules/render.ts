@@ -95,27 +95,28 @@ async function generateIcons(iconUrl: string, folderPath) {
 
   const zipPath = folderPath + "/icons.zip";
   const unzippedPath = folderPath + "/icons";
+  const unzippedPathToIcons = unzippedPath + "/" + constants.platFormName;
 
 
 
- 
+
   return new Promise((resolve) => {
     request(constants.ImageGenApiUrl + iconUrl).pipe(fsSync.createWriteStream(zipPath)).on('finish', () => {
-    let zip = new AdmZip(zipPath);
-    const entries = zip.getEntries();
-  
-    console.log(entries);
+      let zip = new AdmZip(zipPath);
+      const entries = zip.getEntries();
+
+      console.log(entries);
 
 
-    zip.extractAllTo(unzippedPath, true);
-   
-    fsSync.readdir(unzippedPath, function(err, items) {
-      console.log(items);
-      resolve();
-      
+      zip.extractAllTo(unzippedPath, true);
+
+      fsSync.readdir(unzippedPathToIcons, function (err, items) {
+        console.log(items);
+        resolve(items);
+
+      });
     });
   });
-});
 
 }
 
@@ -155,10 +156,30 @@ async function generateManifest(message) {
   if (JSONObject.screenshots !== undefined) {
     JSONObject = await downloadScreenshots(JSONObject, folderPath);
   } //Downloads screenshots into the folder where manifest.json will be created.
-  await generateIcons(message.icon, folderPath);
+  if (message.icon !== undefined && message.icon.trim() !== "") {
+    await generateIcons(message.icon, folderPath).then((files) => {
+      JSONObject = calculateIconSize(files, JSONObject);
+
+    });
+  }
   var JSONString = JSON.stringify(JSONObject, null, 4);
   await createAndDownloadFile(folderPath, JSONString, constants.manifestFileName);
 }
+
+function calculateIconSize(files: any, JSONObject: any) {
+  var arrayOfFileObjects = [];
+  for (var file of files) {
+    var fileNameArray = file.split("-");
+    var sizes = fileNameArray[2] + "x" + fileNameArray[2];
+    var src = 'icons/' + file;
+    var obj = { "src": src, "sizes": sizes };
+    arrayOfFileObjects.push(obj);
+  }
+  JSONObject.icons = arrayOfFileObjects;
+  return JSONObject;
+}
+
+
 
 export async function generateManifestWebview(context) {
   const provider2 = vscode.languages.registerCompletionItemProvider(
