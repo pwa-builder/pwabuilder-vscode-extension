@@ -9,6 +9,134 @@ export const OrientationList : { id: number, type: string }[] = [
 ];
 
 
+export const myOptions = [
+
+    {
+
+        label: "Books",
+
+        value: "NY",
+
+    },
+
+    {
+
+        label: "Business",
+
+        value: "WA",
+
+    },
+
+    {
+
+        label: "Education",
+
+        value: "CA",
+
+    },
+
+    {
+
+        label: "Finance",
+
+        value: "NJ",
+
+    },
+
+    {
+
+        label: "Food",
+
+        value: "food",
+
+    },
+
+    {
+
+        label: "Games",
+
+        value: "games",
+
+    },
+
+    {
+
+        label: "Government",
+
+        value: "government",
+
+    },
+
+    {
+
+        label: "Health",
+
+        value: "health",
+
+    },
+
+    {
+
+        label: "Kids",
+
+        value: "kids",
+
+    },
+
+    {
+
+        label: "Lifestyle",
+
+        value: "lifestyle",
+
+    },
+
+    {
+
+        label: "Magazines",
+
+        value: "magazines",
+
+    },
+
+    {
+
+        label: "Medical",
+
+        value: "medical",
+
+    },
+
+    {
+
+        label: "Music",
+
+        value: "music",
+
+    },
+
+    {
+
+        label: "Navigation",
+
+        value: "navigation",
+
+    },
+
+    {
+
+        label: "News",
+
+        value: "news",
+
+    },
+
+
+
+];
+
+
+
 export class Icon {
     src: string;
     sizes: string;

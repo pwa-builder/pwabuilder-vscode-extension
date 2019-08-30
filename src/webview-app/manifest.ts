@@ -1,6 +1,9 @@
 import { css, LitElement, html, property, customElement } from 'lit-element';
+
+import { SelectPure } from './SelectPure';
+
 import { constants } from 'fs';
-import { OrientationList, ManifestInfo, Screenshot, categoryData } from './constants';
+import { OrientationList, ManifestInfo, Screenshot, categoryData, myOptions } from './constants';
 import dropdownData from './languages.json';
 import { errorRed } from '../modules/constants';
 
@@ -8,49 +11,7 @@ import { errorRed } from '../modules/constants';
 var icon = "";
 
 var sampleObject = new ManifestInfo();
-const myOptions = [
 
-    {
-
-        label: "New York",
-
-        value: "NY",
-
-    },
-
-    {
-
-        label: "Washington",
-
-        value: "WA",
-
-    },
-
-    {
-
-        label: "California",
-
-        value: "CA",
-
-    },
-
-    {
-
-        label: "New Jersey",
-
-        value: "NJ",
-
-    },
-
-    {
-
-        label: "North Carolina",
-
-        value: "NC",
-
-    },
-
-];
 
 var i;
 @customElement('manifest-gen')
@@ -68,8 +29,230 @@ export class Manifest extends LitElement {
     @property() categories = "";
     @property() start_url = '/';
     @property() items = ["Does", "This", "Work"];
+
+
     static get styles() {
         return css`
+    .select-wrapper {
+  margin: auto;
+  max-width: 600px;
+  width: calc(100% - 40px);
+}
+
+select {
+    background: #f9f9f8;
+    border-bottom: 1px solid #e4e4e4;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.select-pure__select {
+  align-items: center;
+  background: #f9f9f8;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  color: #363b3e;
+  cursor: pointer;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+  justify-content: left;
+  min-height: 44px;
+  padding: 5px 10px;
+  position: relative;
+  transition: 0.2s;
+  width: 100%;
+}
+
+.select-pure__options {
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  color: #363b3e;
+  display: none;
+  left: 0;
+  max-height: 221px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 5;
+}
+
+.select-pure__select--opened .select-pure__options {
+  display: block;
+}
+
+.select-pure__option {
+  background: #fff;
+  border-bottom: 1px solid #e4e4e4;
+  box-sizing: border-box;
+  height: 44px;
+  line-height: 25px;
+  padding: 10px;
+}
+
+.select-pure__option--selected {
+  color: #e4e4e4;
+  cursor: initial;
+  pointer-events: none;
+}
+
+.select-pure__option--hidden {
+  display: none;
+}
+
+.select-pure__selected-label {
+  background: #5e6264;
+  border-radius: 4px;
+  color: #fff;
+  cursor: initial;
+  display: inline-block;
+  margin: 5px 10px 5px 0;
+  padding: 3px 7px;
+}
+
+.select-pure__selected-label:last-of-type {
+  margin-right: 0;
+}
+
+.select-pure__selected-label i {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 7px;
+}
+
+.select-pure__selected-label i:hover {
+  color: #e4e4e4;
+}
+
+.select-pure__autocomplete {
+  /* background: #f9f9f8; */
+  border-bottom: 1px solid #e4e4e4;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  box-sizing: border-box;
+  font-size: 16px;
+  outline: none;
+  padding: 10px;
+  width: 100%;
+
+
+  background: white !important;
+  color: black !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  padding-left: 10px !important;
+  font-family: var(--vscode-font-family) !important;
+}
+
+.select-pure__select {
+        align-items: center;
+        background: #f9f9f8;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        color: #363b3e;
+        cursor: pointer;
+        display: flex;
+        font-size: 16px;
+        font-weight: 500;
+        justify-content: left;
+        min-height: 44px;
+        padding: 5px 10px;
+        position: relative;
+        transition: 0.2s;
+        width: 100%;
+      }
+
+      .select-pure__options {
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        color: #363b3e;
+        display: none;
+        left: 0;
+        max-height: 221px;
+        overflow-y: scroll;
+        position: absolute;
+        top: 50px;
+        width: 100%;
+        z-index: 5;
+      }
+
+      .select-pure__select--opened .select-pure__options {
+        display: block;
+      }
+
+      .select-pure__option {
+        background: #fff;
+        border-bottom: 1px solid #e4e4e4;
+        box-sizing: border-box;
+        height: 44px;
+        line-height: 25px;
+        padding: 10px;
+      }
+
+      .select-pure__option--selected {
+        color: #e4e4e4;
+        cursor: initial;
+        pointer-events: none;
+      }
+
+      .select-pure__option--hidden {
+        display: none;
+      }
+
+      .select-pure__selected-label {
+        background: #5e6264;
+        border-radius: 4px;
+        color: #fff;
+        cursor: initial;
+        display: inline-block;
+        margin: 5px 10px 5px 0;
+        padding: 3px 7px;
+      }
+
+      .select-pure__selected-label:last-of-type {
+        margin-right: 0;
+      }
+
+      .select-pure__selected-label i {
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 7px;
+      }
+
+      .select-pure__selected-label i:hover {
+        color: #e4e4e4;
+      }
+
+      .select-pure__autocomplete {
+        background: #f9f9f8;
+        border-bottom: 1px solid #e4e4e4;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        box-sizing: border-box;
+        font-size: 16px;
+        outline: none;
+        padding: 10px;
+        width: 100%;
+      }
+
         .animatedSection {
             display: flex;
             justify-content: space-between;
@@ -217,6 +400,7 @@ export class Manifest extends LitElement {
           }
 
           #saveForm {
+            outline: none;
             float: right;
             margin-right: 4em;
             background: linear-gradient(90deg,#1fc2c8,#9337d8 116%);
@@ -290,19 +474,32 @@ export class Manifest extends LitElement {
               border-color: #ff0000;
               outline: none;
           }
+
+          .errordiv {
+            border-bottom: solid red;
+          }
           
         `;
     }
 
-
     firstUpdated() {
-        console.log("First updated");
+        console.log("First udpated");
         console.log(this.shadowRoot.querySelector(".example"));
 
+       
 
+        const element = this.shadowRoot.querySelector(".example");
+        const containerEl = this.shadowRoot.querySelector(".animatedSection")
 
-
-
+        let instance = new SelectPure(element, {
+            options: myOptions,
+            multiple: true,
+            value: ['NY'],
+            autocomplete: true,
+            icon: 'remove'
+            /*multiple: true,
+            autocomplete: true*/
+        }, this.shadowRoot.host);
     }
 
     toggleAdvancedSection() {
@@ -350,14 +547,10 @@ export class Manifest extends LitElement {
         //this.categories = categoryValue;
     }
     onStartUrlChange(startUrlValue) {
-        if(startUrlValue.trim() !== "") {
-            this.start_url = startUrlValue;
-        }
-        
+        this.start_url = startUrlValue;
     }
     onShortnameChange(shortnameValue) {
         this.shortname = shortnameValue;
-        console.log('short name', shortnameValue)
     }
     async onScreenshotSelection() {
         const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
@@ -379,60 +572,6 @@ export class Manifest extends LitElement {
             sampleObject.screenshots.push(screenshot);
 
         }
-
-
-
-
-    }
-
-    getImageDimensions(url) {
-        let img = new Image();
-        img.src = url;
-        return new Promise((resolve, reject) => {
-
-            img.onload = function () {
-                var width = img.width;
-                var height = img.height;
-                resolve({ height, width });
-            };
-        });
-    }
-
-    onColorChange(colorValue) {
-        this.color = colorValue;
-
-    }
-    onLanguageChange(languageValue) {
-        console.log(languageValue);
-        var lang = JSON.parse(languageValue);
-        sampleObject.lang = lang.code;
-        sampleObject.dir = lang.dir;
-
-        // this.defaultLanguage = languageValue.code;
-        // console.log(languageValue.dir);
-        // sampleObject.dir = languageValue.dir;
-
-
-
-    }
-    onNameChange(nameValue) {
-        if (nameValue.trim() !== "") {
-            this.name = nameValue;
-            console.log('trim', this.shortname.trim())
-            if (this.shortname.trim() === "") {
-                this.onShortnameChange(this.name);
-                (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
-            }
-        }
-    }
-
-    onOrientationChange(orientationValue) {
-        this.orientation = OrientationList[orientationValue].type;
-
-    }
-
-    onDescChange(descValue) {
-        this.desc = descValue;
     }
 
     checkFormValidity(isValid: boolean) {
@@ -450,6 +589,12 @@ export class Manifest extends LitElement {
             isValid = false;
             (form.elements["description"] as HTMLElement).classList.add('error');
         }
+        if (form.elements["icon"].files.length === 0) {
+            console.log("EMPTYYYY")
+            isValid = false;
+            (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add('errordiv');
+        }
+
         // if (form.elements["start_url"].value.trim() === "") {
         //     isValid = false;
         //     (form.elements["start_url"] as HTMLElement).classList.add('error');
@@ -506,9 +651,72 @@ export class Manifest extends LitElement {
         }
     }
 
+
+
+    getImageDimensions(url) {
+        let img = new Image();
+        img.src = url;
+        return new Promise((resolve, reject) => {
+
+            img.onload = function () {
+                var width = img.width;
+                var height = img.height;
+                resolve({ height, width });
+            };
+        });
+    }
+    onIconSelection(iconValue) {
+        console.log("In here", this.parentElement);
+        (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove('errordiv');
+    }
+
+    onColorChange(colorValue) {
+        this.color = colorValue;
+
+    }
+    onLanguageChange(languageValue) {
+        console.log(languageValue);
+        var lang = JSON.parse(languageValue);
+        sampleObject.lang = lang.code;
+        sampleObject.dir = lang.dir;
+
+        // this.defaultLanguage = languageValue.code;
+        // console.log(languageValue.dir);
+        // sampleObject.dir = languageValue.dir;
+
+
+
+    }
+    onNameChange(nameValue) {
+        if (nameValue.trim() !== "") {
+            this.name = nameValue;
+            console.log('trim', this.shortname.trim())
+            if (this.shortname.trim() === "") {
+                this.onShortnameChange(this.name);
+                (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
+            }
+        }
+    }
+
+    onOrientationChange(orientationValue) {
+        this.orientation = OrientationList[orientationValue].type;
+
+    }
+
+    onDescChange(descValue) {
+        this.desc = descValue;
+    }
+
+
+
+
+
+
     onCategoriesChange(categoriesValue) {
         if (categoriesValue.length >= 2) {
+
             this.items = ["Does", "This", "Work"];
+
             if (categoriesValue && categoriesValue.trim() !== '') {
                 this.items = this.items.filter((item) => {
                     return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
@@ -534,8 +742,8 @@ export class Manifest extends LitElement {
     }
 
 
-    removeError(id:string, value:string) {
-        if(value.trim() !== "") {
+    removeError(id: string, value: string) {
+        if (value.trim() !== "") {
             (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove('error');
         }
     }
@@ -600,8 +808,8 @@ export class Manifest extends LitElement {
             <label class="fieldName">
                 <h4>Upload an Icon</h4> </label>
             <p> We suggest at least one image 512×512 or larger </p>
-            <div>
-                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile"/>
+            <div id="icondiv">
+                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile" @change="${e => this.onIconSelection(e.target.value)}"/>
             </div>
         </div>
 
@@ -652,22 +860,11 @@ export class Manifest extends LitElement {
        <section id="rightSection">
         <div>
 
-            <label class="fieldName">Category </label>
-            <!-- <div>
-                <div id="category-multi-auto" @click="${() => { this.displayDropDown(); }}"></div>
-                <span id="categoriesdropdown">
-                <textarea id="categories" name="categories" @keyup="${e => this.onCategoriesChange(e.target.value)}" required>Uhh</textarea>
-                <!-- <input id="category" name="category" type="text" maxlength="255" value="${this.categories}" @change="${e => this.onCategoryChange(e)}"> -->
-                <div id="displayList">
-                    <ul id="categoriesList">
-                    ${this.items.map((i) => html`
-                        <li value=${i}>${i} `)}
-                    </ul>
-        
-                </div>
-                </span>
+            <label class="fieldName">Categories </label>
+            <div>
+                <span class="example"></span>
             </div>        
-            </div> -->
+            </div> 
         </div>
 
         <div>

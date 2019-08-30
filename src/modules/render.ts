@@ -157,7 +157,7 @@ async function generateManifest(message) {
     JSONObject = await downloadScreenshots(JSONObject, folderPath);
   } //Downloads screenshots into the folder where manifest.json will be created.
   if (message.icon !== undefined && message.icon.trim() !== "") {
-    await generateIcons(message.icon, folderPath).then((files) => {
+    await generateIcons(message.icon, typeof folderPath === 'string' ? folderPath : folderPath.fsPath).then((files) => {
       JSONObject = calculateIconSize(files, JSONObject);
 
     });
