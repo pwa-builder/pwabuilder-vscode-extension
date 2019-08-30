@@ -16,23 +16,23 @@ var sampleObject = new ManifestInfo();
 var i;
 @customElement('manifest-gen')
 export class Manifest extends LitElement {
-    @property() name = '';
-    @property() shortname = '';
-    @property() desc;
-    @property() lang = '';
-    @property() orientation = OrientationList[0].type;
-    @property() icons = [];
-    @property() languageData = dropdownData;
-    @property() defaultLanguage = "en";
-    @property() color = "#ffffff";
-    @property() screenshots: Screenshot[];
-    @property() categories = "";
-    @property() start_url = '/';
-    @property() items = ["Does", "This", "Work"];
+  @property() name = '';
+  @property() shortname = '';
+  @property() desc;
+  @property() lang = '';
+  @property() orientation = OrientationList[0].type;
+  @property() icons = [];
+  @property() languageData = dropdownData;
+  @property() defaultLanguage = "en";
+  @property() color = "#ffffff";
+  @property() screenshots: Screenshot[];
+  @property() categories = "";
+  @property() start_url = '/';
+  @property() items = ["Does", "This", "Work"];
 
 
-    static get styles() {
-        return css`
+  static get styles() {
+    return css`
     .select-wrapper {
   margin: auto;
   max-width: 600px;
@@ -130,6 +130,9 @@ select {
   cursor: pointer;
   display: inline-block;
   margin-left: 7px;
+
+  font-style: normal;
+  font-size: 10px;
 }
 
 .select-pure__selected-label i:hover {
@@ -224,6 +227,9 @@ select {
         display: inline-block;
         margin: 5px 10px 5px 0;
         padding: 3px 7px;
+
+        display: inline-flex;
+        align-items: center;
       }
 
       .select-pure__selected-label:last-of-type {
@@ -478,277 +484,282 @@ select {
           .errordiv {
             border-bottom: solid red;
           }
+
+          i.fa {
+            font-style: normal;
+            font-size: 10px;
+          }
           
         `;
+  }
+
+  firstUpdated() {
+    console.log("First udpated");
+    console.log(this.shadowRoot.querySelector(".example"));
+
+
+
+    const element = this.shadowRoot.querySelector(".example");
+    const containerEl = this.shadowRoot.querySelector(".animatedSection")
+
+    let instance = new SelectPure(element, {
+      options: myOptions,
+      multiple: true,
+      value: ['NY'],
+      autocomplete: true,
+      icon: "fa fa-times"
+      /*multiple: true,
+      autocomplete: true*/
+    }, this.shadowRoot.host);
+  }
+
+  toggleAdvancedSection() {
+    var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
+    var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
+
+
+    // console.log(el.style.display);
+    // if(rotatePath !== null) {
+    //     rotatePath.style.animationName = 'rotateClockwise';
+    //     rotatePath.style.animationDuration = '400ms';
+    // }
+
+    console.log(el.style.display);
+    if (el !== null) {
+      if (el.style.display !== 'block') {
+        el.style.display = 'block';
+        console.log('in the first');
+        console.log(el);
+
+      }
+      else {
+        el.style.animationDuration = '400ms';
+        el.style.animationName = 'slideOut';
+        setTimeout(() => {
+          el.style.display = 'none';
+          el.style.animationName = 'slidein';
+          console.log('in the second');
+          console.log(el);
+        }, 220);
+
+
+
+
+      }
     }
-
-    firstUpdated() {
-        console.log("First udpated");
-        console.log(this.shadowRoot.querySelector(".example"));
-
-       
-
-        const element = this.shadowRoot.querySelector(".example");
-        const containerEl = this.shadowRoot.querySelector(".animatedSection")
-
-        let instance = new SelectPure(element, {
-            options: myOptions,
-            multiple: true,
-            value: ['NY'],
-            autocomplete: true,
-            icon: 'remove'
-            /*multiple: true,
-            autocomplete: true*/
-        }, this.shadowRoot.host);
-    }
-
-    toggleAdvancedSection() {
-        var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
-        var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
+  }
 
 
-        // console.log(el.style.display);
-        // if(rotatePath !== null) {
-        //     rotatePath.style.animationName = 'rotateClockwise';
-        //     rotatePath.style.animationDuration = '400ms';
-        // }
+  listener() {
 
-        console.log(el.style.display);
-        if (el !== null) {
-            if (el.style.display !== 'block') {
-                el.style.display = 'block';
-                console.log('in the first');
-                console.log(el);
+  }
+  onCategoryChange(categoryValue) {
+    //console.log(this.nodeValue;
+    //this.categories = categoryValue;
+  }
+  onStartUrlChange(startUrlValue) {
+    this.start_url = startUrlValue;
+  }
+  onShortnameChange(shortnameValue) {
+    this.shortname = shortnameValue;
+  }
+  async onScreenshotSelection() {
+    const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
+    sampleObject.screenshots = [];
+    var img = new Image();
 
-            }
-            else {
-                el.style.animationDuration = '400ms';
-                el.style.animationName = 'slideOut';
-                setTimeout(() => {
-                    el.style.display = 'none';
-                    el.style.animationName = 'slidein';
-                    console.log('in the second');
-                    console.log(el);
-                }, 220);
-
-
-
-
-            }
-        }
-    }
-
-
-    listener() {
-
-    }
-    onCategoryChange(categoryValue) {
-        //console.log(this.nodeValue;
-        //this.categories = categoryValue;
-    }
-    onStartUrlChange(startUrlValue) {
-        this.start_url = startUrlValue;
-    }
-    onShortnameChange(shortnameValue) {
-        this.shortname = shortnameValue;
-    }
-    async onScreenshotSelection() {
-        const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
-        sampleObject.screenshots = [];
-        var img = new Image();
-
-        for (i = 0; i < files.length; i++) {
-            console.log(i);
-            var url = window.URL.createObjectURL(files[i]);
-            var screenshot = new Screenshot();
-            screenshot.src = files[i].path;
-            console.log("This is the file path" + files[i].path);
-            screenshot.type = files[i].type;
-            await this.getImageDimensions(url)
-                .then((data: any) => {
-                    screenshot.sizes = data.height + 'x' + data.width;
-                });
-
-            sampleObject.screenshots.push(screenshot);
-
-        }
-    }
-
-    checkFormValidity(isValid: boolean) {
-
-        var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
-        if (form.elements["name"].value.trim() === "") {
-            isValid = false;
-            (form.elements["name"] as HTMLElement).classList.add('error');
-        }
-        if (form.elements["short-name"].value.trim() === "") {
-            isValid = false;
-            (form.elements["short-name"] as HTMLElement).classList.add('error');
-        }
-        if (form.elements["description"].value.trim() === "") {
-            isValid = false;
-            (form.elements["description"] as HTMLElement).classList.add('error');
-        }
-        if (form.elements["icon"].files.length === 0) {
-            console.log("EMPTYYYY")
-            isValid = false;
-            (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add('errordiv');
-        }
-
-        // if (form.elements["start_url"].value.trim() === "") {
-        //     isValid = false;
-        //     (form.elements["start_url"] as HTMLElement).classList.add('error');
-        // }
-
-        return isValid;
-    }
-    async submit() {
-        var isValid = true;
-        isValid = this.checkFormValidity(isValid);
-        if (isValid) {
-            var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
-
-            //to-do make initial form data
-            //console.log(this.shadowRoot.querySelector('#manifestForm'));
-            //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
-
-            var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
-            if (fileField.files !== undefined) {
-                var formData = new FormData();
-                formData.append('fileName', fileField.files[0]);
-                formData.append('padding', '0.2');
-                formData.append('platform', 'android');
-
-                const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                icon = data.Uri;
-
-            }
-            // testData.append('')
-            if (this.shortname.trim() === "") {
-                this.shortname = this.name;
-            }
-
-
-            sampleObject.description = this.desc;
-            sampleObject.name = this.name;
-            sampleObject.orientation = this.orientation;
-            sampleObject.short_name = this.shortname;
-            sampleObject.theme_color = this.color;
-            sampleObject.background_color = this.color;
-            sampleObject.categories = this.categories;
-
-            sampleObject.start_url = this.start_url;
-            (window as any).vscode.postMessage({
-                name: 'manifest',
-                JSONObject: sampleObject,
-                icon: icon
-            });
-
-        }
-    }
-
-
-
-    getImageDimensions(url) {
-        let img = new Image();
-        img.src = url;
-        return new Promise((resolve, reject) => {
-
-            img.onload = function () {
-                var width = img.width;
-                var height = img.height;
-                resolve({ height, width });
-            };
+    for (i = 0; i < files.length; i++) {
+      console.log(i);
+      var url = window.URL.createObjectURL(files[i]);
+      var screenshot = new Screenshot();
+      screenshot.src = files[i].path;
+      console.log("This is the file path" + files[i].path);
+      screenshot.type = files[i].type;
+      await this.getImageDimensions(url)
+        .then((data: any) => {
+          screenshot.sizes = data.height + 'x' + data.width;
         });
-    }
-    onIconSelection(iconValue) {
-        console.log("In here", this.parentElement);
-        (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove('errordiv');
-    }
 
-    onColorChange(colorValue) {
-        this.color = colorValue;
+      sampleObject.screenshots.push(screenshot);
 
     }
-    onLanguageChange(languageValue) {
-        console.log(languageValue);
-        var lang = JSON.parse(languageValue);
-        sampleObject.lang = lang.code;
-        sampleObject.dir = lang.dir;
+  }
 
-        // this.defaultLanguage = languageValue.code;
-        // console.log(languageValue.dir);
-        // sampleObject.dir = languageValue.dir;
+  checkFormValidity(isValid: boolean) {
 
-
-
+    var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+    if (form.elements["name"].value.trim() === "") {
+      isValid = false;
+      (form.elements["name"] as HTMLElement).classList.add('error');
     }
-    onNameChange(nameValue) {
-        if (nameValue.trim() !== "") {
-            this.name = nameValue;
-            console.log('trim', this.shortname.trim())
-            if (this.shortname.trim() === "") {
-                this.onShortnameChange(this.name);
-                (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
-            }
-        }
+    if (form.elements["short-name"].value.trim() === "") {
+      isValid = false;
+      (form.elements["short-name"] as HTMLElement).classList.add('error');
     }
-
-    onOrientationChange(orientationValue) {
-        this.orientation = OrientationList[orientationValue].type;
-
+    if (form.elements["description"].value.trim() === "") {
+      isValid = false;
+      (form.elements["description"] as HTMLElement).classList.add('error');
+    }
+    if (form.elements["icon"].files.length === 0) {
+      console.log("EMPTYYYY")
+      isValid = false;
+      (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add('errordiv');
     }
 
-    onDescChange(descValue) {
-        this.desc = descValue;
+    // if (form.elements["start_url"].value.trim() === "") {
+    //     isValid = false;
+    //     (form.elements["start_url"] as HTMLElement).classList.add('error');
+    // }
+
+    return isValid;
+  }
+  async submit() {
+    var isValid = true;
+    isValid = this.checkFormValidity(isValid);
+    if (isValid) {
+      var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+
+      //to-do make initial form data
+      //console.log(this.shadowRoot.querySelector('#manifestForm'));
+      //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
+
+      var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+      if (fileField.files !== undefined) {
+        var formData = new FormData();
+        formData.append('fileName', fileField.files[0]);
+        formData.append('padding', '0.2');
+        formData.append('platform', 'android');
+
+        const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        icon = data.Uri;
+
+      }
+      // testData.append('')
+      if (this.shortname.trim() === "") {
+        this.shortname = this.name;
+      }
+
+
+      sampleObject.description = this.desc;
+      sampleObject.name = this.name;
+      sampleObject.orientation = this.orientation;
+      sampleObject.short_name = this.shortname;
+      sampleObject.theme_color = this.color;
+      sampleObject.background_color = this.color;
+      sampleObject.categories = this.categories;
+
+      sampleObject.start_url = this.start_url;
+      (window as any).vscode.postMessage({
+        name: 'manifest',
+        JSONObject: sampleObject,
+        icon: icon
+      });
+
     }
+  }
+
+
+
+  getImageDimensions(url) {
+    let img = new Image();
+    img.src = url;
+    return new Promise((resolve, reject) => {
+
+      img.onload = function () {
+        var width = img.width;
+        var height = img.height;
+        resolve({ height, width });
+      };
+    });
+  }
+  onIconSelection(iconValue) {
+    console.log("In here", this.parentElement);
+    (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove('errordiv');
+  }
+
+  onColorChange(colorValue) {
+    this.color = colorValue;
+
+  }
+  onLanguageChange(languageValue) {
+    console.log(languageValue);
+    var lang = JSON.parse(languageValue);
+    sampleObject.lang = lang.code;
+    sampleObject.dir = lang.dir;
+
+    // this.defaultLanguage = languageValue.code;
+    // console.log(languageValue.dir);
+    // sampleObject.dir = languageValue.dir;
+
+
+
+  }
+  onNameChange(nameValue) {
+    if (nameValue.trim() !== "") {
+      this.name = nameValue;
+      console.log('trim', this.shortname.trim())
+      if (this.shortname.trim() === "") {
+        this.onShortnameChange(this.name);
+        (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
+      }
+    }
+  }
+
+  onOrientationChange(orientationValue) {
+    this.orientation = OrientationList[orientationValue].type;
+
+  }
+
+  onDescChange(descValue) {
+    this.desc = descValue;
+  }
 
 
 
 
 
 
-    onCategoriesChange(categoriesValue) {
-        if (categoriesValue.length >= 2) {
+  onCategoriesChange(categoriesValue) {
+    if (categoriesValue.length >= 2) {
 
-            this.items = ["Does", "This", "Work"];
+      this.items = ["Does", "This", "Work"];
 
-            if (categoriesValue && categoriesValue.trim() !== '') {
-                this.items = this.items.filter((item) => {
-                    return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
-                });
-                console.log("These are the items", this.items);
-                if (this.items.length > 0) {
-                    (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
-                }
-                else {
-                    (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
-                }
-
-            }
-
+      if (categoriesValue && categoriesValue.trim() !== '') {
+        this.items = this.items.filter((item) => {
+          return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
+        });
+        console.log("These are the items", this.items);
+        if (this.items.length > 0) {
+          (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
         }
         else {
-            (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+          (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
         }
-    }
 
-    displayDropDown() {
-        (this.shadowRoot.querySelector("#categoriesdropdown") as HTMLElement).style.display = 'block';
+      }
+
     }
+    else {
+      (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
+    }
+  }
+
+  displayDropDown() {
+    (this.shadowRoot.querySelector("#categoriesdropdown") as HTMLElement).style.display = 'block';
+  }
 
 
-    removeError(id: string, value: string) {
-        if (value.trim() !== "") {
-            (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove('error');
-        }
+  removeError(id: string, value: string) {
+    if (value.trim() !== "") {
+      (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove('error');
     }
-    render() {
-        return html`<h1><a>Manifest Generator</a></h1>
+  }
+  render() {
+    return html`<h1><a>Manifest Generator</a></h1>
         
    <form enctype="multipart/form-data" id="manifestForm" name="manifestForm">
     <div>
@@ -851,7 +862,7 @@ select {
                 <select id="orientation" name="orientation" @change="${e => this.onOrientationChange(e.target.value)}">
                     ${OrientationList.map((i) => html`
                     <option value=${i.id} @click=${() =>
-                this.onOrientationChange(i.id)}>${i.type} `)}</option>
+        this.onOrientationChange(i.id)}>${i.type} `)}</option>
 
                 </select>
             </div>
@@ -897,7 +908,7 @@ select {
         `;
 
 
-    }
+  }
 }
 
 
