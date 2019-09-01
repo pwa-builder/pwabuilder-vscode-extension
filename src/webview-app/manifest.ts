@@ -12,7 +12,7 @@ var icon = "";
 
 var sampleObject = new ManifestInfo();
 
-
+var instance : any;
 var i;
 @customElement('manifest-gen')
 export class Manifest extends LitElement {
@@ -494,23 +494,23 @@ select {
   }
 
   firstUpdated() {
-    console.log("First udpated");
-    console.log(this.shadowRoot.querySelector(".example"));
-
-
 
     const element = this.shadowRoot.querySelector(".example");
     const containerEl = this.shadowRoot.querySelector(".animatedSection")
 
-    let instance = new SelectPure(element, {
+    instance = new SelectPure(element, {
       options: myOptions,
       multiple: true,
-      value: ['NY'],
+      //value: ['NY'],
       autocomplete: true,
       icon: "fa fa-times"
       /*multiple: true,
       autocomplete: true*/
     }, this.shadowRoot.host);
+
+
+    // (this.shadowRoot.querySelector(".select-pure__selected-label").children[0] as HTMLElement).click();
+
   }
 
   toggleAdvancedSection() {
@@ -524,12 +524,9 @@ select {
     //     rotatePath.style.animationDuration = '400ms';
     // }
 
-    console.log(el.style.display);
     if (el !== null) {
       if (el.style.display !== 'block') {
         el.style.display = 'block';
-        console.log('in the first');
-        console.log(el);
 
       }
       else {
@@ -538,8 +535,6 @@ select {
         setTimeout(() => {
           el.style.display = 'none';
           el.style.animationName = 'slidein';
-          console.log('in the second');
-          console.log(el);
         }, 220);
 
 
@@ -569,11 +564,9 @@ select {
     var img = new Image();
 
     for (i = 0; i < files.length; i++) {
-      console.log(i);
       var url = window.URL.createObjectURL(files[i]);
       var screenshot = new Screenshot();
       screenshot.src = files[i].path;
-      console.log("This is the file path" + files[i].path);
       screenshot.type = files[i].type;
       await this.getImageDimensions(url)
         .then((data: any) => {
@@ -601,7 +594,6 @@ select {
       (form.elements["description"] as HTMLElement).classList.add('error');
     }
     if (form.elements["icon"].files.length === 0) {
-      console.log("EMPTYYYY")
       isValid = false;
       (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add('errordiv');
     }
@@ -650,7 +642,7 @@ select {
       sampleObject.short_name = this.shortname;
       sampleObject.theme_color = this.color;
       sampleObject.background_color = this.color;
-      sampleObject.categories = this.categories;
+      sampleObject.categories = instance._config.value;
 
       sampleObject.start_url = this.start_url;
       (window as any).vscode.postMessage({
@@ -677,7 +669,6 @@ select {
     });
   }
   onIconSelection(iconValue) {
-    console.log("In here", this.parentElement);
     (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove('errordiv');
   }
 
@@ -686,7 +677,6 @@ select {
 
   }
   onLanguageChange(languageValue) {
-    console.log(languageValue);
     var lang = JSON.parse(languageValue);
     sampleObject.lang = lang.code;
     sampleObject.dir = lang.dir;
@@ -701,7 +691,6 @@ select {
   onNameChange(nameValue) {
     if (nameValue.trim() !== "") {
       this.name = nameValue;
-      console.log('trim', this.shortname.trim())
       if (this.shortname.trim() === "") {
         this.onShortnameChange(this.name);
         (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
@@ -732,7 +721,6 @@ select {
         this.items = this.items.filter((item) => {
           return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
         });
-        console.log("These are the items", this.items);
         if (this.items.length > 0) {
           (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
         }

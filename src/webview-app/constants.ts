@@ -12,127 +12,65 @@ export const OrientationList : { id: number, type: string }[] = [
 export const myOptions = [
 
     {
-
         label: "Books",
-
-        value: "NY",
-
+        value: "books",
     },
-
     {
-
         label: "Business",
-
-        value: "WA",
-
+        value: "business",
     },
-
     {
-
         label: "Education",
-
-        value: "CA",
-
+        value: "education",
     },
-
     {
-
         label: "Finance",
-
-        value: "NJ",
-
+        value: "finance",
     },
-
     {
-
         label: "Food",
-
         value: "food",
-
     },
-
     {
-
         label: "Games",
-
         value: "games",
-
     },
-
     {
-
         label: "Government",
-
         value: "government",
-
     },
-
     {
-
         label: "Health",
-
         value: "health",
-
     },
-
     {
-
         label: "Kids",
-
         value: "kids",
-
     },
-
     {
-
         label: "Lifestyle",
-
         value: "lifestyle",
-
     },
-
     {
-
         label: "Magazines",
-
         value: "magazines",
-
     },
-
     {
-
         label: "Medical",
-
         value: "medical",
-
     },
-
     {
-
         label: "Music",
-
         value: "music",
-
     },
-
     {
-
         label: "Navigation",
-
         value: "navigation",
-
     },
-
     {
-
         label: "News",
-
         value: "news",
-
     },
-
-
-
 ];
 
 
@@ -166,7 +104,7 @@ export class ManifestInfo {
     related_applications : string = "";
     prefer_related_applications : boolean = false;
     screenshots: Screenshot[];
-    categories: string;
+    categories: string[];
 }
 
 export const categoryData = [

@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as intellisense from './modules/intellisense';
 import { generateWebView, generateManifestWebview } from './modules/render';
 
 
@@ -30,10 +31,13 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   let manifestCommand = vscode.commands.registerCommand('extension.manifest.start', async () => {
-    await generateManifestWebview(context);
+	await generateManifestWebview(context);
+	const completionProvider = intellisense.HoverIntelForManifest(context);
+	context.subscriptions.push(completionProvider);
   });
 
 	context.subscriptions.push(swCommand, manifestCommand);
+	
 }
 
 // this method is called when your extension is deactivated

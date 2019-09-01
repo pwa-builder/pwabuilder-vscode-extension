@@ -6,8 +6,11 @@ export class SelectPure {
     this._state = {
       opened: false,
     };
+    if(this._config.value == undefined) {
+      this._config.value = [];
+      console.log("config value ", this._config.value)
+    }
     this._icons = [];
-
     this._boundHandleClick = this._handleClick.bind(this);
     this._boundUnselectOption = this._unselectOption.bind(this);
     this._boundSortOptions = this._sortOptions.bind(this);
@@ -112,10 +115,13 @@ export class SelectPure {
 
   _setValue(value, manual, unselected) {
     console.log('_setValue', value, manual, unselected);
+    console.log("Does config exist?", this._config)
     if (value && !unselected) {
+      console.log("Inside first if", this._config)
       this._config.value = this._config.multiple ? this._config.value.concat(value) : value;
     }
     if (value && unselected) {
+      console.log("Inside second if", this._config)
       this._config.value = value;
     }
 
@@ -129,6 +135,7 @@ export class SelectPure {
       console.log('setting value', this._config.value, this._config);
       const options = this._config.value.map(_value => {
         const option = this._config.options.find(_option => _option.value === _value);
+        console.log("IS IT BECAUSE OF OPTION",_value);
         const optionNode = this._options.find(
           _option => _option.get().getAttribute("data-value") === option.value.toString()
         );

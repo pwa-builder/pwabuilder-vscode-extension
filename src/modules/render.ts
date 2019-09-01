@@ -4,6 +4,7 @@ import * as path from "path";
 import * as upath from 'upath';
 import * as constants from './constants';
 
+
 const https = require('https');
 const fs = require('fs').promises;
 const request = require('request');
@@ -163,6 +164,10 @@ async function generateManifest(message) {
       JSONObject = calculateIconSize(files, JSONObject);
 
     });
+  }
+  //Remove categories if there are none
+  if(JSONObject.categories === undefined || JSONObject.categories.length === 0) {
+    delete JSONObject["categories"]
   }
   var JSONString = JSON.stringify(JSONObject, null, 4);
   await createAndDownloadFile(folderPath, JSONString, constants.manifestFileName);
