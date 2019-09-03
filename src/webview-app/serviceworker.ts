@@ -59,11 +59,12 @@ export class SWPicker extends LitElement {
         padding-bottom: 14px;
         padding-right: 12px;
         cursor: pointer;
+        border: solid 2px transparent;
       }
 
       .serviceWorkerType#selected {
         border-radius: 12px;
-        background: grey;
+        border: solid 2px #5B7AD0;
       }
 
       #buttonDiv {
