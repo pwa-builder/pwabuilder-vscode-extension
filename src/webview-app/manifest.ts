@@ -258,10 +258,19 @@ select {
         width: 100%;
       }
 
+      #advancedSection #rightSection {
+        margin-left: 26em;
+      }
+
+      #advancedSection h2 {
+        color: white;
+      }
+
         .animatedSection {
             display: flex;
             justify-content: space-between;
-            padding-right: 5em;
+            padding-right: 14em;
+            margin-top: 2em;
           }
 
           #colorDivContainer {
@@ -451,6 +460,47 @@ select {
           #colorinput {
             color: red;
             background: red;
+          }
+
+          #icondiv {
+            background: grey;
+            border-radius: 2em;
+            padding-top: 14px !important;
+            padding-bottom: 8px !important;
+            font-weight: 600;
+            width: 20em;
+            height: 1em;
+            line-height: normal;
+            padding: 0px;
+            font-size: initial;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 0em;
+          }
+
+          input[type="file"].inputfile {
+            width: 8em;
+          }
+
+          input[type="file"].inputfile::-webkit-file-upload-button {
+            visibility: hidden;
+            width: 0;
+          }
+
+          input[type="file"].inputfile::before {
+            display: inline-block;
+            background: linear-gradient(top, #f9f9f9, #e3e3e3);
+            border: 1px solid #999;
+            border-radius: 3px;
+            /*padding: 5px 8px;*/
+            outline: none;
+            white-space: nowrap;
+            -webkit-user-select: none;
+            cursor: pointer;
+            text-shadow: 1px 1px #fff;
+            font-weight: 700;
+            font-size: 10pt;
           }
 
 
@@ -814,6 +864,9 @@ select {
     <section id="advancedSection">
     <ul class="animatedSection">
        <section id="leftSection">
+
+       <h2>Advanced</h2>
+
     <div>
             <label class="fieldName">Upload Screenshots</label>
             <p>We suggest at least one image 512×512 or larger</p>
@@ -852,7 +905,8 @@ select {
        <section id="rightSection">
         <div>
 
-            <label class="fieldName">Categories </label>
+            <label class="fieldName">Categories</label>
+            <p>Categories that your PWA fits into</p>
             <div>
                 <span class="example"></span>
             </div>        
