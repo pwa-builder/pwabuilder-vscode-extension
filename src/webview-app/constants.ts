@@ -24,6 +24,10 @@ export const myOptions = [
         value: "education",
     },
     {
+        label: "Fitness",
+        value: "fitness",
+    },
+    {
         label: "Finance",
         value: "finance",
     },
@@ -70,6 +74,50 @@ export const myOptions = [
     {
         label: "News",
         value: "news",
+    },
+    {
+        label: "Personalization",
+        value: "personalization",
+    },
+    {
+        label: "Photo",
+        value: "photo",
+    },
+    {
+        label: "Politics",
+        value: "politics",
+    },
+    {
+        label: "Productivity",
+        value: "productivity",
+    },
+    {
+        label: "Security",
+        value: "security",
+    },
+    {
+        label: "Shopping",
+        value: "shopping",
+    },
+    {
+        label: "Social",
+        value: "social",
+    },
+    {
+        label: "Sports",
+        value: "sports",
+    },
+    {
+        label: "Travel",
+        value: "travel",
+    },
+    {
+        label: "Utilities",
+        value: "utilities",
+    },
+    {
+        label: "Weather",
+        value: "weather",
     },
 ];
 

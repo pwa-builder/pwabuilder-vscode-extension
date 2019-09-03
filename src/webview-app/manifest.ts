@@ -12,7 +12,7 @@ var icon = "";
 
 var sampleObject = new ManifestInfo();
 
-var instance : any;
+var instance: any;
 var i;
 @customElement('manifest-gen')
 export class Manifest extends LitElement {
@@ -24,11 +24,10 @@ export class Manifest extends LitElement {
   @property() icons = [];
   @property() languageData = dropdownData;
   @property() defaultLanguage = "en";
-  @property() color = "#ffffff";
+  @property() color = "#5b7ad0";
   @property() screenshots: Screenshot[];
   @property() categories = "";
   @property() start_url = '/';
-  @property() items = ["Does", "This", "Work"];
 
 
   static get styles() {
@@ -265,13 +264,31 @@ select {
             padding-right: 5em;
           }
 
-          
+          #colorDivContainer {
+            display: flex;
+            align-items: center;
+          }
+
+        #colorDiv {
+  border-radius: 50px;
+  overflow: hidden;
+
+  border: 2px solid white;
+    width: 30px;
+    height: 30px;
+        }
+
+        #displayColorHex {
+          margin-left: 8px;
+        }
+
         #colorinput {
-            line-height: 70px;
-            width: 50px;
-            height: 30px;
-            border-width: medium;
-            border: solid;
+          border: 0;
+  padding: 0;
+  width: 200%;
+  height: 200%;
+  cursor: pointer;
+  transform: translate(-25%, -25%)
         }
 
         #colorinput:focus {
@@ -429,6 +446,11 @@ select {
 
           #description {
             border-width: thick;
+          }
+
+          #colorinput {
+            color: red;
+            background: red;
           }
 
 
@@ -674,7 +696,6 @@ select {
 
   onColorChange(colorValue) {
     this.color = colorValue;
-
   }
   onLanguageChange(languageValue) {
     var lang = JSON.parse(languageValue);
@@ -705,39 +726,6 @@ select {
 
   onDescChange(descValue) {
     this.desc = descValue;
-  }
-
-
-
-
-
-
-  onCategoriesChange(categoriesValue) {
-    if (categoriesValue.length >= 2) {
-
-      this.items = ["Does", "This", "Work"];
-
-      if (categoriesValue && categoriesValue.trim() !== '') {
-        this.items = this.items.filter((item) => {
-          return (item.toLowerCase().indexOf(categoriesValue.toLowerCase()) > -1);
-        });
-        if (this.items.length > 0) {
-          (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'block';
-        }
-        else {
-          (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
-        }
-
-      }
-
-    }
-    else {
-      (this.shadowRoot.querySelector("#displayList") as HTMLElement).style.display = 'none';
-    }
-  }
-
-  displayDropDown() {
-    (this.shadowRoot.querySelector("#categoriesdropdown") as HTMLElement).style.display = 'block';
   }
 
 
@@ -798,8 +786,13 @@ select {
                 <label class="fieldName" for="color">Color </label>
             </div>
             <p class="colorDesc"> Select the background color for your splash screen and tile </p>
-            <div>
-                <input type="color" id="colorinput" value="${this.color}" @change="${e => this.onColorChange(e.target.value)}">
+
+            <div id="colorDivContainer">
+              <div id="colorDiv">
+                  <input type="color" id="colorinput" value="${this.color}" @change="${e => this.onColorChange(e.target.value)}">
+              </div>
+
+              <div id="displayColorHex">${this.color}</div>
             </div>
         </div>
 
