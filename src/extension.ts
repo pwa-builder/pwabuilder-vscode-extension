@@ -37,6 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(swCommand, manifestCommand);
 	const completionProvider = intellisense.HoverIntelForManifest(context);
 	context.subscriptions.push(completionProvider);
+	intellisense.CompletionIntelForManifest(context);
 }
 
 // this method is called when your extension is deactivated
