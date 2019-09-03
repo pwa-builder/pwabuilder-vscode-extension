@@ -32,12 +32,11 @@ export function activate(context: vscode.ExtensionContext) {
 
   let manifestCommand = vscode.commands.registerCommand('extension.manifest.start', async () => {
 	await generateManifestWebview(context);
-	const completionProvider = intellisense.HoverIntelForManifest(context);
-	context.subscriptions.push(completionProvider);
   });
 
 	context.subscriptions.push(swCommand, manifestCommand);
-	
+	const completionProvider = intellisense.HoverIntelForManifest(context);
+	context.subscriptions.push(completionProvider);
 }
 
 // this method is called when your extension is deactivated

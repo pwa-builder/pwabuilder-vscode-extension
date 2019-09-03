@@ -48,8 +48,9 @@ select {
     font-size: 16px;
     outline: none;
     padding: 10px;
-    width: 100%;
+    width: 28em;
     border-radius: 4px;
+    
 }
 
 .select-pure__select {
@@ -259,7 +260,16 @@ select {
       }
 
       #advancedSection #rightSection {
-        margin-left: 26em;
+        margin-left: 16em;
+        margin-top: 4em;
+      }
+
+      #startURLBlock {
+        margin-top: 2.6em;
+      }
+
+      #rightSection #iconUploadBlock {
+        margin-top: 2em;
       }
 
       #advancedSection h2 {
@@ -846,7 +856,7 @@ select {
             </div>
         </div>
 
-        <div>
+        <div id="iconUploadBlock">
             <label class="fieldName">
                 <h4>Upload an Icon</h4> </label>
             <p> We suggest at least one image 512×512 or larger </p>
@@ -870,7 +880,7 @@ select {
     <div>
             <label class="fieldName">Upload Screenshots</label>
             <p>We suggest at least one image 512×512 or larger</p>
-            <div>
+            <div id="icondiv">
                 <input id="screenshot" type="file" accept="image/*" class="inputfile"  @change="${e => this.onScreenshotSelection()}" multiple />
             </div>
         </div>
@@ -913,7 +923,7 @@ select {
             </div> 
         </div>
 
-        <div>
+        <div id="startURLBlock">
             <label class="fieldName">Start Url </label>
             <p>This will be the first page that loads in your PWA.</p>
             <div>

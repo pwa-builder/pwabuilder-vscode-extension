@@ -1,6 +1,7 @@
 {
-	"name": "test",
-	"displayName": "test",
+	"name": "pwabuilder-extension",
+	"displayName": "PWABuilder Extension",
+	"publisher": "PWABuilderTeam",
 	"description": "",
 	"version": "0.0.1",
 	"engines": {
