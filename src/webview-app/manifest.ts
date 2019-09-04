@@ -1,12 +1,17 @@
-import { css, LitElement, html, property, customElement } from 'lit-element';
+import { css, LitElement, html, property, customElement } from "lit-element";
 
-import { SelectPure } from './SelectPure';
+import { SelectPure } from "./SelectPure";
 
-import { constants } from 'fs';
-import { OrientationList, ManifestInfo, Screenshot, categoryData, myOptions } from './constants';
-import dropdownData from './languages.json';
-import { errorRed } from '../modules/constants';
-
+import { constants } from "fs";
+import {
+  OrientationList,
+  ManifestInfo,
+  Screenshot,
+  categoryData,
+  myOptions
+} from "./constants";
+import dropdownData from "./languages.json";
+import { errorRed } from "../modules/constants";
 
 var icon = "";
 
@@ -15,14 +20,12 @@ var sampleObject = new ManifestInfo();
 var instance: any;
 var i;
 
-
-@customElement('manifest-gen')
+@customElement("manifest-gen")
 export class Manifest extends LitElement {
-
-  @property() name = '';
-  @property() shortname = '';
+  @property() name = "";
+  @property() shortname = "";
   @property() desc;
-  @property() lang = '';
+  @property() lang = "";
   @property() orientation = OrientationList[0].type;
   @property() icons = [];
   @property() languageData = dropdownData;
@@ -30,9 +33,8 @@ export class Manifest extends LitElement {
   @property() color = "#5b7ad0";
   @property() screenshots: Screenshot[];
   @property() categories = "";
-  @property() start_url = '/';
+  @property() start_url = "/";
   @property() submitting: boolean = false;
-
 
   static get styles() {
     return css`
@@ -53,7 +55,7 @@ export class Manifest extends LitElement {
         outline: none;
         padding: 10px;
         width: 28em;
-        border-radius: 4px; 
+        border-radius: 4px;
       }
 
       .select-pure__select {
@@ -153,7 +155,6 @@ export class Manifest extends LitElement {
         outline: none;
         padding: 10px;
         width: 100%;
-
 
         background: white !important;
         color: black !important;
@@ -310,7 +311,7 @@ export class Manifest extends LitElement {
         width: 200%;
         height: 200%;
         cursor: pointer;
-        transform: translate(-25%, -25%)
+        transform: translate(-25%, -25%);
       }
 
       #colorinput:focus {
@@ -340,7 +341,7 @@ export class Manifest extends LitElement {
         font-size: 16px;
         font-weight: bold;
       }
-      
+
       .animatedSection h4 {
         font-style: normal;
         line-height: 24px;
@@ -354,7 +355,7 @@ export class Manifest extends LitElement {
         font-size: 14px;
         color: grey;
       }
-         
+
       .animatedSection input {
         padding-left: 0;
         width: 28em;
@@ -370,255 +371,256 @@ export class Manifest extends LitElement {
         padding: 5px;
       }
 
-          .animatedSection textarea {
-            font-family: Arial;
-            padding-left: 0;
-            width: 28em;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 16px;
-            line-height: 33px;
-            background: transparent;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            color: white;
-            padding: 5px;
-          }
+      .animatedSection textarea {
+        font-family: Arial;
+        padding-left: 0;
+        width: 28em;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 33px;
+        background: transparent;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        color: white;
+        padding: 5px;
+      }
 
-          .animatedSection input:focus:not(.error) {
-            border-color: #5b7ad0;
-            outline: none;
-          }
+      .animatedSection input:focus:not(.error) {
+        border-color: #5b7ad0;
+        outline: none;
+      }
 
-          
-          .animatedSection textarea:focus{
-            border-color: #5b7ad0;
-            outline: none;
-          }
-          
-          #doneDiv {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 62px;
-          }
-          #doneDiv #doneButton {
-            background: #3c3c3c;
-            width: 97px;
-            font-family: Poppins;
-            font-style: normal;
-            font-weight: 600;
-            font-size: 14px;
-            height: 44px;
-            border-radius: 20px;
-            border: none;
-            margin-top: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-          }
+      .animatedSection textarea:focus {
+        border-color: #5b7ad0;
+        outline: none;
+      }
 
-          #rightSection {
-            margin-top: 2em;
-          }
+      #doneDiv {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 62px;
+      }
+      #doneDiv #doneButton {
+        background: #3c3c3c;
+        width: 97px;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        height: 44px;
+        border-radius: 20px;
+        border: none;
+        margin-top: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
 
-          #advancedSection {
-              display: none;
-              animation-duration: 400ms;
-              animation-name: slidein;
-          }
+      #rightSection {
+        margin-top: 2em;
+      }
 
-          #advToggleSection {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
+      #advancedSection {
+        display: none;
+        animation-duration: 400ms;
+        animation-name: slidein;
+      }
 
-          #toggleSection {
-            border: none;
-            background: none;
-            color: white;
-            font-weight: bold;
-            text-decoration: underline;
-            outline: none;
-            display: flex;
-            align-items: center;
-          }
+      #advToggleSection {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-          #saveForm {
-            outline: none;
-            float: right;
-            margin-right: 4em;
-            background: linear-gradient(90deg,#1fc2c8,#9337d8 116%);
-            color: white;
-            border: none;
-            padding: 1em;
-            padding-left: 20px;
-            padding-right: 20px;
-            border-radius: 24px;
-            font-weight: bold;
-            width: 127px;
-            border: none;
-            cursor: pointer;
-          }
+      #toggleSection {
+        border: none;
+        background: none;
+        color: white;
+        font-weight: bold;
+        text-decoration: underline;
+        outline: none;
+        display: flex;
+        align-items: center;
+      }
 
-          #chevronImg {
-            width: 16px;
-            margin-left: 5px;
-          }
+      #saveForm {
+        outline: none;
+        float: right;
+        margin-right: 4em;
+        background: linear-gradient(90deg, #1fc2c8, #9337d8 116%);
+        color: white;
+        border: none;
+        padding: 1em;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 24px;
+        font-weight: bold;
+        width: 127px;
+        border: none;
+        cursor: pointer;
+      }
 
-          #description {
-            border-width: thick;
-          }
+      #chevronImg {
+        width: 16px;
+        margin-left: 5px;
+      }
 
-          #colorinput {
-            color: red;
-            background: red;
-          }
+      #description {
+        border-width: thick;
+      }
 
-          #icondiv {
-            background: grey;
-            border-radius: 2em;
-            padding-top: 14px !important;
-            padding-bottom: 8px !important;
-            font-weight: 600;
-            width: 20em;
-            height: 1em;
-            line-height: normal;
-            padding: 0px;
-            font-size: initial;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-left: 0em;
-          }
+      #colorinput {
+        color: red;
+        background: red;
+      }
 
-          input[type="file"].inputfile {
-            width: 8em;
-          }
+      #icondiv {
+        background: grey;
+        border-radius: 2em;
+        padding-top: 14px !important;
+        padding-bottom: 8px !important;
+        font-weight: 600;
+        width: 9em;
+        height: 1em;
+        line-height: normal;
+        padding: 0px;
+        font-size: initial;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-          input[type="file"].inputfile::-webkit-file-upload-button {
-            visibility: hidden;
-            width: 0;
-          }
+        padding-left: 2em;
+      }
 
-          input[type="file"].inputfile::before {
-            display: inline-block;
-            background: linear-gradient(top, #f9f9f9, #e3e3e3);
-            border: 1px solid #999;
-            border-radius: 3px;
-            /*padding: 5px 8px;*/
-            outline: none;
-            white-space: nowrap;
-            -webkit-user-select: none;
-            cursor: pointer;
-            text-shadow: 1px 1px #fff;
-            font-weight: 700;
-            font-size: 10pt;
-          }
+      input[type="file"].inputfile {
+        cursor: pointer;
+        display: block;
 
+        width: 10.6em;
+      }
 
-          @keyframes slidein {
-            from {
-              transform: translateY(-80px);
-              opacity: 0;
-            }
-          
-            to {
-              transform: translateY(0);
-              opacity: 1;
-            }
-          }
+      input[type="file"].inputfile::-webkit-file-upload-button {
+        visibility: hidden;
+        width: 0;
+      }
 
-          @keyframes slideOut {
-            from {
-                transform: translateY(0);
-                opacity: 1;  
-            }
-          
-            to {
-                transform: translateY(-30px);
-                opacity: 0;
-            }
-          }
+      input[type="file"].inputfile::before {
+        display: inline-block;
+        background: linear-gradient(top, #f9f9f9, #e3e3e3);
+        border: 1px solid #999;
+        border-radius: 3px;
+        /*padding: 5px 8px;*/
+        outline: none;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        cursor: pointer;
+        text-shadow: 1px 1px #fff;
+        font-weight: 700;
+        font-size: 10pt;
+      }
 
-          @keyframes rotateClockwise {
-          from {
-              transform: rotate(0 16 17);
-            }
-          to {
-              transform: rotate(180 16 17);
-            }
-          }
+      @keyframes slidein {
+        from {
+          transform: translateY(-80px);
+          opacity: 0;
+        }
 
-          #chevronPath {
-            animation-duration: 5s;
-            animation-name: rotateClockwise; 
-          }
-          #displayList {
-              display: None;
-          }
-          #categoriesdropdown {
-              display: None;
-          }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
 
-          .error {
-              border-color: #ff0000;
-              outline: none;
-          }
+      @keyframes slideOut {
+        from {
+          transform: translateY(0);
+          opacity: 1;
+        }
 
-          .errordiv {
-            border-bottom: solid red;
-          }
+        to {
+          transform: translateY(-30px);
+          opacity: 0;
+        }
+      }
 
-          i.fa {
-            font-style: normal;
-            font-size: 10px;
-          }
-          
-        `;
+      @keyframes rotateClockwise {
+        from {
+          transform: rotate(0 16 17);
+        }
+        to {
+          transform: rotate(180 16 17);
+        }
+      }
+
+      #chevronPath {
+        animation-duration: 5s;
+        animation-name: rotateClockwise;
+      }
+      #displayList {
+        display: None;
+      }
+      #categoriesdropdown {
+        display: None;
+      }
+
+      .error {
+        border-color: #ff0000;
+        outline: none;
+      }
+
+      .errordiv {
+        border-bottom: solid red;
+      }
+
+      i.fa {
+        font-style: normal;
+        font-size: 10px;
+      }
+    `;
   }
 
   firstUpdated() {
     const element = this.shadowRoot.querySelector(".example");
-    const containerEl = this.shadowRoot.querySelector(".animatedSection")
+    const containerEl = this.shadowRoot.querySelector(".animatedSection");
 
-    instance = new SelectPure(element, {
-      options: myOptions,
-      multiple: true,
-      //value: ['NY'],
-      autocomplete: true,
-      icon: "fa fa-times"
-      /*multiple: true,
+    instance = new SelectPure(
+      element,
+      {
+        options: myOptions,
+        multiple: true,
+        //value: ['NY'],
+        autocomplete: true,
+        icon: "fa fa-times"
+        /*multiple: true,
       autocomplete: true*/
-    }, this.shadowRoot.host);
-
+      },
+      this.shadowRoot.host
+    );
   }
 
   toggleAdvancedSection() {
-    var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
-    var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
-
+    var el = this.shadowRoot.querySelector("#advancedSection") as HTMLElement;
+    var rotatePath = this.shadowRoot.querySelector(
+      "#chevronPath"
+    ) as HTMLElement;
 
     if (el !== null) {
-      if (el.style.display !== 'block') {
-        el.style.display = 'block';
-
-      }
-      else {
-        el.style.animationDuration = '400ms';
-        el.style.animationName = 'slideOut';
+      if (el.style.display !== "block") {
+        el.style.display = "block";
+      } else {
+        el.style.animationDuration = "400ms";
+        el.style.animationName = "slideOut";
         setTimeout(() => {
-          el.style.display = 'none';
-          el.style.animationName = 'slidein';
+          el.style.display = "none";
+          el.style.animationName = "slidein";
         }, 220);
-
       }
     }
   }
-
 
   onStartUrlChange(startUrlValue) {
     this.start_url = startUrlValue;
@@ -629,7 +631,9 @@ export class Manifest extends LitElement {
   }
 
   async onScreenshotSelection() {
-    const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
+    const files: any = (this.shadowRoot.querySelector(
+      "#screenshot"
+    ) as HTMLInputElement).files;
     sampleObject.screenshots = [];
     var img = new Image();
 
@@ -638,38 +642,40 @@ export class Manifest extends LitElement {
       var screenshot = new Screenshot();
       screenshot.src = files[i].path;
       screenshot.type = files[i].type;
-      await this.getImageDimensions(url)
-        .then((data: any) => {
-          screenshot.sizes = data.height + 'x' + data.width;
-        });
+      await this.getImageDimensions(url).then((data: any) => {
+        screenshot.sizes = data.height + "x" + data.width;
+      });
 
       sampleObject.screenshots.push(screenshot);
-
     }
   }
 
   checkFormValidity(isValid: boolean) {
-
-    let form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+    let form = this.shadowRoot.querySelector(
+      "#manifestForm"
+    ) as HTMLFormElement;
     if (form.elements["name"].value.trim() === "") {
       isValid = false;
-      (form.elements["name"] as HTMLElement).classList.add('error');
+      (form.elements["name"] as HTMLElement).classList.add("error");
     }
     if (form.elements["short-name"].value.trim() === "") {
       isValid = false;
-      (form.elements["short-name"] as HTMLElement).classList.add('error');
+      (form.elements["short-name"] as HTMLElement).classList.add("error");
     }
     if (form.elements["description"].value.trim() === "") {
       isValid = false;
-      (form.elements["description"] as HTMLElement).classList.add('error');
+      (form.elements["description"] as HTMLElement).classList.add("error");
     }
     if (form.elements["icon"].files.length === 0) {
       isValid = false;
-      (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add('errordiv');
+      (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add(
+        "errordiv"
+      );
     }
 
     return isValid;
   }
+
   async submit() {
     let isValid = true;
     isValid = this.checkFormValidity(isValid);
@@ -677,24 +683,31 @@ export class Manifest extends LitElement {
     if (isValid) {
       this.submitting = true;
 
-      let form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+      let form = this.shadowRoot.querySelector(
+        "#manifestForm"
+      ) as HTMLFormElement;
 
       //to-do make initial form data
       //console.log(this.shadowRoot.querySelector('#manifestForm'));
       //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
 
-      let fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+      let fileField = this.shadowRoot.querySelector(
+        "#icon"
+      ) as HTMLInputElement;
 
       if (fileField.files !== undefined) {
         let formData = new FormData();
-        formData.append('fileName', fileField.files[0]);
-        formData.append('padding', '0.2');
-        formData.append('platform', 'android');
+        formData.append("fileName", fileField.files[0]);
+        formData.append("padding", "0.2");
+        formData.append("platform", "android");
 
-        const response = await fetch('https://appimagegenerator-prod.azurewebsites.net/api/image', {
-          method: 'POST',
-          body: formData
-        });
+        const response = await fetch(
+          "https://appimagegenerator-prod.azurewebsites.net/api/image",
+          {
+            method: "POST",
+            body: formData
+          }
+        );
 
         const data = await response.json();
         icon = data.Uri;
@@ -714,7 +727,7 @@ export class Manifest extends LitElement {
       sampleObject.start_url = this.start_url;
 
       (window as any).vscode.postMessage({
-        name: 'manifest',
+        name: "manifest",
         JSONObject: sampleObject,
         icon: icon
       });
@@ -723,14 +736,11 @@ export class Manifest extends LitElement {
     }
   }
 
-
-
   getImageDimensions(url) {
     let img = new Image();
     img.src = url;
     return new Promise((resolve, reject) => {
-
-      img.onload = function () {
+      img.onload = function() {
         var width = img.width;
         var height = img.height;
         resolve({ height, width });
@@ -739,7 +749,9 @@ export class Manifest extends LitElement {
   }
 
   onIconSelection(iconValue) {
-    (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove('errordiv');
+    (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove(
+      "errordiv"
+    );
   }
 
   onColorChange(colorValue) {
@@ -757,27 +769,28 @@ export class Manifest extends LitElement {
       this.name = nameValue;
       if (this.shortname.trim() === "") {
         this.onShortnameChange(this.name);
-        (this.shadowRoot.querySelector("#shortname") as HTMLInputElement).value = this.shortname;
+        (this.shadowRoot.querySelector(
+          "#shortname"
+        ) as HTMLInputElement).value = this.shortname;
       }
     }
   }
 
   onOrientationChange(orientationValue) {
     this.orientation = OrientationList[orientationValue].type;
-
   }
 
   onDescChange(descValue) {
     this.desc = descValue;
   }
 
-
   removeError(id: string, value: string) {
     if (value.trim() !== "") {
-      (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove('error');
+      (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove(
+        "error"
+      );
     }
   }
-
 
   render() {
     return html`
@@ -797,7 +810,9 @@ export class Manifest extends LitElement {
 
             <p> Used for App lists or Store listings </p>
             <div>
-                <input id="name" name="name" type="text" placeholder="App Name" maxlength="255" value="" @change="${e => this.onNameChange(e.target.value)}" @keyup="${e => this.removeError(e.target.id, e.target.value)}" >
+                <input id="name" name="name" type="text" placeholder="App Name" maxlength="255" value="" @change="${e =>
+                  this.onNameChange(e.target.value)}" @keyup="${e =>
+      this.removeError(e.target.id, e.target.value)}" >
             </div>
         </div>
 
@@ -807,7 +822,11 @@ export class Manifest extends LitElement {
             </label>
             <p> Used for tiles or home screens </p>
             <div>
-                <input id="shortname" name="short-name" type="text" placeholder="App Short Name" maxlength="255" value="${this.shortname}" @change="${e => this.onShortnameChange(e.target.value)}" @keyup="${e => this.removeError(e.target.id, e.target.value)}" >
+                <input id="shortname" name="short-name" type="text" placeholder="App Short Name" maxlength="255" value="${
+                  this.shortname
+                }" @change="${e =>
+      this.onShortnameChange(e.target.value)}" @keyup="${e =>
+      this.removeError(e.target.id, e.target.value)}" >
             </div>
         </div>
 
@@ -817,7 +836,9 @@ export class Manifest extends LitElement {
                 <h4>Description</h4> </label>
             <p>Used for App listings </p>
             <div>
-                <textarea id="description" name="description" placeholder="App Description"  @change="${e => this.onDescChange(e.target.value)}" @keyup="${e => this.removeError(e.target.id, e.target.value)}" >${this.desc}</textarea>
+                <textarea id="description" name="description" placeholder="App Description"  @change="${e =>
+                  this.onDescChange(e.target.value)}" @keyup="${e =>
+      this.removeError(e.target.id, e.target.value)}" >${this.desc}</textarea>
             </div>
         </div>
 
@@ -833,7 +854,9 @@ export class Manifest extends LitElement {
 
             <div id="colorDivContainer">
               <div id="colorDiv">
-                  <input type="color" id="colorinput" value="${this.color}" @change="${e => this.onColorChange(e.target.value)}">
+                  <input type="color" id="colorinput" value="${
+                    this.color
+                  }" @change="${e => this.onColorChange(e.target.value)}">
               </div>
 
               <div id="displayColorHex">${this.color}</div>
@@ -845,7 +868,8 @@ export class Manifest extends LitElement {
                 <h4>Upload an Icon</h4> </label>
             <p> We suggest at least one image 512×512 or larger </p>
             <div id="icondiv">
-                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile" @change="${e => this.onIconSelection(e.target.value)}"/>
+                <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile" @change="${e =>
+                  this.onIconSelection(e.target.value)}"/>
             </div>
         </div>
 
@@ -864,7 +888,8 @@ export class Manifest extends LitElement {
             <label class="fieldName">Upload Screenshots</label>
             <p>We suggest at least one image 512×512 or larger</p>
             <div id="icondiv">
-                <input id="screenshot" type="file" accept="image/*" class="inputfile"  @change="${e => this.onScreenshotSelection()}" multiple />
+                <input id="screenshot" type="file" accept="image/*" class="inputfile"  @change="${e =>
+                  this.onScreenshotSelection()}" multiple />
             </div>
         </div>
         <div>
@@ -872,10 +897,14 @@ export class Manifest extends LitElement {
                 <h4>Language</h4></label>
                 <p>Declare the language of your PWA</p>
             <div>
-                <select id="language" name="language" @change="${e => this.onLanguageChange(e.target.value)}">
+                <select id="language" name="language" @change="${e =>
+                  this.onLanguageChange(e.target.value)}">
 
-                    ${this.languageData.map((i) => html`
-                    <option value=${JSON.stringify(i)}>${i.name} `)}</option>
+                    ${this.languageData.map(
+                      i => html`
+                        <option value=${JSON.stringify(i)}>${i.name} </option>
+                      `
+                    )}</option>
 
                 </select>
             </div>
@@ -886,10 +915,17 @@ export class Manifest extends LitElement {
                 <h4>Orientation</h4> </label>
                 <p>Orientation determines the perfered flow of your application.</p>
             <div>
-                <select id="orientation" name="orientation" @change="${e => this.onOrientationChange(e.target.value)}">
-                    ${OrientationList.map((i) => html`
-                    <option value=${i.id} @click=${() =>
-        this.onOrientationChange(i.id)}>${i.type} `)}</option>
+                <select id="orientation" name="orientation" @change="${e =>
+                  this.onOrientationChange(e.target.value)}">
+                    ${OrientationList.map(
+                      i => html`
+                        <option
+                          value=${i.id}
+                          @click=${() => this.onOrientationChange(i.id)}
+                          >${i.type}
+                        </option>
+                      `
+                    )}</option>
 
                 </select>
             </div>
@@ -910,7 +946,9 @@ export class Manifest extends LitElement {
             <label class="fieldName">Start Url </label>
             <p>This will be the first page that loads in your PWA.</p>
             <div>
-                <input id="start_url" name="start_url" type="text" maxlength="255" value="${this.start_url}" @change="${e => this.onStartUrlChange(e.target.value)}">
+                <input id="start_url" name="start_url" type="text" maxlength="255" value="${
+                  this.start_url
+                }" @change="${e => this.onStartUrlChange(e.target.value)}">
             </div>
         </div>
        </section>
@@ -932,12 +970,11 @@ export class Manifest extends LitElement {
  </button>
 </div>
 
-<input .disabled="${this.submitting}" id="saveForm" type="submit" name="submit" .value="${this.submitting ? 'Generating...' : 'Generate'}" form="manifestForm" @click="${() => this.submit()}"/>
+<input .disabled="${
+      this.submitting
+    }" id="saveForm" type="submit" name="submit" .value="${
+      this.submitting ? "Generating..." : "Generate"
+    }" form="manifestForm" @click="${() => this.submit()}"/>
         `;
-
-
   }
 }
-
-
-
