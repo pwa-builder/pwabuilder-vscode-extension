@@ -4,18 +4,18 @@ export class SelectPure {
   constructor(element, config) {
     this._config = { ...config };
     this._state = {
-      opened: false,
+      opened: false
     };
-    if(this._config.value == undefined) {
+    if (this._config.value == undefined) {
       this._config.value = [];
-      console.log("config value ", this._config.value)
+      console.log("config value ", this._config.value);
     }
     this._icons = [];
     this._boundHandleClick = this._handleClick.bind(this);
     this._boundUnselectOption = this._unselectOption.bind(this);
     this._boundSortOptions = this._sortOptions.bind(this);
 
-    console.log('shadowRoot', this.shadowRoot);
+    console.log("shadowRoot", this.shadowRoot);
 
     this._body = new Element(document.body);
 
@@ -25,14 +25,19 @@ export class SelectPure {
 
   _create(_element) {
     console.log(_element);
-    const element = typeof _element === "string" ? document.querySelector(_element) : _element;
-    console.log('element', element);
+    const element =
+      typeof _element === "string"
+        ? document.querySelector(_element)
+        : _element;
+    console.log("element", element);
 
     this._parent = new Element(element);
-    console.log('this._parent', this._parent);
+    console.log("this._parent", this._parent);
     this._select = new Element("div", { class: "select-pure__select" });
     this._label = new Element("span", { class: "select-pure__label" });
-    this._optionsWrapper = new Element("div", { class: "select-pure__options" });
+    this._optionsWrapper = new Element("div", {
+      class: "select-pure__options"
+    });
 
     if (this._config.multiple) {
       this._select.addClass("select-pure__select--multiple");
@@ -40,10 +45,10 @@ export class SelectPure {
 
     this._options = this._generateOptions();
 
-    console.log('this._select', this._select)
+    console.log("this._select", this._select);
 
     this._select.addEventListener("click", this._boundHandleClick);
-    console.log('bound click event');
+    console.log("bound click event");
     this._select.append(this._label.get());
     this._select.append(this._optionsWrapper.get());
     this._parent.append(this._select.get());
@@ -51,21 +56,23 @@ export class SelectPure {
 
   _generateOptions() {
     if (this._config.autocomplete) {
-      this._autocomplete = new Element("input", { class: "select-pure__autocomplete", type: "text" });
+      this._autocomplete = new Element("input", {
+        class: "select-pure__autocomplete",
+        type: "text"
+      });
       this._autocomplete.addEventListener("input", this._boundSortOptions);
 
       this._optionsWrapper.append(this._autocomplete.get());
     }
 
-    console.log('options', this._config.options);
-
+    console.log("options", this._config.options);
 
     return this._config.options.map(_option => {
       const option = new Element("div", {
         class: "select-pure__option",
         value: _option.value,
         textContent: _option.label,
-        disabled: _option.disabled,
+        disabled: _option.disabled
       });
 
       this._optionsWrapper.append(option.get());
@@ -77,14 +84,16 @@ export class SelectPure {
   _handleClick(event) {
     event.stopPropagation();
 
-    console.log('click event', event);
+    console.log("click event", event);
 
     if (event.target.className === "select-pure__autocomplete") {
       return;
     }
 
     if (this._state.opened) {
-      const option = this._options.find(_option => _option.get() === event.path[0]);
+      const option = this._options.find(
+        _option => _option.get() === event.path[0]
+      );
 
       if (option) {
         this._setValue(option.get().getAttribute("data-value"), true);
@@ -114,30 +123,35 @@ export class SelectPure {
   }
 
   _setValue(value, manual, unselected) {
-    console.log('_setValue', value, manual, unselected);
-    console.log("Does config exist?", this._config)
+    console.log("_setValue", value, manual, unselected);
+    console.log("Does config exist?", this._config);
     if (value && !unselected) {
-      console.log("Inside first if", this._config)
-      this._config.value = this._config.multiple ? this._config.value.concat(value) : value;
+      console.log("Inside first if", this._config);
+      this._config.value = this._config.multiple
+        ? this._config.value.concat(value)
+        : value;
     }
     if (value && unselected) {
-      console.log("Inside second if", this._config)
+      console.log("Inside second if", this._config);
       this._config.value = value;
     }
 
-    console.log('_setValue2', value, manual, unselected);
+    console.log("_setValue2", value, manual, unselected);
 
     this._options.forEach(_option => {
       _option.removeClass("select-pure__option--selected");
     });
 
     if (this._config.multiple) {
-      console.log('setting value', this._config.value, this._config);
+      console.log("setting value", this._config.value, this._config);
       const options = this._config.value.map(_value => {
-        const option = this._config.options.find(_option => _option.value === _value);
-        console.log("IS IT BECAUSE OF OPTION",_value);
+        const option = this._config.options.find(
+          _option => _option.value === _value
+        );
+        console.log("IS IT BECAUSE OF OPTION", _value);
         const optionNode = this._options.find(
-          _option => _option.get().getAttribute("data-value") === option.value.toString()
+          _option =>
+            _option.get().getAttribute("data-value") === option.value.toString()
         );
 
         optionNode.addClass("select-pure__option--selected");
@@ -150,12 +164,15 @@ export class SelectPure {
       return;
     }
 
-    const option = this._config.value ?
-      this._config.options.find(_option => _option.value.toString() === this._config.value) :
-      this._config.options[0];
+    const option = this._config.value
+      ? this._config.options.find(
+          _option => _option.value.toString() === this._config.value
+        )
+      : this._config.options[0];
 
     const optionNode = this._options.find(
-      _option => _option.get().getAttribute("data-value") === option.value.toString()
+      _option =>
+        _option.get().getAttribute("data-value") === option.value.toString()
     );
 
     optionNode.addClass("select-pure__option--selected");
@@ -178,11 +195,11 @@ export class SelectPure {
     this._icons = options.map(_option => {
       const selectedLabel = new Element("span", {
         class: "select-pure__selected-label",
-        textContent: _option.label,
+        textContent: _option.label
       });
       const icon = new Element("i", {
-        textContent: 'X',
-        value: _option.value,
+        textContent: "X",
+        value: _option.value
       });
 
       icon.addEventListener("click", this._boundUnselectOption);
@@ -195,7 +212,9 @@ export class SelectPure {
 
     if (manual) {
       // eslint-disable-next-line no-magic-numbers
-      this._optionsWrapper.setTop(Number(this._select.getHeight().split("px")[0]) + 5);
+      this._optionsWrapper.setTop(
+        Number(this._select.getHeight().split("px")[0]) + 5
+      );
     }
 
     if (this._config.onChange && manual) {
@@ -217,7 +236,12 @@ export class SelectPure {
 
   _sortOptions(event) {
     this._options.forEach(_option => {
-      if (!_option.get().textContent.toLowerCase().startsWith(event.target.value.toLowerCase())) {
+      if (
+        !_option
+          .get()
+          .textContent.toLowerCase()
+          .startsWith(event.target.value.toLowerCase())
+      ) {
         _option.addClass("select-pure__option--hidden");
         return;
       }

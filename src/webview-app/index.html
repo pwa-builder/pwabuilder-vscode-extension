@@ -1,112 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-
-  <style>
-    html button{
-      outline: none;
-    }
-    body {
-      padding: 0;
-      margin: 0;
-    }
-
-    header {
-      height: 36px;
-      background: black;
-      padding: 1em;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header a {
-      background: linear-gradient(90deg, #1fc2c8, #9337d8 116%);
-      color: white;
-      text-decoration: none;
-      padding: 10px;
-      border-radius: 22px;
-      font-weight: bold;
-      cursor: pointer;
-      padding-right: 20px;
-      padding-left: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    header img {
-      height: 30px;
-    }
-
-    header #headerButtons {
-      display: flex;
-      justify-content: space-between;
-      width: 23em;
-    }
-
-    header #headerButtons button {
-      background: grey;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 22px;
-      font-weight: 700;
-      cursor: pointer;
-      padding: 10px 20px;
-      justify-content: center;
-      border: none;
-      outline: none;
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <img src="/assets/new-logo.svg" alt="header logo">
-
-    <div id="headerButtons">
-      <button id="manifestButton">Web Manifest</button>
-      <a href="https://www.pwabuilder.com">Open PWABuilder</a>
-    </div>
-  </header>
-
-  <sw-picker></sw-picker>
-  <manifest-gen></manifest-gen>
-
-  <script>
-    window.vscode = acquireVsCodeApi();
-    console.log(vscode);
-
-    const maniEl = document.querySelector('manifest-gen');
-    const swEl = document.querySelector('sw-picker');
-
-    maniEl.style.display = 'none';
-
-    const maniButton = document.querySelector('#manifestButton');
-    maniButton.addEventListener('click', () => {
-      if (swEl.style.display === 'block') {
-        swEl.style.display = 'none';
-        maniEl.style.display = 'block';
-
-        maniButton.textContent = 'Service Worker';
+    <style>
+      html button {
+        outline: none;
       }
-      else {
-        maniEl.style.display = 'none';
-        swEl.style.display = 'block';
 
-        maniButton.textContent = 'Web Manifest';
+      body {
+        padding: 0;
+        margin: 0;
       }
-    });
-  </script>
 
-  <script src="serviceworker.ts"></script>
-  <script src="manifest.ts"></script>
+      header {
+        height: 36px;
+        background: black;
+        padding: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
 
-</body>
+      header a {
+        background: linear-gradient(90deg, #1fc2c8, #9337d8 116%);
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        padding-right: 20px;
+        padding-left: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
+      header img {
+        height: 30px;
+      }
+
+      header #headerButtons {
+        display: flex;
+        justify-content: space-between;
+        width: 23em;
+      }
+
+      header #headerButtons button {
+        background: grey;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 22px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 10px 20px;
+        justify-content: center;
+        border: none;
+        outline: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <img src="/assets/new-logo.svg" alt="header logo" />
+
+      <div id="headerButtons">
+        <button id="manifestButton">Web Manifest</button>
+        <a href="https://www.pwabuilder.com">Open PWABuilder</a>
+      </div>
+    </header>
+
+    <sw-picker></sw-picker>
+    <manifest-gen></manifest-gen>
+
+    <script>
+      window.vscode = acquireVsCodeApi();
+      console.log(vscode);
+
+      const maniEl = document.querySelector("manifest-gen");
+      const swEl = document.querySelector("sw-picker");
+
+      maniEl.style.display = "none";
+
+      const maniButton = document.querySelector("#manifestButton");
+      maniButton.addEventListener("click", () => {
+        if (swEl.style.display === "block") {
+          swEl.style.display = "none";
+          maniEl.style.display = "block";
+
+          maniButton.textContent = "Service Worker";
+        } 
+        else {
+          maniEl.style.display = "none";
+          swEl.style.display = "block";
+
+          maniButton.textContent = "Web Manifest";
+        }
+      });
+    </script>
+
+    <script src="serviceworker.ts"></script>
+    <script src="manifest.ts"></script>
+  </body>
 </html>

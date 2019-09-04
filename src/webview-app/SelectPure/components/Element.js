@@ -2,12 +2,15 @@ const allowedAttributes = {
   value: "data-value",
   disabled: "data-disabled",
   class: "class",
-  type: "type",
+  type: "type"
 };
 
 class Element {
   constructor(element, attributes = {}, i18n = {}) {
-    this._node = element instanceof HTMLElement ? element : document.createElement(element);
+    this._node =
+      element instanceof HTMLElement
+        ? element
+        : document.createElement(element);
     this._config = { i18n };
 
     this._setAttributes(attributes);
