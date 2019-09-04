@@ -14,8 +14,11 @@ var sampleObject = new ManifestInfo();
 
 var instance: any;
 var i;
+
+
 @customElement('manifest-gen')
 export class Manifest extends LitElement {
+
   @property() name = '';
   @property() shortname = '';
   @property() desc;
@@ -28,139 +31,139 @@ export class Manifest extends LitElement {
   @property() screenshots: Screenshot[];
   @property() categories = "";
   @property() start_url = '/';
+  @property() submitting: boolean = false;
 
 
   static get styles() {
     return css`
-    .select-wrapper {
-  margin: auto;
-  max-width: 600px;
-  width: calc(100% - 40px);
-}
+      .select-wrapper {
+        margin: auto;
+        max-width: 600px;
+        width: calc(100% - 40px);
+      }
 
-select {
-    background: #f9f9f8;
-    border-bottom: 1px solid #e4e4e4;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    box-sizing: border-box;
-    font-size: 16px;
-    outline: none;
-    padding: 10px;
-    width: 28em;
-    border-radius: 4px;
-    
-}
+      select {
+        background: #f9f9f8;
+        border-bottom: 1px solid #e4e4e4;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        box-sizing: border-box;
+        font-size: 16px;
+        outline: none;
+        padding: 10px;
+        width: 28em;
+        border-radius: 4px; 
+      }
 
-.select-pure__select {
-  align-items: center;
-  background: #f9f9f8;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-  color: #363b3e;
-  cursor: pointer;
-  display: flex;
-  font-size: 16px;
-  font-weight: 500;
-  justify-content: left;
-  min-height: 44px;
-  padding: 5px 10px;
-  position: relative;
-  transition: 0.2s;
-  width: 100%;
-}
+      .select-pure__select {
+        align-items: center;
+        background: #f9f9f8;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        color: #363b3e;
+        cursor: pointer;
+        display: flex;
+        font-size: 16px;
+        font-weight: 500;
+        justify-content: left;
+        min-height: 44px;
+        padding: 5px 10px;
+        position: relative;
+        transition: 0.2s;
+        width: 100%;
+      }
 
-.select-pure__options {
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-  color: #363b3e;
-  display: none;
-  left: 0;
-  max-height: 221px;
-  overflow-y: scroll;
-  position: absolute;
-  top: 50px;
-  width: 100%;
-  z-index: 5;
-}
+      .select-pure__options {
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        color: #363b3e;
+        display: none;
+        left: 0;
+        max-height: 221px;
+        overflow-y: scroll;
+        position: absolute;
+        top: 50px;
+        width: 100%;
+        z-index: 5;
+      }
 
-.select-pure__select--opened .select-pure__options {
-  display: block;
-}
+      .select-pure__select--opened .select-pure__options {
+        display: block;
+      }
 
-.select-pure__option {
-  background: #fff;
-  border-bottom: 1px solid #e4e4e4;
-  box-sizing: border-box;
-  height: 44px;
-  line-height: 25px;
-  padding: 10px;
-}
+      .select-pure__option {
+        background: #fff;
+        border-bottom: 1px solid #e4e4e4;
+        box-sizing: border-box;
+        height: 44px;
+        line-height: 25px;
+        padding: 10px;
+      }
 
-.select-pure__option--selected {
-  color: #e4e4e4;
-  cursor: initial;
-  pointer-events: none;
-}
+      .select-pure__option--selected {
+        color: #e4e4e4;
+        cursor: initial;
+        pointer-events: none;
+      }
 
-.select-pure__option--hidden {
-  display: none;
-}
+      .select-pure__option--hidden {
+        display: none;
+      }
 
-.select-pure__selected-label {
-  background: #5e6264;
-  border-radius: 4px;
-  color: #fff;
-  cursor: initial;
-  display: inline-block;
-  margin: 5px 10px 5px 0;
-  padding: 3px 7px;
-}
+      .select-pure__selected-label {
+        background: #5e6264;
+        border-radius: 4px;
+        color: #fff;
+        cursor: initial;
+        display: inline-block;
+        margin: 5px 10px 5px 0;
+        padding: 3px 7px;
+      }
 
-.select-pure__selected-label:last-of-type {
-  margin-right: 0;
-}
+      .select-pure__selected-label:last-of-type {
+        margin-right: 0;
+      }
 
-.select-pure__selected-label i {
-  cursor: pointer;
-  display: inline-block;
-  margin-left: 7px;
+      .select-pure__selected-label i {
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 7px;
 
-  font-style: normal;
-  font-size: 10px;
-}
+        font-style: normal;
+        font-size: 10px;
+      }
 
-.select-pure__selected-label i:hover {
-  color: #e4e4e4;
-}
+      .select-pure__selected-label i:hover {
+        color: #e4e4e4;
+      }
 
-.select-pure__autocomplete {
-  /* background: #f9f9f8; */
-  border-bottom: 1px solid #e4e4e4;
-  border-left: none;
-  border-right: none;
-  border-top: none;
-  box-sizing: border-box;
-  font-size: 16px;
-  outline: none;
-  padding: 10px;
-  width: 100%;
+      .select-pure__autocomplete {
+        /* background: #f9f9f8; */
+        border-bottom: 1px solid #e4e4e4;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        box-sizing: border-box;
+        font-size: 16px;
+        outline: none;
+        padding: 10px;
+        width: 100%;
 
 
-  background: white !important;
-  color: black !important;
-  font-size: 16px !important;
-  font-weight: 500 !important;
-  padding-left: 10px !important;
-  font-family: var(--vscode-font-family) !important;
-}
+        background: white !important;
+        color: black !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        padding-left: 10px !important;
+        font-family: var(--vscode-font-family) !important;
+      }
 
-.select-pure__select {
+      .select-pure__select {
         align-items: center;
         background: #f9f9f8;
         border-radius: 4px;
@@ -276,93 +279,96 @@ select {
         color: white;
       }
 
-        .animatedSection {
-            display: flex;
-            justify-content: space-between;
-            padding-right: 14em;
-            margin-top: 2em;
-          }
+      .animatedSection {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 14em;
+        margin-top: 2em;
+      }
 
-          #colorDivContainer {
-            display: flex;
-            align-items: center;
-          }
+      #colorDivContainer {
+        display: flex;
+        align-items: center;
+      }
 
-        #colorDiv {
-  border-radius: 50px;
-  overflow: hidden;
+      #colorDiv {
+        border-radius: 50px;
+        overflow: hidden;
 
-  border: 2px solid white;
-    width: 30px;
-    height: 30px;
-        }
+        border: 2px solid white;
+        width: 30px;
+        height: 30px;
+      }
 
-        #displayColorHex {
-          margin-left: 8px;
-        }
+      #displayColorHex {
+        margin-left: 8px;
+      }
 
-        #colorinput {
-          border: 0;
-  padding: 0;
-  width: 200%;
-  height: 200%;
-  cursor: pointer;
-  transform: translate(-25%, -25%)
-        }
+      #colorinput {
+        border: 0;
+        padding: 0;
+        width: 200%;
+        height: 200%;
+        cursor: pointer;
+        transform: translate(-25%, -25%)
+      }
 
-        #colorinput:focus {
-            border-color: #5b7ad0;
-            outline: none;
-        }
+      #colorinput:focus {
+        border-color: #5b7ad0;
+        outline: none;
+      }
 
-        .colorDesc {
-            padding-bottom: 10px;
-        }
+      .colorDesc {
+        padding-bottom: 10px;
+      }
 
-          h1 {
-              margin-left: 28px;
-              color: white;
-          }
+      h1 {
+        margin-left: 28px;
+        color: white;
+      }
 
-          form {
-              padding-left: 28px;
-          }
+      form {
+        padding-left: 28px;
+      }
 
-          form h3 {
-              color: white;
-          }
+      form h3 {
+        color: white;
+      }
 
-          .animatedSection .fieldName {
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-          }
-          .animatedSection h4 {
-            font-style: normal;
-            line-height: 24px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 32px;
-            margin-bottom: 0;
-          }
-          .animatedSection p {
-            font-size: 14px;
-            color: grey;
-          }
-          .animatedSection input {
-            padding-left: 0;
-            width: 28em;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 16px;
-            line-height: 33px;
-            background: transparent;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            color: white;
-            padding: 5px;
-          }
+      .animatedSection .fieldName {
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .animatedSection h4 {
+        font-style: normal;
+        line-height: 24px;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 32px;
+        margin-bottom: 0;
+      }
+
+      .animatedSection p {
+        font-size: 14px;
+        color: grey;
+      }
+         
+      .animatedSection input {
+        padding-left: 0;
+        width: 28em;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 33px;
+        background: transparent;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        color: white;
+        padding: 5px;
+      }
 
           .animatedSection textarea {
             font-family: Arial;
@@ -576,7 +582,6 @@ select {
   }
 
   firstUpdated() {
-
     const element = this.shadowRoot.querySelector(".example");
     const containerEl = this.shadowRoot.querySelector(".animatedSection")
 
@@ -590,21 +595,12 @@ select {
       autocomplete: true*/
     }, this.shadowRoot.host);
 
-
-    // (this.shadowRoot.querySelector(".select-pure__selected-label").children[0] as HTMLElement).click();
-
   }
 
   toggleAdvancedSection() {
     var el = this.shadowRoot.querySelector('#advancedSection') as HTMLElement;
     var rotatePath = this.shadowRoot.querySelector('#chevronPath') as HTMLElement;
 
-
-    // console.log(el.style.display);
-    // if(rotatePath !== null) {
-    //     rotatePath.style.animationName = 'rotateClockwise';
-    //     rotatePath.style.animationDuration = '400ms';
-    // }
 
     if (el !== null) {
       if (el.style.display !== 'block') {
@@ -619,27 +615,19 @@ select {
           el.style.animationName = 'slidein';
         }, 220);
 
-
-
-
       }
     }
   }
 
 
-  listener() {
-
-  }
-  onCategoryChange(categoryValue) {
-    //console.log(this.nodeValue;
-    //this.categories = categoryValue;
-  }
   onStartUrlChange(startUrlValue) {
     this.start_url = startUrlValue;
   }
+
   onShortnameChange(shortnameValue) {
     this.shortname = shortnameValue;
   }
+
   async onScreenshotSelection() {
     const files: any = (this.shadowRoot.querySelector('#screenshot') as HTMLInputElement).files;
     sampleObject.screenshots = [];
@@ -662,7 +650,7 @@ select {
 
   checkFormValidity(isValid: boolean) {
 
-    var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+    let form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
     if (form.elements["name"].value.trim() === "") {
       isValid = false;
       (form.elements["name"] as HTMLElement).classList.add('error');
@@ -680,26 +668,25 @@ select {
       (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.add('errordiv');
     }
 
-    // if (form.elements["start_url"].value.trim() === "") {
-    //     isValid = false;
-    //     (form.elements["start_url"] as HTMLElement).classList.add('error');
-    // }
-
     return isValid;
   }
   async submit() {
-    var isValid = true;
+    let isValid = true;
     isValid = this.checkFormValidity(isValid);
+
     if (isValid) {
-      var form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
+      this.submitting = true;
+
+      let form = this.shadowRoot.querySelector("#manifestForm") as HTMLFormElement;
 
       //to-do make initial form data
       //console.log(this.shadowRoot.querySelector('#manifestForm'));
       //const testData: any = new FormData(this.shadowRoot.querySelector('#manifestForm'));
 
-      var fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+      let fileField = this.shadowRoot.querySelector('#icon') as HTMLInputElement;
+
       if (fileField.files !== undefined) {
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append('fileName', fileField.files[0]);
         formData.append('padding', '0.2');
         formData.append('platform', 'android');
@@ -708,15 +695,14 @@ select {
           method: 'POST',
           body: formData
         });
+
         const data = await response.json();
         icon = data.Uri;
-
       }
-      // testData.append('')
+
       if (this.shortname.trim() === "") {
         this.shortname = this.name;
       }
-
 
       sampleObject.description = this.desc;
       sampleObject.name = this.name;
@@ -725,14 +711,15 @@ select {
       sampleObject.theme_color = this.color;
       sampleObject.background_color = this.color;
       sampleObject.categories = instance._config.value;
-
       sampleObject.start_url = this.start_url;
+
       (window as any).vscode.postMessage({
         name: 'manifest',
         JSONObject: sampleObject,
         icon: icon
       });
 
+      this.submitting = false;
     }
   }
 
@@ -750,6 +737,7 @@ select {
       };
     });
   }
+
   onIconSelection(iconValue) {
     (this.shadowRoot.querySelector("#icondiv") as HTMLElement).classList.remove('errordiv');
   }
@@ -757,18 +745,13 @@ select {
   onColorChange(colorValue) {
     this.color = colorValue;
   }
+
   onLanguageChange(languageValue) {
     var lang = JSON.parse(languageValue);
     sampleObject.lang = lang.code;
     sampleObject.dir = lang.dir;
-
-    // this.defaultLanguage = languageValue.code;
-    // console.log(languageValue.dir);
-    // sampleObject.dir = languageValue.dir;
-
-
-
   }
+
   onNameChange(nameValue) {
     if (nameValue.trim() !== "") {
       this.name = nameValue;
@@ -794,8 +777,11 @@ select {
       (this.shadowRoot.querySelector("#" + id) as HTMLElement).classList.remove('error');
     }
   }
+
+
   render() {
-    return html`<h1><a>Manifest Generator</a></h1>
+    return html`
+      <h1><a>Manifest Generator</a></h1>
         
    <form enctype="multipart/form-data" id="manifestForm" name="manifestForm">
     <div>
@@ -839,8 +825,6 @@ select {
 
         <section id="rightSection">
 
-      
-
         <div>
             <div class="colorlabel">
                 <label class="fieldName" for="color">Color </label>
@@ -869,8 +853,7 @@ select {
 
     </ul>
 
-  
-                      
+            
     <section id="advancedSection">
     <ul class="animatedSection">
        <section id="leftSection">
@@ -949,7 +932,7 @@ select {
  </button>
 </div>
 
-<input id="saveForm" type="submit" name="submit" value="Generate" form="manifestForm" @click="${() => this.submit()}"/>
+<input .disabled="${this.submitting}" id="saveForm" type="submit" name="submit" .value="${this.submitting ? 'Generating...' : 'Generate'}" form="manifestForm" @click="${() => this.submit()}"/>
         `;
 
 
