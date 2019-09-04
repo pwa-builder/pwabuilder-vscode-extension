@@ -450,7 +450,7 @@ export class Manifest extends LitElement {
       #saveForm {
         outline: none;
         float: right;
-        margin-right: 4em;
+        margin-right: 12em;
         background: linear-gradient(90deg, #1fc2c8, #9337d8 116%);
         color: white;
         border: none;
