@@ -352,7 +352,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                       folderPath = folderUri[0];
                       createAndDownloadFile(
                         folderPath,
-                        data.webSite,
+                        data.serviceWorker,
                         constants.swFileName
                       );
 
@@ -368,7 +368,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                   folderPath = folderUri[0];
                   createAndDownloadFile(
                     folderPath,
-                    data.webSite,
+                    data.serviceWorker,
                     constants.swFileName
                   );
 
@@ -397,7 +397,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                 folderPath = folderUri[0];
                 createAndDownloadFile(
                   folderPath,
-                  data.webSite,
+                  data.serviceWorker,
                   constants.swFileName
                 );
                 writeToIndex(data.webSite);
@@ -496,7 +496,7 @@ async function writeToIndex(data: any) {
             const line = openTextDocument.document.lineAt(i);
             console.log(line);
 
-            if (line.text === "</body>") {
+            if (line.text.includes("</body>")) {
               openTextDocument.edit(edit => {
                 edit.insert(
                   new vscode.Position(line.lineNumber - 1, 0),
