@@ -43,7 +43,7 @@ var optionsToOpenFile: vscode.OpenDialogOptions = {
 export async function generateWebView(context) {
   const panel = vscode.window.createWebviewPanel(
     "serviceWorker", // Identifies the type of the webview. Used internally
-    "Service Worker", // Title of the panel displayed to the user
+    "PWABuilder", // Title of the panel displayed to the user
     vscode.ViewColumn.One, // Editor column to show the new webview panel in.
     {
       // Enable scripts in the webview
@@ -221,7 +221,7 @@ function calculateIconSize(files: any, JSONObject: any) {
 export async function generateManifestWebview(context) {
   const panel = vscode.window.createWebviewPanel(
     "javascript_preview",
-    "Web Manifest",
+    "PWABuilder",
     vscode.ViewColumn.One,
     {
       enableScripts: true,
@@ -496,7 +496,7 @@ async function writeToIndex(data: any) {
             const line = openTextDocument.document.lineAt(i);
             console.log(line);
 
-            if (line.text === "</body>") {
+            if (line.text.includes("</body>")) {
               openTextDocument.edit(edit => {
                 edit.insert(
                   new vscode.Position(line.lineNumber - 1, 0),

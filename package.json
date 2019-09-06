@@ -32,7 +32,8 @@
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js",
+    "test": "node ./out/test/runTest.js",
+    "dev": "parcel watch src/webview-app/*.html --out-dir out --public-url .",
 		"build": "parcel build src/webview-app/*.html --out-dir out --public-url ."
 	},
 	"devDependencies": {
