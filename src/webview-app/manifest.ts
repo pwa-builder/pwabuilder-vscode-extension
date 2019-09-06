@@ -424,9 +424,8 @@ export class Manifest extends LitElement {
       }
 
       #advancedSection {
-        display: none;
-        animation-duration: 400ms;
-        animation-name: slidein;
+        transform: scaleY(0);
+        transform-origin: top;
       }
 
       #advToggleSection {
@@ -523,39 +522,6 @@ export class Manifest extends LitElement {
         font-size: 10pt;
       }
 
-      @keyframes slidein {
-        from {
-          transform: translateY(-80px);
-          opacity: 0;
-        }
-
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-
-      @keyframes slideOut {
-        from {
-          transform: translateY(0);
-          opacity: 1;
-        }
-
-        to {
-          transform: translateY(-30px);
-          opacity: 0;
-        }
-      }
-
-      @keyframes rotateClockwise {
-        from {
-          transform: rotate(0 16 17);
-        }
-        to {
-          transform: rotate(180 16 17);
-        }
-      }
-
       #chevronPath {
         animation-duration: 5s;
         animation-name: rotateClockwise;
@@ -580,6 +546,14 @@ export class Manifest extends LitElement {
         font-style: normal;
         font-size: 10px;
       }
+
+      .closed {
+        height: 0;
+      }
+
+      .opened {
+        height: 38em;
+      }
     `;
   }
 
@@ -603,12 +577,12 @@ export class Manifest extends LitElement {
   }
 
   toggleAdvancedSection() {
-    var el = this.shadowRoot.querySelector("#advancedSection") as HTMLElement;
-    var rotatePath = this.shadowRoot.querySelector(
+    const el = this.shadowRoot.querySelector("#advancedSection") as HTMLElement;
+    /*var rotatePath = this.shadowRoot.querySelector(
       "#chevronPath"
-    ) as HTMLElement;
+    ) as HTMLElement;*/
 
-    if (el !== null) {
+    /*if (el !== null) {
       if (el.style.display !== "block") {
         el.style.display = "block";
       } else {
@@ -619,6 +593,44 @@ export class Manifest extends LitElement {
           el.style.animationName = "slidein";
         }, 220);
       }
+    }*/
+
+    if (el.classList.contains('closed')) {
+      if (el) {
+        console.log(el);
+
+        el.classList.add('opened');
+
+        const advAni = el.animate(
+          [
+            { transform: 'scaleY(0.3)', opacity: 0.3 },
+            { transform: 'scaleY(1)', opacity: 1 }
+          ], {
+          duration: 100,
+          fill: 'forwards'
+        });
+        console.log(advAni);
+
+        advAni.onfinish = () => {
+          el.classList.remove('closed');
+        };
+      }
+    }
+    else {
+      const advAni = el.animate(
+        [
+          { transform: 'scaleY(1)', opacity: 1 },
+          { transform: 'scaleY(0)', opacity: 0 }
+        ], {
+        duration: 100,
+        fill: 'forwards'
+      });
+      console.log(advAni);
+
+      advAni.onfinish = () => {
+        el.classList.remove('opened');
+        el.classList.add('closed');
+      };
     }
   }
 
@@ -740,7 +752,7 @@ export class Manifest extends LitElement {
     let img = new Image();
     img.src = url;
     return new Promise((resolve, reject) => {
-      img.onload = function() {
+      img.onload = function () {
         var width = img.width;
         var height = img.height;
         resolve({ height, width });
@@ -811,8 +823,8 @@ export class Manifest extends LitElement {
             <p> Used for App lists or Store listings </p>
             <div>
                 <input id="name" name="name" type="text" placeholder="App Name" maxlength="255" value="" @change="${e =>
-                  this.onNameChange(e.target.value)}" @keyup="${e =>
-      this.removeError(e.target.id, e.target.value)}" >
+        this.onNameChange(e.target.value)}" @keyup="${e =>
+          this.removeError(e.target.id, e.target.value)}" >
             </div>
         </div>
 
@@ -823,10 +835,10 @@ export class Manifest extends LitElement {
             <p> Used for tiles or home screens </p>
             <div>
                 <input id="shortname" name="short-name" type="text" placeholder="App Short Name" maxlength="255" value="${
-                  this.shortname
-                }" @change="${e =>
-      this.onShortnameChange(e.target.value)}" @keyup="${e =>
-      this.removeError(e.target.id, e.target.value)}" >
+      this.shortname
+      }" @change="${e =>
+        this.onShortnameChange(e.target.value)}" @keyup="${e =>
+          this.removeError(e.target.id, e.target.value)}" >
             </div>
         </div>
 
@@ -837,8 +849,8 @@ export class Manifest extends LitElement {
             <p>Used for App listings </p>
             <div>
                 <textarea id="description" name="description" placeholder="App Description"  @change="${e =>
-                  this.onDescChange(e.target.value)}" @keyup="${e =>
-      this.removeError(e.target.id, e.target.value)}" >${this.desc}</textarea>
+        this.onDescChange(e.target.value)}" @keyup="${e =>
+          this.removeError(e.target.id, e.target.value)}" >${this.desc}</textarea>
             </div>
         </div>
 
@@ -855,8 +867,8 @@ export class Manifest extends LitElement {
             <div id="colorDivContainer">
               <div id="colorDiv">
                   <input type="color" id="colorinput" value="${
-                    this.color
-                  }" @change="${e => this.onColorChange(e.target.value)}">
+      this.color
+      }" @change="${e => this.onColorChange(e.target.value)}">
               </div>
 
               <div id="displayColorHex">${this.color}</div>
@@ -869,7 +881,7 @@ export class Manifest extends LitElement {
             <p> We suggest at least one image 512×512 or larger </p>
             <div id="icondiv">
                 <input id="icon" name="fileName" type="file" accept="image/*" class="inputfile" @change="${e =>
-                  this.onIconSelection(e.target.value)}"/>
+        this.onIconSelection(e.target.value)}"/>
             </div>
         </div>
 
@@ -878,7 +890,7 @@ export class Manifest extends LitElement {
     </ul>
 
             
-    <section id="advancedSection">
+    <section id="advancedSection" class="closed">
     <ul class="animatedSection">
        <section id="leftSection">
 
@@ -889,7 +901,7 @@ export class Manifest extends LitElement {
             <p>We suggest at least one image 512×512 or larger</p>
             <div id="icondiv">
                 <input id="screenshot" type="file" accept="image/*" class="inputfile"  @change="${e =>
-                  this.onScreenshotSelection()}" multiple />
+        this.onScreenshotSelection()}" multiple />
             </div>
         </div>
         <div>
@@ -898,13 +910,13 @@ export class Manifest extends LitElement {
                 <p>Declare the language of your PWA</p>
             <div>
                 <select id="language" name="language" @change="${e =>
-                  this.onLanguageChange(e.target.value)}">
+        this.onLanguageChange(e.target.value)}">
 
                     ${this.languageData.map(
-                      i => html`
+          i => html`
                         <option value=${JSON.stringify(i)}>${i.name} </option>
                       `
-                    )}</option>
+        )}</option>
 
                 </select>
             </div>
@@ -916,16 +928,16 @@ export class Manifest extends LitElement {
                 <p>Orientation determines the perfered flow of your application.</p>
             <div>
                 <select id="orientation" name="orientation" @change="${e =>
-                  this.onOrientationChange(e.target.value)}">
+        this.onOrientationChange(e.target.value)}">
                     ${OrientationList.map(
-                      i => html`
+          i => html`
                         <option
                           value=${i.id}
                           @click=${() => this.onOrientationChange(i.id)}
                           >${i.type}
                         </option>
                       `
-                    )}</option>
+        )}</option>
 
                 </select>
             </div>
@@ -947,8 +959,8 @@ export class Manifest extends LitElement {
             <p>This will be the first page that loads in your PWA.</p>
             <div>
                 <input id="start_url" name="start_url" type="text" maxlength="255" value="${
-                  this.start_url
-                }" @change="${e => this.onStartUrlChange(e.target.value)}">
+      this.start_url
+      }" @change="${e => this.onStartUrlChange(e.target.value)}">
             </div>
         </div>
        </section>
@@ -972,9 +984,9 @@ export class Manifest extends LitElement {
 
 <input .disabled="${
       this.submitting
-    }" id="saveForm" type="submit" name="submit" .value="${
+      }" id="saveForm" type="submit" name="submit" .value="${
       this.submitting ? "Generating..." : "Generate"
-    }" form="manifestForm" @click="${() => this.submit()}"/>
+      }" form="manifestForm" @click="${() => this.submit()}"/>
         `;
   }
 }
