@@ -352,7 +352,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                       folderPath = folderUri[0];
                       createAndDownloadFile(
                         folderPath,
-                        data.webSite,
+                        data.serviceWorker,
                         constants.swFileName
                       );
 
@@ -368,7 +368,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                   folderPath = folderUri[0];
                   createAndDownloadFile(
                     folderPath,
-                    data.webSite,
+                    data.serviceWorker,
                     constants.swFileName
                   );
 
@@ -397,7 +397,7 @@ async function getServiceWorkerCode(serviceWorkerId: number, type: string) {
                 folderPath = folderUri[0];
                 createAndDownloadFile(
                   folderPath,
-                  data.webSite,
+                  data.serviceWorker,
                   constants.swFileName
                 );
                 writeToIndex(data.webSite);
