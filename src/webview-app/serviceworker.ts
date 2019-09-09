@@ -202,7 +202,7 @@ export class SWPicker extends LitElement {
         </div>
 
         <div id="bottomRow">
-          <h3>Add this code to your landing page in a &lt;script&gt; tag:</h3>
+          <h3>Add this code to a file named "pwabuilder-sw.js" on your site root:</h3>
           <div>
             <pre>
               <code>
