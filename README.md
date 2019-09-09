@@ -1,21 +1,31 @@
-# PWABuilder VSCode extension
+# PWABuilder VSCode extension (Preview)
 
-## Status: Alpha
+The PWABuilder VSCode extension helps you transform any web app to a PWA, right inside of VSCode!
 
-Thanks for checking this project out, we are actively working on this extension so it may not work for you currently.
+## This extension is in Preview
 
-## Trying the Alpha
-Once we are further along with this project we will be releasing to the [vscode marketplace](https://marketplace.visualstudio.com/) so that this extension can be installed just like any other extension. Until then you can try the alpha with the following steps:
+This extension is in preview and is in early development. Based on feedback from the community, this extension is expected to change and improve.
 
-Prerequisites: You will need [nodejs](https://nodejs.org/en/), [git](https://git-scm.com/) and [vscode](https://code.visualstudio.com/) installed on your machine.
 
-- Run `git clone https://github.com/pwa-builder/pwabuilder-vscode-extension.git` in a directory of your choice
-- In the directory we just cloned above (you should be in `/pwabuilder-vscode-extension`) run `npm install`
-- Next, run `npm run build` in the same directory.
-- Open the `/pwabuilder-vscode-extension` folder in [vscode](https://code.visualstudio.com/) and then press `F5` on your computer.
-- This should open the extension in a new vscode window. Once it has opened you can press `ctrl + shift + P`and type `Start new Service Worker session`. 
+## Not sure what PWABuilder is? 
 
-If you have any problems with the above steps feel free to [open an issue](https://github.com/pwa-builder/pwabuilder-vscode-extension/issues) with us. Also, [these docs](https://code.visualstudio.com/api/get-started/your-first-extension) may help get you started.
+Check out this talk on the [Microsoft Developer youtube channel](https://youtu.be/ks3CYvPBO2k?t=1109) to learn more about PWABuilder! 
+
+
+## Trying the Preview
+
+- Download the latest build from [here](https://github.com/pwa-builder/pwabuilder-vscode-extension/releases/tag/v0.0.1)
+- Open your terminal of choice
+- In your terminal, navigate to where you downloaded the file (normally /Downloads). You can do this by running `cd \Downloads` in your terminal
+- You can now run `code --install-extension pwabuilder-extension.vsix` in your terminal to install the extension
+- Open a web app such as https://github.com/jgw96/simple-html-app
+- Serve the app with a local web server (httpster is a good one https://www.npmjs.com/package/httpster)
+- Open the url your web server is running on in your web browser
+- When you open VSCode open the command pallete using ctrl + shift + p and type PWABuilder
+- At this point you should see our two commands pop up, one for the manifest and one for the service worker. You are now ready to start using the PWABuilder VSCode extension! 
+
+
+If you have any problems with the above steps feel free to [open an issue](https://github.com/pwa-builder/pwabuilder-vscode-extension/issues) with us.
 
 Thanks,
 
