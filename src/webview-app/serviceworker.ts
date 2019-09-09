@@ -4,11 +4,6 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import Prism from 'prismjs';
 
 
-// var Prism = require('prismjs');
-declare var acquireVsCodeApi: any;
-// declare var htmlString: any;
-const vscode = acquireVsCodeApi();
-
 @customElement('sw-picker')
 export class SWPicker extends LitElement {
   @property() serviceWorkers = [];
@@ -64,11 +59,12 @@ export class SWPicker extends LitElement {
         padding-bottom: 14px;
         padding-right: 12px;
         cursor: pointer;
+        border: solid 2px transparent;
       }
 
       .serviceWorkerType#selected {
         border-radius: 12px;
-        background: grey;
+        border: solid 2px #5B7AD0;
       }
 
       #buttonDiv {
@@ -118,11 +114,12 @@ export class SWPicker extends LitElement {
   }
 
   firstUpdated() {
-    window.onload = () => {
-      vscode.postMessage({
-        name: 'Ready!!!!!!'
-      });
-    };
+    console.log((window as any).vscode);
+    
+    (window as any).vscode.postMessage({
+      name: 'Ready!!!!!!'
+    });
+
 
     window.addEventListener('message', async (event) => {
       this.serviceWorkers = event.data.data;
@@ -152,7 +149,7 @@ export class SWPicker extends LitElement {
   }
 
   download() {
-    vscode.postMessage({
+    (window as any).vscode.postMessage({
       name: 'download',
       serviceWorkerId: this.currentServiceWorker,
       type: 'download'
@@ -160,7 +157,7 @@ export class SWPicker extends LitElement {
   }
 
   inspect() {
-    vscode.postMessage({
+    (window as any).vscode.postMessage({
       name: 'sw',
       serviceWorkerId: this.currentServiceWorker,
       type: 'preview'
@@ -205,7 +202,7 @@ export class SWPicker extends LitElement {
         </div>
 
         <div id="bottomRow">
-          <h3>Add this code to your landing page in a &lt;script&gt; tag:</h3>
+          <h3>Add this code to a file named "pwabuilder-sw.js" on your site root:</h3>
           <div>
             <pre>
               <code>
