@@ -14,7 +14,7 @@ Check out this talk on the [Microsoft Developer youtube channel](https://youtu.b
 
 ## Trying the Preview
 
-- Download the latest build from [here](https://github.com/pwa-builder/pwabuilder-vscode-extension/releases/tag/v0.0.1)
+- Download from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=PWABuilder.pwabuilder-extension)
 - Open your terminal of choice
 - In your terminal, navigate to where you downloaded the file (normally /Downloads). You can do this by running `cd \Downloads` in your terminal
 - You can now run `code --install-extension pwabuilder-extension.vsix` in your terminal to install the extension

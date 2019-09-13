@@ -1,8 +1,10 @@
 {
 	"name": "pwabuilder-extension",
-	"displayName": "PWABuilder Extension",
-	"publisher": "PWABuilderTeam",
-	"description": "",
+	"displayName": "PWABuilder",
+  "publisher": "PWABuilder",
+  "repository": "https://github.com/pwa-builder/pwabuilder-vscode-extension",
+  "description": "The PWABuilder VS Code extension allows web developers to seamlessly integrate key PWA components into their code base.",
+  "icon": "store_assets/icon_512.png",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.36.0"
