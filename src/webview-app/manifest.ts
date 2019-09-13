@@ -492,14 +492,14 @@ export class Manifest extends LitElement {
         align-items: center;
         justify-content: center;
 
-        padding-left: 2em;
+        padding-left: 0em;
       }
 
       input[type="file"].inputfile {
         cursor: pointer;
         display: block;
-
-        width: 10.6em;
+        width: 7.6em;
+        margin-right: 1em;
       }
 
       input[type="file"].inputfile::-webkit-file-upload-button {
