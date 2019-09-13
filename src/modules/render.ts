@@ -148,8 +148,6 @@ async function generateIcons(iconUrl: string, folderPath) {
 }
 
 async function generateManifest(message) {
-  //HARDCODE JSON object to maintain order of keys
-
   var JSONObject = OrderJSON(message.JSONObject);
   var srcIndex = -1;
   var folderPath;
@@ -198,6 +196,7 @@ async function generateManifest(message) {
     delete JSONObject["categories"];
   }
   var JSONString = JSON.stringify(JSONObject, null, 4);
+
   await createAndDownloadFile(
     folderPath,
     JSONString,

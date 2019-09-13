@@ -264,8 +264,13 @@ export class Manifest extends LitElement {
       }
 
       #advancedSection #rightSection {
-        margin-left: 16em;
+        margin-left: 10em;
         margin-top: 4em;
+        width: 27em;
+      }
+
+      #start_url {
+        width: 22em;
       }
 
       #startURLBlock {
@@ -439,6 +444,7 @@ export class Manifest extends LitElement {
         border: none;
         background: none;
         color: white;
+        cursor: pointer;
         font-weight: bold;
         text-decoration: underline;
         outline: none;
