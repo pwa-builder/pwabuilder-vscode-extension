@@ -139,7 +139,7 @@ async function generateIcons(iconUrl: string, folderPath) {
 
         zip.extractAllTo(unzippedPath, true);
 
-        fsSync.readdir(unzippedPathToIcons, function(err, items) {
+        fsSync.readdir(unzippedPathToIcons, function (err, items) {
           console.log(items);
           resolve(items);
         });
@@ -166,6 +166,9 @@ async function generateManifest(message) {
           //src is found
           srcIndex = index;
           folderPath = element;
+
+          console.log('srcIndex', srcIndex);
+          writeIndexLink();
         }
       });
     if (srcIndex === -1) {
@@ -202,6 +205,104 @@ async function generateManifest(message) {
     JSONString,
     constants.manifestFileName
   );
+}
+
+async function writeIndexLink() {
+  const possibleIndexes = await vscode.workspace.findFiles("**/src/index.html");
+  console.group(possibleIndexes);
+
+  if (possibleIndexes.length > 0) {
+    const infoMessage = await vscode.window.showInformationMessage(
+      "This will write to your index.html file, is this ok?",
+      {},
+      {
+        title: "Ok"
+      },
+      {
+        title: "Cancel"
+      }
+    );
+
+    console.log(infoMessage);
+
+    if (infoMessage.title === "Ok") {
+      const indexFilePath = possibleIndexes[0].path;
+
+      const indexFile = await vscode.workspace.openTextDocument(indexFilePath);
+      console.log(indexFile);
+
+      const openTextDocument = await vscode.window.showTextDocument(
+        indexFile,
+        vscode.ViewColumn.Beside,
+        false
+      );
+      console.log(openTextDocument);
+
+      if (openTextDocument) {
+        for (let i = 0; i < openTextDocument.document.lineCount; i++) {
+          const line = openTextDocument.document.lineAt(i);
+
+          if (line.text.includes("</head>")) {
+            openTextDocument.edit(edit => {
+              edit.insert(
+                new vscode.Position(line.lineNumber, 0),
+                `<link rel="manifest" href="/manifest.json">\n`
+              );
+            });
+            break;
+          }
+        }
+      }
+    } else if (infoMessage.title === "Cancel") {
+    }
+  } else {
+    const infoMessage = await vscode.window.showInformationMessage(
+      "Open the HTML file of your landing page. We will write into it.",
+      {},
+      {
+        title: "Ok"
+      },
+      {
+        title: "Cancel"
+      }
+    );
+    if (infoMessage.title === "Ok") {
+      var filePath;
+      await getFileOrFolderPath(optionsToOpenFile).then(fileUri => {
+        if (fileUri && fileUri[0]) {
+          filePath = fileUri[0];
+        }
+      });
+      if (filePath !== undefined) {
+        const indexFile = await vscode.workspace.openTextDocument(filePath);
+
+        const openTextDocument = await vscode.window.showTextDocument(
+          indexFile,
+          vscode.ViewColumn.Beside,
+          false
+        );
+        console.log(openTextDocument);
+
+        if (openTextDocument) {
+          for (let i = 0; i < openTextDocument.document.lineCount; i++) {
+            const line = openTextDocument.document.lineAt(i);
+            console.log(line);
+
+            if (line.text.includes("</head>")) {
+              openTextDocument.edit(edit => {
+                edit.insert(
+                  new vscode.Position(line.lineNumber, 0),
+                  `<link rel="manifest" href="/manifest.json">\n`
+                );
+              });
+              break;
+            }
+          }
+        }
+      }
+    } else {
+    }
+  }
 }
 
 function calculateIconSize(files: any, JSONObject: any) {
@@ -278,7 +379,7 @@ async function downloadScreenshots(JSONObject, folderPath) {
       .copyFile(
         JSONObject.screenshots[i].src,
         path.join(folderPath, "screenshot" + (i > 0 ? i : "") + ".png"),
-        function(err, data) {
+        function (err, data) {
           if (err) {
             throw err;
           }
