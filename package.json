@@ -59,7 +59,7 @@
 		"lit-element": "^2.2.0",
 		"lit-html": "^1.1.1",
 		"node-fetch": "^2.6.0",
-		"prismjs": "^1.17.1",
+		"prismjs": "^1.23.0",
 		"request": "^2.88.0",
 		"revoke-object-url": "^1.0.2",
 		"select-pure": "^0.2.0",
